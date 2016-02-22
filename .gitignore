@@ -1,10 +1,1 @@
-CMakeFiles
-CMakeCache.txt
-cmake_install.cmake
-Makefile
-engine/CMakeFiles
-engine/CMakeCache.txt
-engine/cmake_install.cmake
-engine/Makefile
-
-*.swp
+build/
