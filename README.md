@@ -14,13 +14,13 @@ To build the source, you need:
 If you want to only build the engine library, type this:
 
 ```shell
-mkdir build && cmake .. && make
+mkdir build && cd $_ && cmake .. && make
 ```
 
 If you also want to build the sdemo scenes, type this:
 
 ```shell
-mkdir build && cmake -DBUILD_SAMPLES=ON .. && make
+mkdir build && cd $_ && cmake -DBUILD_SAMPLES=ON .. && make
 ```
 
 ### Windows & OS X
