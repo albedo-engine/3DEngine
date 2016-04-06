@@ -11,7 +11,7 @@ set (
 )
 
 # Subdirectories
-add_subdirectory(engine)
+add_subdirectory(src)
 
 if (BUILD_SAMPLES)
 	add_subdirectory(samples)
