@@ -4,6 +4,9 @@ project(Engine)
 # Options
 option(BUILD_SAMPLES "Build sample programs" OFF)
 
+# C++14
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++1y")
+
 # Library output directory
 set (
 	CMAKE_LIBRARY_OUTPUT_DIRECTORY
