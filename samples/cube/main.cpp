@@ -1,5 +1,6 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
+#include "engine.hpp"
 
 static void error_callback(int error, const char* description)
 {
@@ -28,6 +29,8 @@ int main()
 		glfwTerminate();
 		throw 1;
 	}
+
+  Engine::Scene::Node::NodePtr node = std::shared_ptr<Engine::Scene::Node>(new Engine::Scene::Node());
 
 	while (!glfwWindowShouldClose(window))
 	{
