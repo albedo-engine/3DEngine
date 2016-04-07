@@ -1,8 +1,6 @@
 #pragma once
 
-#include <iostream>
-#include <memory>
-#include <string>
+#include "../engine.hpp"
 
 namespace scene
 {

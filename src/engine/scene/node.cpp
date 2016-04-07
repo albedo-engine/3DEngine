@@ -6,9 +6,8 @@ namespace scene
   { }
 
   Node::Node(std::string& name)
-  {
-    name_ = name;
-  }
+       : name_(name)
+  { }
 
   void
   Node::add_child(Node::NodePtr n)
