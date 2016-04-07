@@ -13,7 +13,7 @@ namespace scene
   Node::add_child(Node::NodePtr n)
   {
     if (parent_ != nullptr
-        || std::find(children_.begin(), children_.end(), n) != vec.end())
+        || std::find(children_.begin(), children_.end(), n) != children_.end())
       return false;
 
     // Puts the new child in the children container

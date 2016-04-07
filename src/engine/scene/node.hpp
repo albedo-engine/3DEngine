@@ -1,6 +1,9 @@
 #pragma once
 
-#include "../engine.hpp"
+#include <memory>
+#include <string>
+#include <vector>
+#include <algorithm>
 
 namespace scene
 {
