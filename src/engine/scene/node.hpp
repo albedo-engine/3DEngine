@@ -24,4 +24,6 @@ namespace scene
       std::string   name_;
       NodePtr       parent_;
       NodeList      children_;
- doamespace scene
+  };
+
+ } // namespace scene
