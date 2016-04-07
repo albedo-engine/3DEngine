@@ -1,43 +1,47 @@
 #include "node.hpp"
 
-namespace scene
+namespace Engine
 {
-  Node::Node()
-  { }
-
-  Node::Node(std::string& name)
-       : name_(name)
-  { }
-
-  bool
-  Node::add_child(Node::NodePtr n)
+  namespace Scene
   {
-    if (parent_ != nullptr
-        || std::find(children_.begin(), children_.end(), n) != children_.end())
-      return false;
+    Node::Node()
+      : name_("")
+    { }
 
-    // Puts the new child in the children container
-    children_.push_back(n);
-    // Updates the child's parent pointer to the current Node instance
-    // Use the boost shared_from_this
-  }
+    Node::Node(std::string& name)
+      : name_(name)
+    { }
 
-  void
-  Node::clear_children()
-  {
-    children_.clear();
-  }
+    bool
+    Node::add_child(Node::NodePtr n)
+    {
+      if (parent_ != nullptr
+          || std::find(children_.begin(), children_.end(), n) != children_.end())
+        return false;
 
-  Node::NodePtr&
-  Node::get_child_at(size_t i)
-  {
-    return children_.at(i);
-  }
+      // Puts the new child in the children container
+      children_.push_back(n);
+      // Updates the child's parent pointer to the current Node instance
+      // Use the boost shared_from_this
+    }
 
-  Node::NodePtr&
-  Node::get_parent()
-  {
-    return parent_;
-  }
+    void
+    Node::clear_children()
+    {
+      children_.clear();
+    }
 
-} // namespace scene
+    Node::NodePtr&
+    Node::get_child_at(size_t i)
+    {
+      return children_.at(i);
+    }
+
+    Node::NodePtr&
+    Node::get_parent()
+    {
+      return parent_;
+    }
+
+  } // namespace Scene
+} // namespace Engine

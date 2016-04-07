@@ -2,28 +2,32 @@
 
 #include "headers/common.hpp"
 
-namespace scene
+namespace Engine
 {
-  class Node
+  namespace Scene
   {
-    public:
-      typedef std::shared_ptr<Node>               NodePtr;
-      typedef std::vector<std::shared_ptr<Node>>  NodeList;
 
-    public:
-      Node();
-      Node(std::string& name);
+    class Node
+    {
+      public:
+        typedef std::shared_ptr<Node>               NodePtr;
+        typedef std::vector<std::shared_ptr<Node>>  NodeList;
 
-    public:
-      bool add_child(NodePtr n);
-      void clear_children();
-      NodePtr& get_child_at(size_t i);
-      NodePtr& get_parent();
+      public:
+        Node();
+        Node(std::string& name);
 
-    private:
-      std::string   name_;
-      NodePtr       parent_;
-      NodeList      children_;
-  };
+      public:
+        bool add_child(NodePtr n);
+        void clear_children();
+        NodePtr& get_child_at(size_t i);
+        NodePtr& get_parent();
 
- } // namespace scene
+      private:
+        std::string   name_;
+        NodePtr       parent_;
+        NodeList      children_;
+    };
+
+  } // namespace Scene
+} // namespace Engine
