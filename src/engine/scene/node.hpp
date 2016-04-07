@@ -15,14 +15,13 @@ namespace scene
       Node(std::string& name);
 
     public:
-      void add_child(NodePtr n);
-      NodePtr& get_child_at(size_t i);
+      bool add_child(NodePtr n);
       void clear_children();
+      NodePtr& get_child_at(size_t i);
+      NodePtr& get_parent();
 
     private:
       std::string   name_;
+      NodePtr       parent_;
       NodeList      children_;
-
-  };
-
-} // namespace scene
+ doamespace scene
