@@ -1,4 +1,4 @@
 add_library(Components STATIC
-	component.cpp
+  component.cpp
   transform.cpp
 )

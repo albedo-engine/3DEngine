@@ -1,6 +1,8 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
+
 #include "engine.hpp"
+#include "components/transform.hpp"
 
 using namespace Engine;
 using namespace Engine::Scene;
@@ -33,7 +35,10 @@ int main()
     throw 1;
   }
 
-  Node::NodePtr node = std::shared_ptr<Node>(new Node());
+  Node::NodePtr root = std::shared_ptr<Node>(new Node("root"));
+  Node::NodePtr camera = std::shared_ptr<Node>(new Node("camera"));
+  Node::NodePtr cube = std::shared_ptr<Node>(new Node("cube"));
+  cube->add_component(std::shared_ptr<Transform>(new Transform()));
 
   while (!glfwWindowShouldClose(window))
   {
