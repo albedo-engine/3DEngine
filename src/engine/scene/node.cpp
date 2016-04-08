@@ -8,15 +8,14 @@ namespace Engine
       : name_("")
     { }
 
-    Node::Node(std::string& name)
+    Node::Node(const std::string& name)
       : name_(name)
     { }
 
     bool
     Node::add_child(Node::NodePtr n)
     {
-      if (n->parent_ != nullptr
-          || std::find(children_.begin(), children_.end(), n) != children_.end())
+      if (n->parent_ != nullptr || has_child(n))
         return false;
 
       // Puts the new child in the children container
@@ -65,20 +64,22 @@ namespace Engine
     bool
     Node::add_component(Component::ComponentPtr c)
     {
+      if (has_component(c))
+        return false;
+
       components_.push_back(c);
+      return true;  
     }
 
     bool
     Node::remove_component(Component::ComponentPtr c)
     {
       auto i = std::find(components_.begin(), components_.end(), c);
-      if (i != components_.end())
-      {
-        components_.erase(i);
-        return true;
-      }
-      else
+      if (i == components_.end())
         return false;
+
+      components_.erase(i);
+      return true;
     }
 
     bool

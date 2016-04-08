@@ -18,7 +18,7 @@ namespace Engine
 
       public:
         Node();
-        Node(std::string& name);
+        Node(const std::string& name);
 
       public:
         bool add_child(NodePtr n);
@@ -32,10 +32,10 @@ namespace Engine
         bool remove_component(Component::ComponentPtr c);
         bool has_component(Component::ComponentPtr c);
       private:
-        std::string   name_;
-        NodePtr       parent_;
-        NodeList      children_;
-        ComponentList components_;
+        const std::string   name_;
+        NodePtr             parent_;
+        NodeList            children_;
+        ComponentList       components_;
     };
   } // namespace Scene
 } // namespace Engine
