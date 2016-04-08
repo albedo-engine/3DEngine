@@ -2,42 +2,45 @@
 #include <iostream>
 #include "engine.hpp"
 
+using namespace Engine;
+using namespace Engine::Scene;
+
 static void error_callback(int error, const char* description)
 {
-	std::cerr << "Error " << error << ": " << description;
+  std::cerr << "Error " << error << ": " << description;
 }
 
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-		glfwSetWindowShouldClose(window, GL_TRUE);
+  if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+    glfwSetWindowShouldClose(window, GL_TRUE);
 }
 
 int main()
 {
-	glfwSetErrorCallback(error_callback);
+  glfwSetErrorCallback(error_callback);
 
-	if (!glfwInit())
-		throw 1;
+  if (!glfwInit())
+    throw 1;
 
-	GLFWwindow* window = glfwCreateWindow(640, 480, "Cube Sample", NULL, NULL);
+  GLFWwindow* window = glfwCreateWindow(640, 480, "Cube Sample", NULL, NULL);
 
-	glfwSetKeyCallback(window, key_callback);
+  glfwSetKeyCallback(window, key_callback);
 
-	if (!window)
-	{
-		glfwTerminate();
-		throw 1;
-	}
+  if (!window)
+  {
+    glfwTerminate();
+    throw 1;
+  }
 
-  Engine::Scene::Node::NodePtr node = std::shared_ptr<Engine::Scene::Node>(new Engine::Scene::Node());
+  Node::NodePtr node = std::shared_ptr<Node>(new Node());
 
-	while (!glfwWindowShouldClose(window))
-	{
-		glfwPollEvents();
-	}
+  while (!glfwWindowShouldClose(window))
+  {
+    glfwPollEvents();
+  }
 
-	glfwDestroyWindow(window);
-	glfwTerminate();
-	return 0;
+  glfwDestroyWindow(window);
+  glfwTerminate();
+  return 0;
 }
