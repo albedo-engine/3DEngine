@@ -4,7 +4,7 @@
 
 namespace Engine
 {
-  namespace Component
+  namespace Components
   {
     class Component
     {

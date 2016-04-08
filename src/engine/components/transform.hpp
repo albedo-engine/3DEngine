@@ -5,7 +5,7 @@
 
 namespace Engine
 {
-  namespace Component
+  namespace Components
   {
     class Transform : public Component
     {
