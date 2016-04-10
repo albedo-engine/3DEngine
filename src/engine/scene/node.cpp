@@ -15,13 +15,16 @@ namespace Engine
     bool
     Node::add_child(Node::NodePtr n)
     {
-      if (n->parent_ != nullptr || has_child(n))
-        return false;
+      if (n->get_parent())
+        n->get_parent()->remove_child(n);
+
 
       // Puts the new child in the children container
       children_.push_back(n);
       // Updates the child's parent pointer to the current Node instance
+      n->parent_ = shared_from_this();
       // Use the boost shared_from_this
+      return true;
     }
 
     bool
