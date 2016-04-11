@@ -23,7 +23,6 @@ namespace Engine
       children_.push_back(n);
       // Updates the child's parent pointer to the current Node instance
       n->parent_ = shared_from_this();
-      // Use the boost shared_from_this
       return true;
     }
 
@@ -71,7 +70,7 @@ namespace Engine
         return false;
 
       components_.push_back(c);
-      return true;  
+      return true;
     }
 
     bool

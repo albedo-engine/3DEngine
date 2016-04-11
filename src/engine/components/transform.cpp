@@ -4,16 +4,42 @@ namespace Engine
 {
   namespace Components
   {
-    Transform::Transform()
-      : position_(glm::vec3(0.0f))
-      , rotation_(glm::vec3(0.0f))
-      , scale_(glm::vec3(0.0f))
+    Transform::Transform(glm::vec3 position)
+    {
+      world_matrix_ = glm::translate(world_matrix_, position);
+    }
+
+    Transform::Transform(glm::vec3 scale, glm::vec3 rotation_axis, float angle)
+    {
+      world_matrix_ = glm::scale(world_matrix_, scale);
+      world_matrix_ = glm::rotate(world_matrix_, glm::radians(angle), rot_axis);
+      world_matrix_ = glm::translate(world_matrix_, position);
+    }
+
+    void
+    Transform::translate(glm::vec3 position)
+    {
+      world_matrix_ = glm::translate(world_matrix_, position);
+    }
+
+    void
+    Transform::translate(double x, double y, double z)
     { }
 
-    Transform::Transform(glm::vec3 position, glm::vec3 rotation, glm::vec3 scale)
-      : position_(position)
-      , rotation_(rotation)
-      , scale_(scale)
+    void
+    Transform::rotate(double angle, glm::vec3 axis)
+    { }
+
+    void
+    Transform::rotate(double angle, double xaxis, double yaxis, double zaxis)
+    { }
+
+    void
+    Transform::scale(glm::vec3 factor)
+    { }
+
+    void
+    Transform::rotate(double xaxis, double yaxis, double zaxis)
     { }
 
   } // namespace Component

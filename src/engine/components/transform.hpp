@@ -13,13 +13,21 @@ namespace Engine
         typedef std::shared_ptr<Transform>  TransformPtr;
 
       public:
-        Transform();
-        Transform(glm::vec3 position, glm::vec3 rotation, glm::vec3 scale);
+        Transform(glm::vec3 position);
+        Transform(glm::vec3 scale, glm::vec3 rotation);
+
+        void translate(glm::vec3 position);
+        void translate(double x, double y, double z);
+
+        void rotate(double angle, glm::vec3 axis);
+        void rotate(double angle, double xaxis, double yaxis, double zaxis);
+
+        void scale(glm::vec3 scale_vector);
+        void scale(double scale_x, double scale_y, double scale_z);
 
       private:
-        glm::vec3 position_;
-        glm::vec3 rotation_;
-        glm::vec3 scale_;
+        glm::mat4 world_matrix_;
+
     };
   } // namespace Component
 } // namespace Engine
