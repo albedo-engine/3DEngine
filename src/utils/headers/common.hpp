@@ -3,4 +3,6 @@
 #include <vector>
 #include <algorithm>
 
-#include "../glm/glm/vec3.hpp"
+#include "../glm/glm/glm.hpp"
+#include "../glm/glm/gtc/matrix_transform.hpp"
+#include "../glm/glm/gtc/type_ptr.hpp"
