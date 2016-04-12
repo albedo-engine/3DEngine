@@ -13,8 +13,10 @@ namespace Engine
         typedef std::shared_ptr<Transform>  TransformPtr;
 
       public:
+        Transform();
         Transform(glm::vec3 position);
         Transform(glm::vec3 scale, glm::vec3 rotation, float angle);
+        Transform(glm::vec3 scale, glm::vec3 position, glm::vec3 rotation, float angle);
 
         void translate(glm::vec3 position);
         void translate(double x, double y, double z);

@@ -4,6 +4,9 @@ namespace Engine
 {
   namespace Components
   {
+    Transform::Transform()
+    { }
+
     Transform::Transform(glm::vec3 position)
     {
       world_matrix_ = glm::translate(world_matrix_, position);
@@ -13,6 +16,13 @@ namespace Engine
     {
       world_matrix_ = glm::scale(world_matrix_, scale);
       world_matrix_ = glm::rotate(world_matrix_, glm::radians(angle), rot_axis);
+    }
+
+    Transform::Transform(glm::vec3 scale, glm::vec3 position, glm::vec3 rot_axis, float angle)
+    {
+      world_matrix_ = glm::scale(world_matrix_, scale);
+      world_matrix_ = glm::rotate(world_matrix_, glm::radians(angle), rot_axis);
+      world_matrix_ = glm::translate(world_matrix_, position);
     }
 
     void
