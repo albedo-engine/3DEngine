@@ -31,6 +31,7 @@ namespace Engine
         bool add_component(Component::ComponentPtr c);
         bool remove_component(Component::ComponentPtr c);
         bool has_component(Component::ComponentPtr c);
+
       private:
         const std::string   name_;
         NodePtr             parent_;

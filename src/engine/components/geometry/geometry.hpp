@@ -8,34 +8,32 @@ namespace Engine
 {
   namespace Components
   {
-    namespace Geometry
+    struct Vertex
     {
-      struct Vertex
-      {
-        glm::vec3 position;
-        glm::vec3 normal;
-        glm::vec2 text_coords;
-      };
+      glm::vec3 position;
+      glm::vec3 normal;
+    };
 
-      class Geometry : public Component
-      {
-        public:
-          typedef std::shared_ptr<Geometry> GeometryPtr;
+    class Geometry : public Component
+    {
+      public:
+        typedef std::shared_ptr<Geometry> GeometryPtr;
 
-        public:
-          Geometry();
+      public:
+        Geometry() = delete;
+        Geometry(std::vector<Vertex> vertices);
 
-          const std::vector<Vertex>& get_vertices();
+        const std::vector<Vertex>& get_vertices() const;
 
-        private:
-          std::vector<Vertex> vertices_;
-          std::vector<GLuint> indices_;
+      private:
+        void init();
 
-          GLuint vao_;
-          GLuint vbo_;
-      };
+      private:
+        std::vector<Vertex> vertices_;
+        std::vector<GLuint> indices_;
 
-    } // namespace Geometry
-
+        GLuint vao_;
+        GLuint vbo_;
+    };
   }
 } // namespace Engine
