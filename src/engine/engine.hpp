@@ -1,5 +1,6 @@
 #pragma once
 
 #include <iostream>
-#include <GL/gl.h>
+
+#include "../utils/headers/common.hpp"
 #include "scene/node.hpp"
