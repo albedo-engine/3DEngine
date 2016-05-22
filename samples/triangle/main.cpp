@@ -1,10 +1,13 @@
 #include "engine.hpp"
-#include "components/transform.hpp"
-
 #include <GLFW/glfw3.h>
+
+#include "components/transform.hpp"
+#include "components/geometry/geometry.hpp"
+#include "components/geometry/triangle.hpp"
 
 using namespace Engine;
 using namespace Engine::Scene;
+using namespace Engine::Components;
 
 static void error_callback(int error, const char* description)
 {
@@ -34,10 +37,11 @@ int main()
     throw 1;
   }
 
-  Node::NodePtr root = Node::create("root");
-  Node::NodePtr camera = Node::create("camera");
-  Node::NodePtr cube = Node::create("cube");
-  //cube->add_component(std::shared_ptr<Transform>());
+  auto root = Node::create("root");
+  auto camera = Node::create("camera");
+  auto triangle = Node::create("triangle");
+  auto triangle_geometry = Triangle::create();
+  //triangle->add_component(triangle_geometry);
 
   while (!glfwWindowShouldClose(window))
   {

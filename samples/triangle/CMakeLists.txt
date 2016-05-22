@@ -1,0 +1,8 @@
+add_executable(Triangle
+  main.cpp
+)
+
+target_link_libraries(Triangle LINK_PUBLIC
+  Engine
+  GLEW glfw3 GL X11 Xi Xrandr Xxf86vm Xinerama Xcursor rt m pthread dl
+)
