@@ -4,5 +4,7 @@ namespace Engine
 {
   namespace Components
   {
+    Component::~Component()
+    { }
   }
 }

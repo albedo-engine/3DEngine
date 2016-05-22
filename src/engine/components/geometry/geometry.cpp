@@ -6,7 +6,9 @@ namespace Engine
   {
     Geometry::Geometry(std::vector<Vertex> vertices)
               : vertices_(vertices)
-    { }
+    {
+      init();
+    }
 
     const std::vector<Vertex> &
     Geometry::get_vertices() const

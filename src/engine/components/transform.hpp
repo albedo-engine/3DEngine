@@ -13,10 +13,40 @@ namespace Engine
         typedef std::shared_ptr<Transform>  TransformPtr;
 
       public:
+        TransformPtr
+        static inline
+        create()
+        {
+          return std::make_shared<Transform>();
+        }
+
+        TransformPtr
+        static inline
+        create(glm::vec3 position)
+        {
+          return std::make_shared<Transform>(position);
+        }
+
+        TransformPtr
+        static inline
+        create(glm::vec3 scale, glm::vec3 rotation, float angle)
+        {
+          return std::make_shared<Transform>(scale, rotation, angle);
+        }
+
+        TransformPtr
+        static inline
+        create(glm::vec3 scale, glm::vec3 position, glm::vec3 rotation, float angle)
+        {
+          return std::make_shared<Transform>(scale, position, rotation, angle);
+        }
+
+      public:
         Transform();
         Transform(glm::vec3 position);
         Transform(glm::vec3 scale, glm::vec3 rotation, float angle);
         Transform(glm::vec3 scale, glm::vec3 position, glm::vec3 rotation, float angle);
+
 
         void translate(glm::vec3 position);
         void translate(double x, double y, double z);

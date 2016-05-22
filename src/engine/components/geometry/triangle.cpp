@@ -5,13 +5,18 @@ namespace Engine
   namespace Components
   {
     Triangle::Triangle()
+            : Geometry(init())
+    { }
+
+    Triangle::VertexList
+    Triangle::init()
     {
       std::vector<Vertex> vertices;
       GLfloat v_positions[] =
       {
           -0.5f, -0.5f, 0.0f,
-           0.5f, -0.5f, 0.0f,
-           0.0f,  0.5f, 0.0f
+          0.5f, -0.5f, 0.0f,
+          0.0f,  0.5f, 0.0f
       };
       GLfloat normals[] =
       {
@@ -31,8 +36,7 @@ namespace Engine
         i += 3;
       }
 
-      // Initializes the parent geometry with the vector containing the vertices
-      Geometry(vertices);
+      return vertices;
     }
   }
 }
