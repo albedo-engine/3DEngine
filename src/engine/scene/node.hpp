@@ -1,6 +1,5 @@
 #pragma once
 
-#include "../../utils/headers/common.hpp"
 #include "../components/component.hpp"
 
 using namespace Engine::Components;
@@ -15,6 +14,21 @@ namespace Engine
         typedef std::shared_ptr<Node>                 NodePtr;
         typedef std::vector<NodePtr>                  NodeList;
         typedef std::vector<Component::ComponentPtr>  ComponentList;
+
+      public:
+        NodePtr
+        static inline
+        create()
+        {
+          return std::make_shared<Node>();
+        }
+
+        NodePtr
+        static inline
+        create(const std::string& name)
+        {
+          return std::make_shared<Node>(name);
+        }
 
       public:
         Node();
