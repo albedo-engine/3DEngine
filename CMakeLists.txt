@@ -12,3 +12,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/samples)
 # Add the engine and samples directories
 add_subdirectory(src)
 add_subdirectory(samples)
+
+# Add the test suite subdirectory
+enable_testing()
+add_subdirectory(tests)
