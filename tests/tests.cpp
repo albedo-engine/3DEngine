@@ -1,22 +1,26 @@
-#include "engine.hpp"
+#include "utils/test_utils.hpp"
 
-#include "components/transform.hpp"
-#include "components/geometry/geometry.hpp"
+#include "engine.hpp"
 
 using namespace Engine;
 using namespace Engine::Scene;
 using namespace Engine::Components;
 
-int main()
+void test_components()
 {
-    // Create a camera
     Node::NodePtr parent = Node::create("parent");
     Node::NodePtr child = Node::create();
 
     parent->add_child(child);
 
-    assert(parent->get_child_at(0) == child);
+    ASSERT(parent->get_child_at(0) == child, "get_child_at");
+}
 
+int main()
+{
+    // Create a camera
+
+    LAUNCH(test_components);
 
     return 0;
 }
