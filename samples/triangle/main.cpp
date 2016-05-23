@@ -23,7 +23,7 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 int main()
 {
   glfwSetErrorCallback(error_callback);
-
+  glewExperimental = GL_TRUE;
   if (!glfwInit())
     throw 1;
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -45,18 +45,24 @@ int main()
   glfwGetFramebufferSize(window, &width, &height);
   glViewport(0, 0, width, height);
 
+  // Initializes the engine
+  Engine::Engine::initialize();
+
   // Create a camera
   Node::NodePtr camera = Node::create("camera");
 
-  // Create the triangle
+  // Create the triangle mesh
+  Triangle::TrianglePtr triangle_mesh = Triangle::create();
+
+  // Create the triangle node
   Node::NodePtr triangle = Node::create("triangle");
-  //triangle->add_component(Transform::create(glm::vec3(0.f, 0.f, 0.f)));
-  //triangle->add_component(Triangle::create());
+  triangle->add_component(Transform::create(glm::vec3(0.f, 0.f, 0.f)));
+  triangle->add_component(Triangle::create());
 
   // Link components in a single scene by adding them to a root node
   Node::NodePtr root = Node::create("root");
-  //root->add_child(camera);
-  //root->add_child(triangle);
+  root->add_child(camera);
+  root->add_child(triangle);
 
   while (!glfwWindowShouldClose(window))
   {
