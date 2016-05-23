@@ -59,10 +59,15 @@ namespace Engine
         void scale_rot_translate(glm::vec3 scale, glm::vec3 position,
                                  glm::vec3 rotation, float angle);
 
-        void update(glm::mat4 matrix);
+        void update_world_matrix(const glm::mat4& parent_matrix);
+        void look_at(const glm::vec3& target, const glm::vec3& up);
+        void look_at(const TransformPtr& transform);
 
+        const glm::mat4& get_world_matrix();
+        const glm::mat4& get_local_matrix();
       private:
         glm::mat4 world_matrix_;
+        glm::mat4 local_matrix_;
 
     };
   } // namespace Component

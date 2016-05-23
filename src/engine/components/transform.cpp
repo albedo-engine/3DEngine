@@ -14,8 +14,8 @@ namespace Engine
 
     Transform::Transform(glm::vec3 scale, glm::vec3 rot_axis, float angle)
     {
-      world_matrix_ = glm::rotate(world_matrix_, glm::radians(angle), rot_axis)
-                      * glm::scale(world_matrix_, scale);
+      local_matrix_ = glm::rotate(local_matrix_, glm::radians(angle), rot_axis)
+                      * glm::scale(local_matrix_, scale);
     }
 
     Transform::Transform(glm::vec3 scale, glm::vec3 position, glm::vec3 rot_axis, float angle)
@@ -26,7 +26,7 @@ namespace Engine
     void
     Transform::translate(glm::vec3 position)
     {
-      world_matrix_ = glm::translate(world_matrix_, position);
+      local_matrix_ = glm::translate(local_matrix_, position);
     }
 
     void
@@ -38,7 +38,7 @@ namespace Engine
     void
     Transform::rotate(float angle, glm::vec3 rot_axis)
     {
-      world_matrix_ = glm::rotate(world_matrix_, glm::radians(angle), rot_axis);
+      local_matrix_ = glm::rotate(local_matrix_, glm::radians(angle), rot_axis);
     }
 
     void
@@ -50,7 +50,7 @@ namespace Engine
     void
     Transform::scale(glm::vec3 factor)
     {
-      world_matrix_ = glm::scale(world_matrix_, factor);
+      local_matrix_ = glm::scale(local_matrix_, factor);
     }
 
     void
@@ -63,9 +63,41 @@ namespace Engine
     Transform::scale_rot_translate(glm::vec3 scale, glm::vec3 position,
                                    glm::vec3 rot_axis, float angle)
     {
-      world_matrix_ = glm::translate(world_matrix_, position)
-                      * glm::rotate(world_matrix_, glm::radians(angle), rot_axis)
-                      * glm::scale(world_matrix_, scale);
+      local_matrix_ = glm::translate(local_matrix_, position)
+                      * glm::rotate(local_matrix_, glm::radians(angle), rot_axis)
+                      * glm::scale(local_matrix_, scale);
+    }
+
+    void
+    Transform::update_world_matrix(const glm::mat4& parent_matrix)
+    {
+      world_matrix_ = parent_matrix * local_matrix_;
+    }
+
+    void
+    Transform::look_at(const glm::vec3& target, const glm::vec3& up)
+    {
+      // FIXME: Need a position
+      // Should the transform store it?
+    }
+
+    void
+    Transform::look_at(const TransformPtr& transform)
+    {
+      // FIXME: Need a position
+      // Should the transform store it?
+    }
+
+    const glm::mat4&
+    Transform::get_world_matrix()
+    {
+      return world_matrix_;
+    }
+
+    const glm::mat4&
+    Transform::get_local_matrix()
+    {
+      return local_matrix_;
     }
 
   } // namespace Component
