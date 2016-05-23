@@ -19,21 +19,23 @@ namespace Engine
     void
     Geometry::init()
     {
-      // Generates the VAO and the VBO
-      glGenVertexArrays(1, &vao_);
-      glGenBuffers(1, &vbo_);
 
-      // Binds the VBO inside the VAO binding
-      glBindVertexArray(vao_);
-      glBindBuffer(GL_ARRAY_BUFFER, vbo_);
-      // Copies the vertices into the VBO
-      glBufferData(GL_ARRAY_BUFFER, vertices_.size() * sizeof(Vertex),
-                     &vertices_[0], GL_STATIC_DRAW);
-      // Sets up the different attributes at the different locations
-      glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
+      glGenVertexArrays(1, &this->vao_);
+      glGenBuffers(1, &this->vbo_);
+
+      glBindVertexArray(this->vao_);
+      glBindBuffer(GL_ARRAY_BUFFER, this->vbo_);
+
+      glBufferData(GL_ARRAY_BUFFER, this->vertices_.size() * sizeof(Vertex),
+                   &this->vertices_[0], GL_STATIC_DRAW);
+
+      // Sends the attributes to the graphic card
       glEnableVertexAttribArray(0);
-      glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, normal));
+      glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+                            (GLvoid*)0);
       glEnableVertexAttribArray(1);
+      glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+                            (GLvoid*)offsetof(Vertex, normal));
 
       glBindVertexArray(0);
     }
