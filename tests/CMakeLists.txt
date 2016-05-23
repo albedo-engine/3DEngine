@@ -1,19 +1,18 @@
-enable_testing()
-
 file(GLOB TEST_SRCS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.cpp)
 
-#Run through each source
-foreach(testSrc ${TEST_SRCS})
-    get_filename_component(testName ${testSrc} NAME_WE)
+foreach(src ${TEST_SRCS})
+    get_filename_component(testName test_${src} NAME_WE)
 
-    add_executable(${testName} ${testSrc})
+    add_executable(${testName} ${src})
 
-    target_link_libraries(${testName} Engine GLEW)
+    target_link_libraries(${testName} engine GLEW)
 
     set_target_properties(${testName} PROPERTIES
             RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/tests)
 
-    add_test(NAME ${testName}
-            WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/bin/tests
-            COMMAND ${CMAKE_BINARY_DIR}/bin/tests/${testName} )
-endforeach(testSrc)
+    set(TEST_LIST ${TEST_LIST} ${testName})
+endforeach(src)
+
+add_custom_target(check
+        COMMAND ${CMAKE_CTEST_COMMAND}
+        DEPENDS ${TEST_LIST})

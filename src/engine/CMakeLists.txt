@@ -6,8 +6,8 @@ add_subdirectory(scene)
 add_subdirectory(components)
 add_subdirectory(components/geometry)
 
-add_library(Engine SHARED
+add_library(engine SHARED
 	${EngineSource}
 )
 
-target_include_directories(Engine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(engine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

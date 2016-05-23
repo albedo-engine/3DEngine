@@ -14,5 +14,4 @@ add_subdirectory(src)
 add_subdirectory(samples)
 
 # Add the test suite subdirectory
-enable_testing()
 add_subdirectory(tests)
