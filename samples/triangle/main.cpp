@@ -27,7 +27,7 @@ int main()
   if (!glfwInit())
     throw 1;
 
-  GLFWwindow* window = glfwCreateWindow(640, 480, "Cube Sample", NULL, NULL);
+  GLFWwindow* window = glfwCreateWindow(640, 480, "Triangle Sample", NULL, NULL);
 
   glfwSetKeyCallback(window, key_callback);
 
@@ -37,11 +37,18 @@ int main()
     throw 1;
   }
 
-  auto root = Node::create("root");
-  auto camera = Node::create("camera");
-  auto triangle = Node::create("triangle");
-  auto triangle_geometry = Triangle::create();
-  //triangle->add_component(triangle_geometry);
+  // Create a camera
+  Node::NodePtr camera = Node::create("camera");
+
+  // Create the triangle
+  Node::NodePtr triangle = Node::create("triangle");
+  triangle->add_component(Transform::create(glm::vec3(0.f, 0.f, 0.f)));
+  triangle->add_component(Triangle::create());
+
+  // Link components in a single scene by adding them to a root node
+  Node::NodePtr root = Node::create("root");
+  root->add_child(camera);
+  root->add_child(triangle);
 
   while (!glfwWindowShouldClose(window))
   {
