@@ -26,35 +26,46 @@ int main()
 
   if (!glfwInit())
     throw 1;
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+  glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
-  GLFWwindow* window = glfwCreateWindow(640, 480, "Triangle Sample", NULL, NULL);
-
-  glfwSetKeyCallback(window, key_callback);
+  int width = 640;
+  int height = 480;
+  GLFWwindow* window = glfwCreateWindow(width, height, "Triangle Sample", NULL, NULL);
 
   if (!window)
   {
     glfwTerminate();
     throw 1;
   }
+  glfwMakeContextCurrent(window);
+  glfwSetKeyCallback(window, key_callback);
+
+  // Define the viewport dimensions
+  glfwGetFramebufferSize(window, &width, &height);
+  glViewport(0, 0, width, height);
 
   // Create a camera
   Node::NodePtr camera = Node::create("camera");
 
   // Create the triangle
   Node::NodePtr triangle = Node::create("triangle");
-  triangle->add_component(Transform::create(glm::vec3(0.f, 0.f, 0.f)));
-  triangle->add_component(Triangle::create());
+  //triangle->add_component(Transform::create(glm::vec3(0.f, 0.f, 0.f)));
+  //triangle->add_component(Triangle::create());
 
   // Link components in a single scene by adding them to a root node
   Node::NodePtr root = Node::create("root");
-  root->add_child(camera);
-  root->add_child(triangle);
+  //root->add_child(camera);
+  //root->add_child(triangle);
 
   while (!glfwWindowShouldClose(window))
   {
     glfwPollEvents();
     // Refreshes screen
+    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
     // Draws
+    glfwSwapBuffers(window);
   }
 
   glfwDestroyWindow(window);

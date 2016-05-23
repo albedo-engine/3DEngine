@@ -47,7 +47,6 @@ namespace Engine
         Transform(glm::vec3 scale, glm::vec3 rotation, float angle);
         Transform(glm::vec3 scale, glm::vec3 position, glm::vec3 rotation, float angle);
 
-
         void translate(glm::vec3 position);
         void translate(double x, double y, double z);
 
@@ -59,6 +58,8 @@ namespace Engine
 
         void scale_rot_translate(glm::vec3 scale, glm::vec3 position,
                                  glm::vec3 rotation, float angle);
+
+        void update(glm::mat4 matrix);
 
       private:
         glm::mat4 world_matrix_;

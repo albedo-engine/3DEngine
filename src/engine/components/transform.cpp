@@ -56,7 +56,7 @@ namespace Engine
     void
     Transform::scale(double xaxis, double yaxis, double zaxis)
     {
-      this->translate(glm::vec3(xaxis, yaxis, zaxis));
+      this->scale(glm::vec3(xaxis, yaxis, zaxis));
     }
 
     void
