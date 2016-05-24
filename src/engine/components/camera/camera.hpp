@@ -1,5 +1,8 @@
 #pragma once
 
+#include "../../../utils/headers/common.hpp"
+#include "components/component.hpp"
+
 namespace Engine
 {
   namespace Components
@@ -10,7 +13,8 @@ namespace Engine
         typedef std::shared_ptr<Camera> CameraPtr;
 
       public:
-        virtual ~Camera() = 0;
+        Camera();
+        virtual ~Camera();
 
         virtual void update() = 0;
 

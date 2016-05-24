@@ -11,8 +11,11 @@ namespace Engine
             , near_{1.0f}
     { }
 
+    Camera::~Camera()
+    { }
+
     const glm::mat4&
-    get_projection_matrix() const
+    Camera::get_projection_matrix() const
     {
       return projection_matrix_;
     }

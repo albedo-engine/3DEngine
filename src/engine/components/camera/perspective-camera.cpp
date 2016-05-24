@@ -14,7 +14,10 @@ namespace Engine
                       , fov_{fov}
     { }
 
-    override void
+    PerspectiveCamera::~PerspectiveCamera()
+    { }
+
+    void
     PerspectiveCamera::update()
     {
       projection_matrix_ = glm::perspective
@@ -32,7 +35,7 @@ namespace Engine
     }
 
     void
-    PerspectiveCamera::set_fov(const float& fov) const
+    PerspectiveCamera::set_fov(const float& fov)
     {
       fov_ = fov;
     }
