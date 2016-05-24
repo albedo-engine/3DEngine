@@ -10,5 +10,12 @@ namespace Engine
             , far_{100.0f}
             , near_{1.0f}
     { }
-  }
-}
+
+    const glm::mat4&
+    get_projection_matrix() const
+    {
+      return projection_matrix_;
+    }
+
+  } // Namespace Components
+} // Namespace Engine

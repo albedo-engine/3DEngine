@@ -14,6 +14,8 @@ namespace Engine
 
         virtual void update() = 0;
 
+        const glm::mat4& get_projection_matrix() const;
+
       protected:
         float     viewport_width_;
         float     viewport_height_;
