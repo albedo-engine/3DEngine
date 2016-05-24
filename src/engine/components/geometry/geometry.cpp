@@ -16,18 +16,30 @@ namespace Engine
       return vertices_;
     }
 
+    const GLuint&
+    Geometry::get_vao() const
+    {
+      return vao_;
+    }
+
+    const GLuint&
+    Geometry::get_vbo() const
+    {
+      return vbo_;
+    }
+
     void
     Geometry::init()
     {
 
-      glGenVertexArrays(1, &this->vao_);
-      glGenBuffers(1, &this->vbo_);
+      glGenVertexArrays(1, &vao_);
+      glGenBuffers(1, &vbo_);
 
-      glBindVertexArray(this->vao_);
-      glBindBuffer(GL_ARRAY_BUFFER, this->vbo_);
+      glBindVertexArray(vao_);
+      glBindBuffer(GL_ARRAY_BUFFER, vbo_);
 
-      glBufferData(GL_ARRAY_BUFFER, this->vertices_.size() * sizeof(Vertex),
-                   &this->vertices_[0], GL_STATIC_DRAW);
+      glBufferData(GL_ARRAY_BUFFER, vertices_.size() * sizeof(Vertex),
+                   &vertices_[0], GL_STATIC_DRAW);
 
       // Sends the attributes to the graphic card
       glEnableVertexAttribArray(0);

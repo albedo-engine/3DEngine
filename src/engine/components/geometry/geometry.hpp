@@ -24,6 +24,8 @@ namespace Engine
         Geometry(std::vector<Vertex> vertices);
 
         const std::vector<Vertex>& get_vertices() const;
+        const GLuint& get_vao() const;
+        const GLuint& get_vbo() const;
 
       private:
         void init();
@@ -32,8 +34,8 @@ namespace Engine
         std::vector<Vertex> vertices_;
         std::vector<GLuint> indices_;
 
-        GLuint vao_;
-        GLuint vbo_;
+        GLuint              vao_;
+        GLuint              vbo_;
     };
   }
 } // namespace Engine
