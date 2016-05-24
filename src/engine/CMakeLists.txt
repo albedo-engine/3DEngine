@@ -4,7 +4,6 @@ set(EngineSource engine.cpp)
 
 add_subdirectory(scene)
 add_subdirectory(components)
-add_subdirectory(components/geometry)
 
 add_library(engine SHARED
 	${EngineSource}

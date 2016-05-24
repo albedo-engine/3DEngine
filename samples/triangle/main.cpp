@@ -1,7 +1,7 @@
 #include "engine.hpp"
 #include <GLFW/glfw3.h>
 
-#include "components/transform.hpp"
+#include "components/transform/transform.hpp"
 #include "components/geometry/geometry.hpp"
 #include "components/geometry/triangle.hpp"
 
