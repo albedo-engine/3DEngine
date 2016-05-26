@@ -25,6 +25,7 @@ namespace Engine
         float     viewport_height_;
         float     far_;
         float     near_;
+        glm::mat4 view_matrix_;
         glm::mat4 projection_matrix_;
 
     };
