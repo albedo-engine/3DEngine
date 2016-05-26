@@ -9,6 +9,11 @@ namespace Engine
   {
     class Transform : public Component
     {
+      enum Reference {
+        LOCAL,
+        WORLD
+      };
+
       public:
         typedef std::shared_ptr<Transform>  TransformPtr;
 
@@ -20,29 +25,8 @@ namespace Engine
           return std::make_shared<Transform>();
         }
 
-        TransformPtr
-        static inline
-        create(glm::vec3 position)
-        {
-          return std::make_shared<Transform>(position);
-        }
-
-        TransformPtr
-        static inline
-        create(glm::vec3 scale, glm::vec3 rotation, float angle)
-        {
-          return std::make_shared<Transform>(scale, rotation, angle);
-        }
-
-        TransformPtr
-        static inline
-        create(glm::vec3 scale, glm::vec3 position, glm::vec3 rotation, float angle)
-        {
-          return std::make_shared<Transform>(scale, position, rotation, angle);
-        }
-
       public:
-        Transform();
+        /*Transform();
         Transform(glm::vec3 position);
         Transform(glm::vec3 scale, glm::vec3 rotation, float angle);
         Transform(glm::vec3 scale, glm::vec3 position, glm::vec3 rotation, float angle);
@@ -61,13 +45,27 @@ namespace Engine
 
         void update_world_matrix(const glm::mat4& parent_matrix);
         void look_at(const glm::vec3& target, const glm::vec3& up);
-        void look_at(const TransformPtr& transform);
+        void look_at(const TransformPtr& transform); */
 
-        const glm::mat4& get_world_matrix();
-        const glm::mat4& get_local_matrix();
-      private:
-        glm::mat4 world_matrix_;
-        glm::mat4 local_matrix_;
+        Transform();
+
+        void rotate(float angle_degrees, glm::vec3 axis);
+        void rotate(const glm::quat& quaternion);
+
+        const glm::vec3 get_direction() const;
+        const glm::vec3 get_up() const;
+        const glm::vec3 get_right() const;
+
+        const glm::mat4& get_world_matrix() const;
+        const glm::mat4& get_local_matrix() const;
+
+    private:
+      glm::vec3 local_pos_;
+      glm::vec3 world_pos_;
+      glm::vec3 local_scale_;
+      glm::quat quaternion_;
+      glm::mat4 world_matrix_;
+      glm::mat4 local_matrix_;
 
     };
   } // namespace Component

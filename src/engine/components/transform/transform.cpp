@@ -4,7 +4,7 @@ namespace Engine
 {
   namespace Components
   {
-    Transform::Transform()
+    /*Transform::Transform()
     { }
 
     Transform::Transform(glm::vec3 position)
@@ -86,16 +86,52 @@ namespace Engine
     {
       // FIXME: Need a position
       // Should the transform store it?
+    } */
+
+    Transform::Transform()
+              : local_pos_(0, 0, 0), world_pos_(0, 0, 0),
+                local_scale_(1, 1, 1), quaternion_(1, 0, 0, 0)
+    { }
+
+    void
+    Transform::rotate(float angle, glm::vec3 axis)
+    {
+      glm::quat rotation_quat = glm::angleAxis(glm::radians(angle), axis);
+      rotate(rotation_quat);
+    }
+
+    void
+    Transform::rotate(const glm::quat& quaternion)
+    {
+      quaternion_ = quaternion * quaternion_;
+    }
+
+    const glm::vec3
+    Transform::get_direction() const
+    {
+      return quaternion_ * glm::vec3(0, 0, -1);
+    }
+
+    const glm::vec3
+    Transform::get_up() const
+    {
+      return quaternion_ * glm::vec3(0, 1, 0);
+    }
+
+    const glm::vec3
+    Transform::get_right() const
+    {
+      return quaternion_ * glm::vec3(1, 0, 0);
     }
 
     const glm::mat4&
-    Transform::get_world_matrix()
+    Transform::get_world_matrix() const
     {
       return world_matrix_;
     }
 
     const glm::mat4&
-    Transform::get_local_matrix()
+    Transform::get_local_matrix() const
     {
       return local_matrix_;
     }
