@@ -1,5 +1,7 @@
 #pragma once
 
+#include <fstream>
+#include <sstream>
 #include "../../utils/headers/common.hpp"
 
 namespace Engine
@@ -8,13 +10,23 @@ namespace Engine
     {
         class Shader
         {
-          public:
+          private:
             Shader(const GLchar* vertexShader, const GLchar* fragmentShader);
 
+          public:
+
+            static Shader
+            createFromStrings(const GLchar* vertexShader, const GLchar* fragmentShader);
+
+            static Shader
+            createFromFiles(const GLchar* vertexShaderPath, const GLchar* fragmentShaderPath);
+
+
             bool compile();
-            const GLchar* getCompilationInfo();
+            const GLchar* get_compilation_info();
 
             void use_shader();
+
 
           private:
             bool has_compiled(GLuint shader);

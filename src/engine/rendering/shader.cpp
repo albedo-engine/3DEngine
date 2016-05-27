@@ -7,7 +7,43 @@ namespace Engine
         Shader::Shader(const GLchar* vertexShader, const GLchar* fragmentShader)
                 : vertexShader_(vertexShader)
                 , fragmentShader_(fragmentShader)
+        { }
+
+        Shader
+        Shader::createFromStrings(const GLchar* vertexShader, const GLchar* fragmentShader)
         {
+            return Shader(vertexShader, fragmentShader);
+        }
+
+        Shader
+        Shader::createFromFiles(const GLchar* vertexShaderPath, const GLchar* fragmentShaderPath)
+        {
+            std::string vertexShader;
+            std::string fragmentShader;
+
+            std::ifstream vertexShaderFStream(vertexShaderPath, std::ifstream::in);
+            if (vertexShaderFStream)
+            {
+                std::stringstream vertexShaderSStream;
+                vertexShaderSStream << vertexShaderFStream.rdbuf();
+                vertexShaderFStream.close();
+                vertexShader = vertexShaderSStream.str();
+            }
+            else
+                throw std::invalid_argument("Vertex shader file cannot be opened");
+
+            std::ifstream fragmentShaderFStream(fragmentShaderPath, std::ifstream::in);
+            if (fragmentShaderFStream)
+            {
+                std::stringstream fragmentShaderSStream;
+                fragmentShaderSStream << fragmentShaderFStream.rdbuf();
+                fragmentShaderFStream.close();
+                fragmentShader = fragmentShaderSStream.str();
+            }
+            else
+                throw std::invalid_argument("Fragment shader file cannot be opened");
+
+            return Shader(vertexShader.c_str(), fragmentShader.c_str());
         }
 
         bool
@@ -64,7 +100,7 @@ namespace Engine
         }
 
         const GLchar*
-        Shader::getCompilationInfo()
+        Shader::get_compilation_info()
         {
             return compileInfo_;
         }
