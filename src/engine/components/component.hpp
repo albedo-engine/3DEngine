@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../../utils/headers/common.hpp"
-#include "../scene/node.hpp"
+#include <utils/headers/common.hpp>
+#include <scene/node.hpp>
 
 namespace Engine
 {

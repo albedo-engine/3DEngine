@@ -2,7 +2,7 @@
 
 #include <fstream>
 #include <sstream>
-#include "../../utils/headers/common.hpp"
+#include <utils/headers/common.hpp>
 
 namespace Engine
 {

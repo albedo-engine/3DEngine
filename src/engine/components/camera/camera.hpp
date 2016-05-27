@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../../../utils/headers/common.hpp"
-#include "components/component.hpp"
+#include <utils/headers/common.hpp>
+#include <components/component.hpp>
 
 namespace Engine
 {

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../../../utils/headers/common.hpp"
-#include "components/component.hpp"
-#include "rendering/shader.hpp"
+#include <utils/headers/common.hpp>
+#include <components/component.hpp>
+#include <rendering/shader.hpp>
 
 namespace Engine
 {

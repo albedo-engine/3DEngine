@@ -2,9 +2,9 @@
 
 #include <iostream>
 
-#include "../utils/headers/common.hpp"
-#include "scene/node.hpp"
-#include "components/camera/perspective-camera.hpp"
+#include <utils/headers/common.hpp>
+#include <scene/node.hpp>
+#include <components/camera/perspective-camera.hpp>
 
 namespace Engine
 {

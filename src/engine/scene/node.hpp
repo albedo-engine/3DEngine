@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../components/component.hpp"
+#include <components/component.hpp>
 
 using namespace Engine::Components;
 
