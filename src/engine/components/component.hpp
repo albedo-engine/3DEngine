@@ -13,12 +13,14 @@ namespace Engine
         typedef std::shared_ptr<Component>    ComponentPtr;
 
       public:
-        Component(Scene::Node::NodePtr parent_node);
         virtual ~Component();
 
-    protected:
-      Scene::Node::NodePtr parent_;
+        void
+        set_parent(Scene::Node::NodePtr parent);
+
+      protected:
+        Scene::Node::NodePtr parent_;
 
     };
-  } // namespace Component
+  } // namespace Components
 } // namespace Engine

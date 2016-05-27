@@ -4,11 +4,13 @@ namespace Engine
 {
   namespace Components
   {
-    Component::Component(Scene::Node::NodePtr parent)
-              : parent_(parent)
-    { }
-
     Component::~Component()
     { }
+
+    void
+    Component::set_parent(Scene::Node::NodePtr parent)
+    {
+      parent_ = parent;
+    }
   }
 }

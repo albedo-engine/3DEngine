@@ -69,6 +69,7 @@ namespace Engine
       if (has_component(c))
         return false;
 
+      c->set_parent(this);
       components_.push_back(c);
       return true;
     }
@@ -80,6 +81,7 @@ namespace Engine
       if (i == components_.end())
         return false;
 
+      c->set_parent(nullptr);
       components_.erase(i);
       return true;
     }
