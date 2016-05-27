@@ -2,6 +2,7 @@
 
 #include "../../../utils/headers/common.hpp"
 #include "components/component.hpp"
+#include "rendering/shader.hpp"
 
 namespace Engine
 {
@@ -22,6 +23,11 @@ namespace Engine
 
       public:
         Renderer();
+
+        // void render();
+
+      private:
+        Rendering::Shader quadShader_;
 
     };
   } // namespace Component
