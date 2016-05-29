@@ -5,7 +5,7 @@ namespace Engine
   namespace Components
   {
     Transform::Transform(Transform::NodePtr parent)
-              : Component(parent)
+              : Component()
               , local_pos_(0, 0, 0)
               , local_scale_(1, 1, 1)
               , quaternion_(1, 0, 0, 0)

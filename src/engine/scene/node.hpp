@@ -2,12 +2,12 @@
 
 #include <components/component.hpp>
 
-using namespace Engine::Components;
-
 namespace Engine
 {
   namespace Scene
   {
+    using namespace Engine::Components;
+
     class Node : public std::enable_shared_from_this<Node>
     {
       public:

@@ -1,10 +1,13 @@
 #pragma once
 
 #include <utils/headers/common.hpp>
-#include <scene/node.hpp>
 
 namespace Engine
 {
+  namespace Scene
+  {
+    class Node;
+  }
   namespace Components
   {
     class Component
@@ -16,11 +19,13 @@ namespace Engine
         virtual ~Component();
 
         void
-        set_parent(Scene::Node::NodePtr parent);
+        set_parent(std::shared_ptr<Scene::Node> parent);
 
       protected:
-        Scene::Node::NodePtr parent_;
+        std::shared_ptr<Scene::Node> parent_;
 
     };
   } // namespace Components
 } // namespace Engine
+
+#include <scene/node.hpp>

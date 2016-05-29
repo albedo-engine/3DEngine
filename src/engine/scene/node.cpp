@@ -69,7 +69,7 @@ namespace Engine
       if (has_component(c))
         return false;
 
-      c->set_parent(this);
+      c->set_parent(shared_from_this());
       components_.push_back(c);
       return true;
     }
