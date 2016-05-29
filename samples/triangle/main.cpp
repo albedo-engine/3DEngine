@@ -1,10 +1,10 @@
 #include <engine.hpp>
 #include <GLFW/glfw3.h>
 
-#include "components/transform/transform.hpp"
-#include "components/geometry/geometry.hpp"
-#include "components/geometry/triangle.hpp"
-//#include "components/renderer/renderer.hpp"
+#include <components/transform/transform.hpp>
+#include <components/geometry/geometry.hpp>
+#include <components/geometry/triangle.hpp>
+#include <components/renderer/renderer.hpp>
 
 using namespace Engine;
 using namespace Engine::Scene;
@@ -28,6 +28,7 @@ int main()
   if (!glfwInit())
     throw 1;
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
   int width = 640;
@@ -59,7 +60,7 @@ int main()
   Node::NodePtr triangle = Node::create("triangle");
   triangle->add_component(Transform::create());
   triangle->add_component(Triangle::create());
-  //triangle->add_component(Renderer::create());
+  triangle->add_component(Renderer::create());
 
   // Link components in a single scene by adding them to a root node
   Node::NodePtr root = Node::create("root");

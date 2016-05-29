@@ -27,6 +27,10 @@ namespace Engine
         // void render();
 
       private:
+        const GLchar* get_quad_vertex_shader();
+        const GLchar* get_quad_fragment_shader();
+
+      private:
         Rendering::Shader quadShader_;
 
     };
