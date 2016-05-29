@@ -45,8 +45,9 @@ namespace Engine
 
         void scale(const glm::vec3& scale_vector);
 
+        void look_at(const glm::vec3& source_point, const glm::vec3& target_point);
         void look_at(const glm::vec3& target);
-        void look_at(const Transform& transform_target);
+        void look_at(const TransformPtr& transform_target);
 
       public:
         glm::vec3 get_local_position() const;
@@ -63,6 +64,7 @@ namespace Engine
         glm::vec3 local_scale_;
         glm::quat quaternion_;
 
+        glm::vec3 world_pos_;
         glm::mat4 world_matrix_;
 
     };

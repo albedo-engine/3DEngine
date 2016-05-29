@@ -48,7 +48,20 @@ namespace Engine
           break;
       }
 
-      // FIXME: Compute world position
+      // Updates world position according to parent world position
+      if (parent_ == nullptr)
+      {
+        world_pos_ = local_pos_;
+        return;
+      }
+
+      auto parent_transform = parent_->component<Transform>();
+      if (parent_transform == nullptr)
+      {
+        world_pos_ = local_pos_;
+        return;
+      }
+      world_pos_ = parent_transform->get_world_position() + local_pos_;
     }
 
     void
@@ -70,6 +83,58 @@ namespace Engine
       local_scale_ = scale;
     }
 
+    void
+    Transform::look_at(const glm::vec3& source_point, const glm::vec3& dest_point)
+    {
+      const auto world_forward = glm::vec3(0, 0, -1);
+      const auto source_target_dir = glm::normalize(dest_point - source_point);
+      const auto transform_dir = get_direction();
+      const auto up = get_up();
+      float dot = glm::dot(world_forward, source_target_dir);
+
+      // Check for global axis alignment
+      if (glm::abs(dot + 1.0f) < 0.000001f)
+      {
+        quaternion_ = glm::quat(up.x, up.y, up.z, glm::pi<float>());
+        return;
+      }
+      if (glm::abs(dot - 1.0f < 0.000001f))
+      {
+        quaternion_ = glm::quat(0, 0, 0, 1);
+        return;
+      }
+
+      // Update the quaternion to match the new direction
+      float rot_angle = glm::acos(dot);
+      glm::vec3 rot_axis = glm::normalize(glm::cross(world_forward, source_target_dir));
+
+      float half_angle = rot_angle * 0.5f;
+      float s = glm::sin(half_angle);
+
+      quaternion_.x = rot_axis.x * s;
+      quaternion_.y = rot_axis.y * s;
+      quaternion_.z = rot_axis.z * s;
+      quaternion_.w = glm::cos(half_angle);
+    }
+
+    void
+    Transform::look_at(const Transform::TransformPtr& transform_target)
+    {
+
+    }
+
+    glm::vec3
+    Transform::get_local_position() const
+    {
+      return local_pos_;
+    }
+
+    glm::vec3
+    Transform::get_world_position() const
+    {
+      return world_pos_;
+    }
+
     glm::vec3
     Transform::get_direction() const
     {
@@ -88,24 +153,10 @@ namespace Engine
       return quaternion_ * glm::vec3(1, 0, 0);
     }
 
-    glm::vec3
-    Transform::get_local_position() const
-    {
-      return local_pos_;
-    }
-
-    glm::vec3
-    Transform::get_world_position() const
-    {
-      if (parent_ == nullptr)
-        return local_pos_;
-
-      return glm::vec3(0.0f);
-    }
-
     const glm::mat4&
     Transform::get_world_matrix() const
     {
+      // FIXME: compute the world matrix with parent
       return world_matrix_;
     }
 
