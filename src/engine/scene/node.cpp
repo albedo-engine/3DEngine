@@ -15,14 +15,19 @@ namespace Engine
     bool
     Node::add_child(Node::NodePtr n)
     {
+      if (n == nullptr)
+        throw new std::logic_error("The node child cannot be null");
+      else if (n == parent_)
+        throw new std::logic_error("A parent node cannot be added as a child node");
+
       if (n->get_parent())
         n->get_parent()->remove_child(n);
-
 
       // Puts the new child in the children container
       children_.push_back(n);
       // Updates the child's parent pointer to the current Node instance
       n->parent_ = shared_from_this();
+
       return true;
     }
 

@@ -8,9 +8,9 @@ namespace Engine
     { }
 
     void
-    Component::set_parent(Scene::Node::NodePtr parent)
+    Component::set_parent(Scene::Node::NodePtr target_node)
     {
-      parent_ = parent;
+      target_node_ = target_node;
     }
 
   }
