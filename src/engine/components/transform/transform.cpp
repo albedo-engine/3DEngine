@@ -11,16 +11,16 @@ namespace Engine
               , quaternion_(1, 0, 0, 0)
     { }
 
-    void
-    Transform::translate(const glm::vec3& position)
-    {
-      local_pos_ += position;
-    }
-
     bool
     Transform::unique()
     {
       return true;
+    }
+
+    void
+    Transform::translate(const glm::vec3& position)
+    {
+      local_pos_ += position;
     }
 
     void
@@ -47,21 +47,6 @@ namespace Engine
           local_pos_ += (-1.0f * get_up()) * amount;
           break;
       }
-
-      // Updates world position according to parent world position
-      if (parent_ == nullptr)
-      {
-        world_pos_ = local_pos_;
-        return;
-      }
-
-      auto parent_transform = parent_->component<Transform>();
-      if (parent_transform == nullptr)
-      {
-        world_pos_ = local_pos_;
-        return;
-      }
-      world_pos_ = parent_transform->get_world_position() + local_pos_;
     }
 
     void
@@ -120,13 +105,13 @@ namespace Engine
     void
     Transform::look_at(const glm::vec3& target)
     {
-      look_at(world_pos_, target);
+      look_at(get_world_position(), target);
     }
 
     void
     Transform::look_at(const Transform::TransformPtr& transform_target)
     {
-      look_at(world_pos_, transform_target->get_world_position());
+      look_at(get_world_position(), transform_target->get_world_position());
     }
 
     glm::vec3
@@ -136,9 +121,21 @@ namespace Engine
     }
 
     glm::vec3
-    Transform::get_world_position() const
+    Transform::get_world_position()
     {
-      return world_pos_;
+      // Updates world position according to parent world position
+      if (target_node_ == nullptr)
+        return local_pos_;
+
+      auto parent_node = target_node_->get_parent();
+      if (parent_node == nullptr)
+        return local_pos_;
+
+      auto parent_transform = parent_node->component<Transform>();
+      if (parent_transform == nullptr)
+        return local_pos_;
+
+      return parent_transform->get_world_position() + local_pos_;
     }
 
     glm::vec3

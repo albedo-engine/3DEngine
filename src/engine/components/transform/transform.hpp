@@ -51,7 +51,7 @@ namespace Engine
 
       public:
         glm::vec3 get_local_position() const;
-        glm::vec3 get_world_position() const;
+        glm::vec3 get_world_position();
 
         glm::vec3 get_direction() const;
         glm::vec3 get_up() const;
@@ -64,7 +64,6 @@ namespace Engine
         glm::vec3 local_scale_;
         glm::quat quaternion_;
 
-        glm::vec3 world_pos_;
         glm::mat4 world_matrix_;
 
     };
