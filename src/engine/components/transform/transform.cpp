@@ -118,9 +118,15 @@ namespace Engine
     }
 
     void
+    Transform::look_at(const glm::vec3& target)
+    {
+      look_at(world_pos_, target);
+    }
+
+    void
     Transform::look_at(const Transform::TransformPtr& transform_target)
     {
-
+      look_at(world_pos_, transform_target->get_world_position());
     }
 
     glm::vec3
