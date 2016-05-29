@@ -1,0 +1,26 @@
+sudo: required
+dist: trusty
+
+notifications:
+  email:
+    recipients:
+      - adrien.neveu@epita.fr
+      - david.peicho@epita.fr
+    on_success: never
+    on_failure: always
+    
+language: cpp
+matrix:
+  include:
+    - os: linux
+      compiler: gcc
+      addons:
+        apt:
+          sources:
+            - george-edison55-precise-backports
+          packages:
+            - cmake
+            - libglew-dev
+script:
+  - export CXX=$COMPILER; 
+  - mkdir build; cd build/; cmake ..; make engine
