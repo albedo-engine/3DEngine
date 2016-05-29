@@ -24,6 +24,10 @@ namespace Engine
       public:
         Renderer();
 
+      public:
+        bool unique() override;
+
+      public:
         // void render();
 
       private:

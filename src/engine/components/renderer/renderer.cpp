@@ -13,6 +13,12 @@ namespace Engine
                                  + std::string(quadShader_.get_compilation_info()));
     }
 
+    bool
+    Renderer::unique()
+    {
+      return false;
+    }
+
     const GLchar*
     Renderer::get_quad_vertex_shader()
     {

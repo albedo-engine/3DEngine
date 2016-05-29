@@ -14,6 +14,12 @@ namespace Engine
     Camera::~Camera()
     { }
 
+    bool
+    Camera::unique()
+    {
+      return false;
+    }
+
     const glm::mat4&
     Camera::get_projection_matrix() const
     {

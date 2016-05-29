@@ -33,6 +33,10 @@ namespace Engine
       public:
         Transform();
 
+      public:
+        bool unique() override;
+
+      public:
         void translate(const glm::vec3& translation_vector);
         void translate(float amount, Direction relative_direction);
 
@@ -44,12 +48,13 @@ namespace Engine
         void look_at(const glm::vec3& target);
         void look_at(const Transform& transform_target);
 
-        const glm::vec3& get_local_position() const;
-        const glm::vec3& get_world_position() const;
+      public:
+        glm::vec3 get_local_position() const;
+        glm::vec3 get_world_position() const;
 
-        const glm::vec3& get_direction() const;
-        const glm::vec3& get_up() const;
-        const glm::vec3& get_right() const;
+        glm::vec3 get_direction() const;
+        glm::vec3 get_up() const;
+        glm::vec3 get_right() const;
 
         const glm::mat4& get_world_matrix() const;
 
@@ -58,7 +63,6 @@ namespace Engine
         glm::vec3 local_scale_;
         glm::quat quaternion_;
 
-        glm::vec3 world_pos_;
         glm::mat4 world_matrix_;
 
     };

@@ -10,6 +10,12 @@ namespace Engine
       init();
     }
 
+    bool
+    Geometry::unique()
+    {
+      return true;
+    }
+
     const std::vector<Vertex> &
     Geometry::get_vertices() const
     {

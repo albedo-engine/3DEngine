@@ -22,6 +22,10 @@ namespace Engine
         Geometry() = delete;
         Geometry(std::vector<Vertex> vertices);
 
+      public:
+        bool unique() override;
+
+      public:
         const std::vector<Vertex>& get_vertices() const;
         const GLuint& get_vao() const;
         const GLuint& get_vbo() const;

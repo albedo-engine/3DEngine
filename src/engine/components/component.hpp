@@ -18,8 +18,11 @@ namespace Engine
       public:
         virtual ~Component();
 
-        void
-        set_parent(std::shared_ptr<Scene::Node> parent);
+      public:
+        virtual bool unique() = 0;
+
+      public:
+        void set_parent(std::shared_ptr<Scene::Node> parent);
 
       protected:
         std::shared_ptr<Scene::Node> parent_;

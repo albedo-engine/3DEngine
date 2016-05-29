@@ -14,10 +14,15 @@ namespace Engine
 
       public:
         Camera();
+
+      public:
         virtual ~Camera();
 
+      public:
+        bool unique() override;
         virtual void update() = 0;
 
+      public:
         const glm::mat4& get_projection_matrix() const;
 
       protected:

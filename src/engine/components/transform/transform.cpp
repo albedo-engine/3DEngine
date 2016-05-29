@@ -15,7 +15,12 @@ namespace Engine
     Transform::translate(const glm::vec3& position)
     {
       local_pos_ += position;
-      // FIXME: Compute world position
+    }
+
+    bool
+    Transform::unique()
+    {
+      return true;
     }
 
     void
@@ -65,34 +70,36 @@ namespace Engine
       local_scale_ = scale;
     }
 
-    const glm::vec3&
+    glm::vec3
     Transform::get_direction() const
     {
       return quaternion_ * glm::vec3(0, 0, -1);
     }
 
-    const glm::vec3&
+    glm::vec3
     Transform::get_up() const
     {
       return quaternion_ * glm::vec3(0, 1, 0);
     }
 
-    const glm::vec3&
+    glm::vec3
     Transform::get_right() const
     {
       return quaternion_ * glm::vec3(1, 0, 0);
     }
 
-    const glm::vec3&
+    glm::vec3
     Transform::get_local_position() const
     {
       return local_pos_;
     }
 
-    const glm::vec3&
+    glm::vec3
     Transform::get_world_position() const
     {
-      // return nullptr;
+      if (parent_ == nullptr)
+        return local_pos_;
+
       return glm::vec3(0.0f);
     }
 

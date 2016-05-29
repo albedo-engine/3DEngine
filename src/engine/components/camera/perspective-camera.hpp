@@ -33,8 +33,10 @@ namespace Engine
         PerspectiveCamera(float fov);
         ~PerspectiveCamera();
 
+      public:
         void update() override;
 
+      public:
         const float& get_fov() const;
         void set_fov(const float& fov);
 
