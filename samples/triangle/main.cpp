@@ -1,9 +1,10 @@
-#include "engine.hpp"
+#include <engine.hpp>
 #include <GLFW/glfw3.h>
 
 #include "components/transform/transform.hpp"
 #include "components/geometry/geometry.hpp"
 #include "components/geometry/triangle.hpp"
+//#include "components/renderer/renderer.hpp"
 
 using namespace Engine;
 using namespace Engine::Scene;
@@ -56,8 +57,9 @@ int main()
 
   // Create the triangle node
   Node::NodePtr triangle = Node::create("triangle");
-  triangle->add_component(Transform::create(glm::vec3(0.f, 0.f, 0.f)));
+  triangle->add_component(Transform::create());
   triangle->add_component(Triangle::create());
+  //triangle->add_component(Renderer::create());
 
   // Link components in a single scene by adding them to a root node
   Node::NodePtr root = Node::create("root");

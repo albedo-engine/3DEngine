@@ -4,7 +4,7 @@ namespace Engine
 {
   namespace Components
   {
-    Transform::Transform(Transform::NodePtr parent)
+    Transform::Transform()
               : Component()
               , local_pos_(0, 0, 0)
               , local_scale_(1, 1, 1)
@@ -92,7 +92,8 @@ namespace Engine
     const glm::vec3&
     Transform::get_world_position() const
     {
-      return nullptr;
+      // return nullptr;
+      return glm::vec3(0.0f);
     }
 
     const glm::mat4&

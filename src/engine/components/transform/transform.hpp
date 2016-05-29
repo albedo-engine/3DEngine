@@ -20,19 +20,18 @@ namespace Engine
       };
 
       public:
-        typedef std::shared_ptr<Scene::Node>  NodePtr;
         typedef std::shared_ptr<Transform>    TransformPtr;
 
       public:
         TransformPtr
         static inline
-        create(NodePtr parent_node)
+        create()
         {
-          return std::make_shared<Transform>(parent_node);
+          return std::make_shared<Transform>();
         }
 
       public:
-        Transform(NodePtr parent_node);
+        Transform();
 
         void translate(const glm::vec3& translation_vector);
         void translate(float amount, Direction relative_direction);
