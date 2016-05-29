@@ -67,7 +67,7 @@ namespace Engine
     Node::add_component(Component::ComponentPtr c)
     {
       if (has_component(c))
-        return false;
+        throw new std::logic_error("This component instance is already contained in the node");
 
       c->set_parent(shared_from_this());
       components_.push_back(c);

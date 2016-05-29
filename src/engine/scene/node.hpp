@@ -37,14 +37,29 @@ namespace Engine
       public:
         bool add_child(NodePtr n);
         bool remove_child(NodePtr n);
-        bool has_child(NodePtr n);
         void clear_children();
-        NodePtr& get_child_at(size_t i);
-        NodePtr& get_parent();
 
         bool add_component(Component::ComponentPtr c);
         bool remove_component(Component::ComponentPtr c);
+
+      public:
+        bool has_child(NodePtr n);
+        NodePtr& get_child_at(size_t i);
+        NodePtr& get_parent();
+
         bool has_component(Component::ComponentPtr c);
+        template<typename T>
+        std::shared_ptr<T> component() const
+        {
+          std::shared_ptr<T> result_ptr = nullptr;
+          auto result_it = std::find_if(components_.begin(), components_.end(),
+                                      [&result_ptr](const Component::ComponentPtr& e)
+                                      {
+                                        result_ptr = std::dynamic_pointer_cast<T>(e);
+                                        return (result_ptr != nullptr);
+                                      });
+          return (result_it != components_.end()) ? result_ptr : nullptr;
+        }
 
       private:
         const std::string   name_;
