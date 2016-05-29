@@ -1,4 +1,6 @@
-# 3DEngine
+# 3DEngine [![Build Status](https://travis-ci.com/AdrienNeveu/3DEngine.svg?token=AGcLYmG3qkhAiyxVFXyU&branch=master)](https://travis-ci.com/AdrienNeveu/3DEngine)
+
+
 
 ## Build Instructions
 
