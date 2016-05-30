@@ -34,6 +34,60 @@ void test_transform()
   parent->add_child(child);
   ASSERT(child->component<Transform>()->get_local_position() == glm::vec3(0, 1, 0), "check local position");
   ASSERT(child->component<Transform>()->get_world_position() == glm::vec3(5, 1, 0), "check world position");
+
+  // Check centered rotation
+  Node::NodePtr rotate_node = Node::create("rotate_node");
+  rotate_node->add_component(Transform::create());
+  rotate_node->component<Transform>()->rotate(90.0, glm::vec3(0.0, 1.0, 0.0));
+  glm::vec3 dir = rotate_node->component<Transform>()->get_direction();
+  ASSERT(glm::abs(dir[0] - 1.0) <= 0.00001, "check center rotation");
+  ASSERT(glm::abs(dir[1] - 0.0) <= 0.00001, "check center rotation");
+  ASSERT(glm::abs(dir[2] - 0.0) <= 0.00001, "check center rotation");
+  rotate_node->component<Transform>()->rotate(-90.0f, glm::vec3(0.0, 1.0, 0.0));
+  dir = rotate_node->component<Transform>()->get_direction();
+  ASSERT(glm::abs(dir[0] - 0.0) <= 0.00001, "check center reverse rotation");
+  ASSERT(glm::abs(dir[1] - 0.0) <= 0.00001, "check center reverse rotation");
+  ASSERT(glm::abs(dir[2] + 1.0) <= 0.00001, "check center reverse rotation");
+
+  // Check rotation after translation
+  rotate_node->component<Transform>()->translate(glm::vec3(1.0f, 1.0f, -1.0f));
+  rotate_node->component<Transform>()->rotate(-90.0f, glm::vec3(0.0, 1.0, 0.0));
+  dir = rotate_node->component<Transform>()->get_direction();
+  ASSERT(glm::abs(dir[0] + 1.0f) <= 0.00001, "check center reverse rotation");
+  ASSERT(glm::abs(dir[1] - 0.0f) <= 0.00001, "check center reverse rotation");
+  ASSERT(glm::abs(dir[2] - 0.0f) <= 0.00001, "check center reverse rotation");
+
+  // Check for right vector
+  glm::vec3 right = rotate_node->component<Transform>()->get_right();
+  ASSERT(glm::abs(right[0] - 0.0f) <= 0.00001, "check right vector");
+  ASSERT(glm::abs(right[1] - 0.0f) <= 0.00001, "check right vector");
+  ASSERT(glm::abs(right[2] + 1.0f) <= 0.00001, "check right vector");
+
+  // Check for up vector
+  glm::vec3 up = rotate_node->component<Transform>()->get_up();
+  ASSERT(glm::abs(up[0] - 0.0f) <= 0.00001, "check up vector");
+  ASSERT(glm::abs(up[1] - 1.0f) <= 0.00001, "check up vector");
+  ASSERT(glm::abs(up[2] - 0.0f) <= 0.00001, "check up vector");
+
+  // Check centered look_at function
+  Node::NodePtr look_at_node = Node::create("look_at_node");
+  look_at_node->add_component(Transform::create());
+  look_at_node->component<Transform>()->look_at(glm::vec3(0.0f, 1.0f, 0.0f));
+  dir = look_at_node->component<Transform>()->get_direction();
+  std::cout << dir[0] << std::endl;
+  std::cout << dir[1] << std::endl;
+  std::cout << dir[2]  << std::endl;
+  ASSERT(glm::abs(dir[0] + 1.0f) <= 0.00001, "check center look_at");
+  ASSERT(glm::abs(dir[1] - 0.0f) <= 0.00001, "check center look_at");
+  ASSERT(glm::abs(dir[2] - 0.0f) <= 0.00001, "check center look_at");
+  /*look_at_node->component<Transform>()->look_at(glm::vec3(0.0f, -1.0f, 0.0f));
+  dir = look_at_node->component<Transform>()->get_direction();
+  std::cout << dir[0] << std::endl;
+  std::cout << dir[1] << std::endl;
+  std::cout << dir[2]  << std::endl;
+  ASSERT(glm::abs(dir[0] - 0.0f) <= 0.00001, "check center look_at");
+  ASSERT(glm::abs(dir[1] + 1.0f) <= 0.00001, "check center look_at");
+  ASSERT(glm::abs(dir[2] - 0.0f) <= 0.00001, "check center look_at");*/
 }
 
 void test_components()
