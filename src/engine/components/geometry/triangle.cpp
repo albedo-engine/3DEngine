@@ -32,7 +32,7 @@ namespace Engine
                       0.5f, 1.0f
               };
 
-      for (int i = 0; i < 3; i += 3)
+      for (int i = 0; i < 9; i += 3)
       {
         Vertex v;
         v.position = glm::vec3(positions[i], positions[i + 1],
