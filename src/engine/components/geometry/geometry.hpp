@@ -34,8 +34,8 @@ namespace Engine
         const IndexList &get_indices() const;
 
         const GLuint &get_vao() const;
-
         const GLuint &get_vbo() const;
+        const GLuint &get_ebo() const;
 
       private:
         void init();
@@ -46,6 +46,7 @@ namespace Engine
 
         GLuint vao_;
         GLuint vbo_;
+        GLuint ebo_;
     };
   }
 } // namespace Engine
