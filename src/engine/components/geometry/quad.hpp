@@ -6,21 +6,21 @@ namespace Engine
 {
   namespace Components
   {
-    class Triangle : public Geometry
+    class Quad : public Geometry
     {
       public:
-        typedef std::shared_ptr<Triangle> TrianglePtr;
+        typedef std::shared_ptr<Quad>     QuadPtr;
 
       public:
-        TrianglePtr
+        QuadPtr
         inline static
         create()
         {
-          return std::make_shared<Triangle>();
+          return std::make_shared<Quad>();
         }
 
       public:
-        Triangle();
+        Quad();
 
       private:
         VertexList initVertices();

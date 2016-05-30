@@ -4,8 +4,9 @@ namespace Engine
 {
   namespace Components
   {
-    Geometry::Geometry(std::vector<Vertex> vertices)
-              : vertices_(vertices)
+    Geometry::Geometry(VertexList vertices, IndexList indices)
+            : vertices_(vertices)
+            , indices_(indices)
     {
       init();
     }
@@ -16,19 +17,25 @@ namespace Engine
       return true;
     }
 
-    const std::vector<Vertex> &
+    const Geometry::VertexList&
     Geometry::get_vertices() const
     {
       return vertices_;
     }
 
-    const GLuint&
+    const Geometry::IndexList&
+    Geometry::get_indices() const
+    {
+      return indices_;
+    }
+
+    const GLuint &
     Geometry::get_vao() const
     {
       return vao_;
     }
 
-    const GLuint&
+    const GLuint &
     Geometry::get_vbo() const
     {
       return vbo_;
@@ -50,10 +57,15 @@ namespace Engine
       // Sends the attributes to the graphic card
       glEnableVertexAttribArray(0);
       glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-                            (GLvoid*)0);
+                            (GLvoid*) 0);
+
       glEnableVertexAttribArray(1);
       glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-                            (GLvoid*)offsetof(Vertex, normal));
+                            (GLvoid*) offsetof(Vertex, normal));
+
+      glEnableVertexAttribArray(2);
+      glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+                            (GLvoid*) offsetof(Vertex, texcoords));
 
       glBindVertexArray(0);
     }

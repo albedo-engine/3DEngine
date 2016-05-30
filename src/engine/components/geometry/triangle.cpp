@@ -5,38 +5,56 @@ namespace Engine
   namespace Components
   {
     Triangle::Triangle()
-            : Geometry(init())
+            : Geometry(initVertices(), initIndices())
     { }
 
     Triangle::VertexList
-    Triangle::init()
+    Triangle::initVertices()
     {
       std::vector<Vertex> vertices;
-      GLfloat v_positions[] =
-      {
-          -0.5f, -0.5f, 0.0f,
-          0.5f, -0.5f, 0.0f,
-          0.0f,  0.5f, 0.0f
-      };
+      GLfloat positions[] =
+              {
+                      -1.0f, -1.0f, 0.0f,
+                      1.0f, -1.0f, 0.0f,
+                      0.0f, 1.0f, 0.0f
+              };
       GLfloat normals[] =
-      {
-          0.0f, 0.0f, 1.0f,
-          0.0f, 0.0f, 1.0f,
-          0.0f, 0.0f, 1.0f
-      };
+              {
+                      0.0f, 0.0f, 1.0f,
+                      0.0f, 0.0f, 1.0f,
+                      0.0f, 0.0f, 1.0f
+              };
 
-      for (int i = 0; i < 9; ++i)
+      GLfloat texcoords[] =
+              {
+                      0.0f, 0.0f,
+                      1.0f, 0.0f,
+                      0.5f, 1.0f
+              };
+
+      for (int i = 0; i < 3; i += 3)
       {
         Vertex v;
-        v.position = glm::vec3(v_positions[i], v_positions[i + 1], v_positions[i + 2]);
-        v.position = glm::vec3(normals[i], normals[i + 1], normals[i + 2]);
+        v.position = glm::vec3(positions[i], positions[i + 1],
+                               positions[i + 2]);
+        v.normal = glm::vec3(normals[i], normals[i + 1], normals[i + 2]);
+        v.texcoords = glm::vec3(texcoords[i], texcoords[i + 1], texcoords[i + 2]);
 
         vertices.push_back(v);
-
-        i += 3;
       }
 
       return vertices;
+    }
+
+    Triangle::IndexList
+    Triangle::initIndices()
+    {
+      GLuint idx[] = {
+              0, 1, 2
+      };
+      IndexList indices(idx, idx + 3);
+
+      return indices;
     }
   }
 }
