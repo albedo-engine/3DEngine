@@ -53,14 +53,12 @@ int main()
   // Create a camera
   Node::NodePtr camera = Node::create("camera");
 
-  // Create the triangle mesh
-  Triangle::TrianglePtr triangle_mesh = Triangle::create();
-
+  Renderer::RendererPtr renderer = Renderer::create(width, height);
   // Create the triangle node
   Node::NodePtr triangle = Node::create("triangle");
   triangle->add_component(Transform::create());
   triangle->add_component(Triangle::create());
-  triangle->add_component(Renderer::create());
+  triangle->add_component(renderer);
 
   // Link components in a single scene by adding them to a root node
   Node::NodePtr root = Node::create("root");
@@ -70,10 +68,9 @@ int main()
   while (!glfwWindowShouldClose(window))
   {
     glfwPollEvents();
-    // Refreshes screen
-    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
-    // Draws
+
+    renderer->display();
+
     glfwSwapBuffers(window);
   }
 

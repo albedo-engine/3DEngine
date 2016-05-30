@@ -62,11 +62,10 @@ namespace Engine
       glBufferData(GL_ARRAY_BUFFER, vertices_.size() * sizeof(Vertex),
                    &vertices_[0], GL_STATIC_DRAW);
 
-
       // EBO
       glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo_);
-      glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices_), &indices_[0],
-                   GL_STATIC_DRAW);
+      glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_.size() * sizeof(GLuint),
+                   &indices_[0], GL_STATIC_DRAW);
 
       // Sends the attributes to the graphic card
       glEnableVertexAttribArray(0);

@@ -4,13 +4,44 @@ namespace Engine
 {
   namespace Components
   {
-    Renderer::Renderer()
-      : quadShader_(Rendering::Shader::createFromStrings(
-            get_quad_vertex_shader(), get_quad_fragment_shader()))
+    Renderer::Renderer(int width, int height)
+            : renderWidth_(width)
+            , renderHeight_(height)
+            , quadShader_(
+                    Rendering::Shader::createFromStrings(
+                            get_quad_vertex_shader(),
+                            get_quad_fragment_shader()))
     {
       if (!quadShader_.compile())
-        throw std::runtime_error("Quad shader "
-                                 + std::string(quadShader_.get_compilation_info()));
+        throw std::logic_error("Quad shader " + std::string(
+                quadShader_.get_compilation_info()));
+
+      quadGeometry_ = Components::Quad::create();
+
+      glGenFramebuffers(1, &framebuffer_);
+      glBindFramebuffer(GL_FRAMEBUFFER, framebuffer_);
+
+      glGenTextures(1, &renderTexture_);
+      glBindTexture(GL_TEXTURE_2D, renderTexture_);
+      glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, renderWidth_, renderHeight_, 0,
+                   GL_RGB, GL_UNSIGNED_BYTE, 0);
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+      glBindTexture(GL_TEXTURE_2D, 0);
+      glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, renderTexture_, 0);
+
+      GLuint rbo;
+      glGenRenderbuffers(1, &rbo);
+      glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+      glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, renderWidth_, renderHeight_);
+      glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
+      glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
+
+      if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+        throw std::logic_error("Framebuffer initialization error");
+
+      glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
     bool
@@ -48,6 +79,34 @@ namespace Engine
               "{ \n"
               "    color = texture(screenTexture, TexCoords);\n"
               "}\n\0";
+    }
+
+    void
+    Renderer::render()
+    {
+
+    }
+
+    void
+    Renderer::display()
+    {
+      glBindFramebuffer(GL_FRAMEBUFFER, framebuffer_);
+
+      glClearColor(1.0f, 0.0f, 0.0f, 1.0f); //R - Quad
+      glClear(GL_COLOR_BUFFER_BIT);
+
+      render();
+
+      glBindFramebuffer(GL_FRAMEBUFFER, 0);
+      glClearColor(0.0f, 0.0f, 1.0f, 1.0f); //B - Screen
+      glClear(GL_COLOR_BUFFER_BIT);
+
+      quadShader_.use_shader();
+      glBindVertexArray(quadGeometry_->get_vao());
+      glBindTexture(GL_TEXTURE_2D, renderTexture_);
+      glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+      glBindVertexArray(0);
     }
 
   } // namespace Components
