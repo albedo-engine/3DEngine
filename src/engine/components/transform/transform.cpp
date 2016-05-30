@@ -69,49 +69,25 @@ namespace Engine
     }
 
     void
-    Transform::look_at(const glm::vec3& source_point, const glm::vec3& dest_point)
-    {
-      const auto world_forward = glm::vec3(0, 0, -1);
-      const auto source_target_dir = glm::normalize(dest_point - source_point);
-      const auto transform_dir = get_direction();
-      const auto up = get_up();
-      float dot = glm::dot(world_forward, source_target_dir);
-
-      // Check for global axis alignment
-      if (glm::abs(dot + 1.0f) < 0.000001f)
-      {
-        quaternion_ = glm::quat(up.x, up.y, up.z, glm::pi<float>());
-        return;
-      }
-      if (glm::abs(dot - 1.0f < 0.000001f))
-      {
-        quaternion_ = glm::quat(0, 0, 0, 1);
-        return;
-      }
-
-      // Update the quaternion to match the new direction
-      float rot_angle = glm::acos(dot);
-      glm::vec3 rot_axis = glm::normalize(glm::cross(world_forward, source_target_dir));
-
-      float half_angle = rot_angle * 0.5f;
-      float s = glm::sin(half_angle);
-
-      quaternion_.x = rot_axis.x * s;
-      quaternion_.y = rot_axis.y * s;
-      quaternion_.z = rot_axis.z * s;
-      quaternion_.w = glm::cos(half_angle);
-    }
-
-    void
     Transform::look_at(const glm::vec3& target)
     {
-      look_at(get_world_position(), target);
+      const auto to_target = glm::normalize(target - get_world_position());
+      const auto direction = glm::normalize(get_direction());
+
+      float cos_theta = glm::dot(direction, to_target);
+      // The direction are already aligned
+      if (cos_theta >= 0.9999f)
+        return;
+
+      float half_cos = sqrt(0.5f * (1.f + cos_theta));
+      glm::vec3 w = glm::cross(direction, to_target);
+      quaternion_ = glm::normalize(glm::quat(2.f * half_cos * half_cos, w));
     }
 
     void
     Transform::look_at(const Transform::TransformPtr& transform_target)
     {
-      look_at(get_world_position(), transform_target->get_world_position());
+      look_at(transform_target->get_world_position());
     }
 
     glm::vec3
@@ -141,19 +117,19 @@ namespace Engine
     glm::vec3
     Transform::get_direction() const
     {
-      return quaternion_ * glm::vec3(0, 0, -1);
+      return glm::conjugate(quaternion_) * glm::vec3(0, 0, -1);
     }
 
     glm::vec3
     Transform::get_up() const
     {
-      return quaternion_ * glm::vec3(0, 1, 0);
+      return glm::conjugate(quaternion_) * glm::vec3(0, 1, 0);
     }
 
     glm::vec3
     Transform::get_right() const
     {
-      return quaternion_ * glm::vec3(1, 0, 0);
+      return glm::conjugate(quaternion_) * glm::vec3(1, 0, 0);
     }
 
     const glm::mat4&

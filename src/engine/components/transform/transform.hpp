@@ -45,7 +45,6 @@ namespace Engine
 
         void scale(const glm::vec3& scale_vector);
 
-        void look_at(const glm::vec3& source_point, const glm::vec3& target_point);
         void look_at(const glm::vec3& target_point);
         void look_at(const TransformPtr& transform_target);
 
