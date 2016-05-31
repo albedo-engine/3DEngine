@@ -1,6 +1,7 @@
 #pragma once
 
 #include <components/component.hpp>
+#include <iostream>
 
 namespace Engine
 {
@@ -45,7 +46,7 @@ namespace Engine
       public:
         bool has_child(NodePtr n);
         NodePtr& get_child_at(size_t i);
-        NodePtr& get_parent();
+        NodePtr get_parent();
 
         bool has_component(Component::ComponentPtr c);
 
@@ -53,20 +54,19 @@ namespace Engine
         std::shared_ptr<T> component() const
         {
           std::shared_ptr<T> result_ptr = nullptr;
-          auto result_it = std::find_if(components_.begin(), components_.end(),
-                                        [&result_ptr](
-                                                const Component::ComponentPtr& e)
-                                        {
-                                          result_ptr = std::dynamic_pointer_cast<T>(
-                                                  e);
-                                          return (result_ptr != nullptr);
-                                        });
+          auto result_it =
+                  std::find_if(components_.begin(), components_.end(),
+                               [&result_ptr](const Component::ComponentPtr& e)
+                               {
+                                 result_ptr = std::dynamic_pointer_cast<T>(e);
+                                 return (result_ptr != nullptr);
+                               });
           return (result_it != components_.end()) ? result_ptr : nullptr;
         }
 
       private:
         const std::string name_;
-        NodePtr parent_;
+        std::weak_ptr<Node> parent_;
         NodeList children_;
         ComponentList components_;
     };

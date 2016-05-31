@@ -23,9 +23,10 @@ namespace Engine
 
       public:
         void set_parent(std::shared_ptr<Scene::Node> parent);
+        std::shared_ptr<Scene::Node> get_target();
 
-      protected:
-        std::shared_ptr<Scene::Node> target_node_;
+      private:
+        std::weak_ptr<Scene::Node> target_node_;
 
     };
   } // namespace Components

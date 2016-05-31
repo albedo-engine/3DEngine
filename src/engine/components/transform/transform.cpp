@@ -100,10 +100,10 @@ namespace Engine
     Transform::get_world_position()
     {
       // Updates world position according to parent world position
-      if (target_node_ == nullptr)
+      if (get_target() == nullptr)
         return local_pos_;
 
-      auto parent_node = target_node_->get_parent();
+      auto parent_node = get_target()->get_parent();
       if (parent_node == nullptr)
         return local_pos_;
 

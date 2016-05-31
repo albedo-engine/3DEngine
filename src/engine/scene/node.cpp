@@ -17,7 +17,7 @@ namespace Engine
     {
       if (n == nullptr)
         throw new std::logic_error("The node child cannot be null");
-      else if (n == parent_)
+      else if (n == get_parent())
         throw new std::logic_error("A parent node cannot be added as a child node");
 
       if (n->get_parent())
@@ -62,10 +62,10 @@ namespace Engine
       return children_.at(i);
     }
 
-    Node::NodePtr&
+    Node::NodePtr
     Node::get_parent()
     {
-      return parent_;
+      return parent_.lock();
     }
 
     bool
