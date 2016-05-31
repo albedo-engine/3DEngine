@@ -1,7 +1,6 @@
 #pragma once
 
 #include <components/component.hpp>
-#include <iostream>
 
 namespace Engine
 {

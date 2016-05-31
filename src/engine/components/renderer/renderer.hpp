@@ -24,6 +24,7 @@ namespace Engine
 
       public:
         Renderer(int width, int height);
+        ~Renderer();
 
       public:
         bool unique() override;
@@ -43,7 +44,8 @@ namespace Engine
         Rendering::Shader quadShader_;
         Components::Geometry::GeometryPtr quadGeometry_;
 
-        GLuint framebuffer_;
+        GLuint frameBuffer_;
+        GLuint renderBuffer_;
         GLuint renderTexture_;
     };
   } // namespace Component

@@ -18,30 +18,39 @@ namespace Engine
 
       quadGeometry_ = Components::Quad::create();
 
-      glGenFramebuffers(1, &framebuffer_);
-      glBindFramebuffer(GL_FRAMEBUFFER, framebuffer_);
+      glGenFramebuffers(1, &frameBuffer_);
+      glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer_);
 
       glGenTextures(1, &renderTexture_);
       glBindTexture(GL_TEXTURE_2D, renderTexture_);
       glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, renderWidth_, renderHeight_, 0,
                    GL_RGB, GL_UNSIGNED_BYTE, 0);
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
       glBindTexture(GL_TEXTURE_2D, 0);
-      glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, renderTexture_, 0);
+      glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                             GL_TEXTURE_2D, renderTexture_, 0);
 
-      GLuint rbo;
-      glGenRenderbuffers(1, &rbo);
-      glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-      glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, renderWidth_, renderHeight_);
+      glGenRenderbuffers(1, &renderBuffer_);
+      glBindRenderbuffer(GL_RENDERBUFFER, renderBuffer_);
+      glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8,
+                            renderWidth_, renderHeight_);
       glBindRenderbuffer(GL_RENDERBUFFER, 0);
 
-      glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
+      glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT,
+                                GL_RENDERBUFFER, renderBuffer_);
 
-      if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+      if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
         throw std::logic_error("Framebuffer initialization error");
 
       glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    }
+
+    Renderer::~Renderer()
+    {
+      glDeleteFramebuffers(1, &frameBuffer_);
+      glDeleteTextures(1, &renderTexture_);
+      glDeleteRenderbuffers(1, &renderBuffer_);
     }
 
     bool
@@ -91,7 +100,7 @@ namespace Engine
     void
     Renderer::display()
     {
-      glBindFramebuffer(GL_FRAMEBUFFER, framebuffer_);
+      glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer_);
 
       glClearColor(1.0f, 0.0f, 0.0f, 1.0f); //R - Quad
       glClear(GL_COLOR_BUFFER_BIT);

@@ -11,6 +11,13 @@ namespace Engine
       init();
     }
 
+    Geometry::~Geometry()
+    {
+      glDeleteVertexArrays(1, &vao_);
+      glDeleteBuffers(1, &vbo_);
+      glDeleteBuffers(1, &ebo_);
+    }
+
     bool
     Geometry::unique()
     {

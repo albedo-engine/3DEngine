@@ -23,26 +23,26 @@ namespace Engine
 
       public:
         Geometry() = delete;
-
         Geometry(VertexList vertices, IndexList indices);
+        ~Geometry();
 
       public:
         bool unique() override;
 
       public:
-        const VertexList &get_vertices() const;
-        const IndexList &get_indices() const;
+        const VertexList& get_vertices() const;
+        const IndexList& get_indices() const;
 
-        const GLuint &get_vao() const;
-        const GLuint &get_vbo() const;
-        const GLuint &get_ebo() const;
+        const GLuint& get_vao() const;
+        const GLuint& get_vbo() const;
+        const GLuint& get_ebo() const;
 
       private:
         void init();
 
       private:
         VertexList vertices_;
-        IndexList  indices_;
+        IndexList indices_;
 
         GLuint vao_;
         GLuint vbo_;
