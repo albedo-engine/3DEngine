@@ -74,20 +74,15 @@ void test_transform()
   look_at_node->add_component(Transform::create());
   look_at_node->component<Transform>()->look_at(glm::vec3(0.0f, 1.0f, 0.0f));
   dir = look_at_node->component<Transform>()->get_direction();
-  std::cout << dir[0] << std::endl;
-  std::cout << dir[1] << std::endl;
-  std::cout << dir[2]  << std::endl;
-  ASSERT(glm::abs(dir[0] + 1.0f) <= 0.00001, "check center look_at");
-  ASSERT(glm::abs(dir[1] - 0.0f) <= 0.00001, "check center look_at");
+  ASSERT(glm::abs(dir[0] - 0.0f) <= 0.00001, "check center look_at");
+  ASSERT(glm::abs(dir[1] - 1.0f) <= 0.00001, "check center look_at");
   ASSERT(glm::abs(dir[2] - 0.0f) <= 0.00001, "check center look_at");
-  /*look_at_node->component<Transform>()->look_at(glm::vec3(0.0f, -1.0f, 0.0f));
+
+  look_at_node->component<Transform>()->look_at(glm::vec3(0.0f, -1.0f, 0.0f));
   dir = look_at_node->component<Transform>()->get_direction();
-  std::cout << dir[0] << std::endl;
-  std::cout << dir[1] << std::endl;
-  std::cout << dir[2]  << std::endl;
   ASSERT(glm::abs(dir[0] - 0.0f) <= 0.00001, "check center look_at");
   ASSERT(glm::abs(dir[1] + 1.0f) <= 0.00001, "check center look_at");
-  ASSERT(glm::abs(dir[2] - 0.0f) <= 0.00001, "check center look_at");*/
+  ASSERT(glm::abs(dir[2] - 0.0f) <= 0.00001, "check center look_at");
 }
 
 void test_components()
