@@ -78,7 +78,7 @@ namespace Engine
     Transform::look_at(const glm::vec3& target)
     {
       const auto to_target = glm::normalize(target - get_world_position());
-      const auto direction = glm::normalize(get_direction());
+      const auto direction = glm::normalize(glm::vec3(0, 0, -1));
 
       float cos_theta = glm::dot(direction, to_target);
       // The direction are already aligned
@@ -87,7 +87,7 @@ namespace Engine
 
       float half_cos = sqrt(0.5f * (1.f + cos_theta));
       glm::vec3 w = glm::cross(direction, to_target);
-      quaternion_ = glm::normalize(glm::quat(2.f * half_cos * half_cos, w));
+      quaternion_ = glm::normalize(glm::quat(2.f * half_cos * half_cos, - w));
     }
 
     void
@@ -139,9 +139,11 @@ namespace Engine
     }
 
     const glm::mat4&
-    Transform::get_world_matrix() const
+    Transform::get_world_matrix()
     {
-      // FIXME: compute the world matrix with parent
+      world_matrix_ = glm::translate(glm::mat4(1.0), get_world_position())
+                      * glm::mat4_cast(quaternion_)
+                      * glm::scale(glm::mat4(1.0), local_scale_);
       return world_matrix_;
     }
 

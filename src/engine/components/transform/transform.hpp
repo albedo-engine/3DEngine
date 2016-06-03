@@ -57,7 +57,7 @@ namespace Engine
         glm::vec3 get_up() const;
         glm::vec3 get_right() const;
 
-        const glm::mat4& get_world_matrix() const;
+        const glm::mat4& get_world_matrix();
 
       private:
         glm::vec3 local_pos_;
