@@ -12,5 +12,7 @@ namespace Engine
       std::cout << "Failed to initialize GLEW" << std::endl;
       throw 1;
     }
+
+    glEnable(GL_DEPTH_TEST);
   }
 }

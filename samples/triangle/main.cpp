@@ -6,6 +6,7 @@
 #include <components/geometry/triangle.hpp>
 #include <components/renderer/renderer.hpp>
 #include <components/material/material.hpp>
+#include <components/geometry/cube.hpp>
 
 using namespace Engine;
 using namespace Engine::Scene;
@@ -55,12 +56,13 @@ int main()
   // Create the triangle node
   Node::NodePtr triangle = Node::create("triangle");
   triangle->add_component(Transform::create());
-  triangle->add_component(Triangle::create());
+  triangle->add_component(Cube::create());
   triangle->add_component(Material::create());
 
   // Create a camera with a renderer attached to it
-  Renderer::RendererPtr renderer = Renderer::create(width, height);
   Node::NodePtr camera = Node::create("camera");
+  camera->add_component(PerspectiveCamera::create(width, height));
+  Renderer::RendererPtr renderer = Renderer::create(camera, width, height);
   camera->add_component(renderer);
 
   // Link components in a single scene by adding them to a root node

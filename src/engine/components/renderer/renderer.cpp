@@ -4,14 +4,19 @@ namespace Engine
 {
   namespace Components
   {
-    Renderer::Renderer(int width, int height)
+    Renderer::Renderer(Scene::Node::NodePtr camera, int width, int height)
             : renderWidth_(width)
             , renderHeight_(height)
+            , camera_(camera->component<Camera>())
             , quadShader_(
                     Rendering::Shader::createFromStrings(
                             get_quad_vertex_shader(),
                             get_quad_fragment_shader()))
     {
+      if (!camera_)
+        throw std::invalid_argument(
+                "Camera node doesn't contain a camera component.");
+
       if (!quadShader_.compile())
         throw std::logic_error("Quad shader " + std::string(
                 quadShader_.get_compilation_info()));
@@ -102,12 +107,26 @@ namespace Engine
         if (geometry && material && transform)
         {
           material->get_shader().use_shader();
+          GLuint program = material->get_shader().get_program();
 
-          // Set transform
-          GLint transformLoc = glGetUniformLocation(
-                  material->get_shader().get_program(), "transform");
-          glUniformMatrix4fv(transformLoc, 1, GL_FALSE,
-                             glm::value_ptr(transform->get_world_matrix()));
+          // Hardcoded view till the camera view works
+          glm::mat4 view;
+          view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+
+          GLint modelUni = glGetUniformLocation(program, "model");
+          GLint viewUni = glGetUniformLocation(program, "view");
+          GLint projectionUni = glGetUniformLocation(program, "projection");
+
+          glUniformMatrix4fv(viewUni, 1, GL_FALSE, glm::value_ptr(view));
+          glUniformMatrix4fv(projectionUni, 1, GL_FALSE,
+                             glm::value_ptr(camera_->get_projection_matrix()));
+
+          // Hardcoded worl matrix till the transformation works
+          //glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(
+          //        transform->get_world_position()));
+          glm::mat4 model;
+          model = glm::rotate(model, 1.f, glm::vec3(1));
+          glUniformMatrix4fv(modelUni, 1, GL_FALSE, glm::value_ptr(model));
 
           // Render
           glBindVertexArray(geometry->get_vao());
@@ -126,13 +145,13 @@ namespace Engine
       glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer_);
 
       glClearColor(1.0f, 0.0f, 0.0f, 1.0f); //R - Quad
-      glClear(GL_COLOR_BUFFER_BIT);
+      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
       render(get_target());
 
       glBindFramebuffer(GL_FRAMEBUFFER, 0);
       glClearColor(0.0f, 0.0f, 1.0f, 1.0f); //B - Screen
-      glClear(GL_COLOR_BUFFER_BIT);
+      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
       quadShader_.use_shader();
       glBindVertexArray(quadGeometry_->get_vao());

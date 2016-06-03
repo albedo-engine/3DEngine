@@ -57,9 +57,7 @@ namespace Engine
               0, 1, 3,
               1, 2, 3
       };
-      IndexList indices(idx, idx + 6);
-
-      return indices;
+      return IndexList(idx, idx + 6);
     }
   }
 }

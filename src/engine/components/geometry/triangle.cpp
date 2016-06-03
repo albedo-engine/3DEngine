@@ -27,9 +27,9 @@ namespace Engine
 
       GLfloat texcoords[] =
               {
-                      0.0f, 0.0f,
-                      1.0f, 0.0f,
-                      0.5f, 1.0f
+                      0.0f, 0.0f, 0.0f,
+                      1.0f, 0.0f, 0.0f,
+                      0.5f, 1.0f, 0.0f
               };
 
       for (int i = 0; i < 9; i += 3)
@@ -52,9 +52,7 @@ namespace Engine
       GLuint idx[] = {
               0, 1, 2
       };
-      IndexList indices(idx, idx + 3);
-
-      return indices;
+      return IndexList(idx, idx + 3);
     }
   }
 }
