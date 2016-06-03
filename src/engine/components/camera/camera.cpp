@@ -4,9 +4,9 @@ namespace Engine
 {
   namespace Components
   {
-    Camera::Camera()
-            : viewport_width_{0.0f}
-            , viewport_height_{0.0f}
+    Camera::Camera(float viewport_width, float viewport_height)
+            : viewport_width_{viewport_width}
+            , viewport_height_{viewport_height}
             , far_{100.0f}
             , near_{1.0f}
     { }

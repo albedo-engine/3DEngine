@@ -13,7 +13,7 @@ namespace Engine
         typedef std::shared_ptr<Camera> CameraPtr;
 
       public:
-        Camera();
+        Camera(float viewport_width, float viewport_height);
 
       public:
         virtual ~Camera();
