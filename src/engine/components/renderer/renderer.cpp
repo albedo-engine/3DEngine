@@ -104,6 +104,7 @@ namespace Engine
         Geometry::GeometryPtr geometry = child->component<Geometry>();
         Transform::TransformPtr transform = child->component<Transform>();
         Material::MaterialPtr material = child->component<Material>();
+
         if (geometry && material && transform)
         {
           material->get_shader().use_shader();
@@ -121,12 +122,11 @@ namespace Engine
           glUniformMatrix4fv(projectionUni, 1, GL_FALSE,
                              glm::value_ptr(camera_->get_projection_matrix()));
 
-          // Hardcoded worl matrix till the transformation works
-          //glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(
-          //        transform->get_world_position()));
-          glm::mat4 model;
-          model = glm::rotate(model, 1.f, glm::vec3(1));
-          glUniformMatrix4fv(modelUni, 1, GL_FALSE, glm::value_ptr(model));
+          //glm::mat4 model;
+          //model = glm::rotate(model, 1.f, glm::vec3(1));
+          //glUniformMatrix4fv(modelUni, 1, GL_FALSE, glm::value_ptr(model));
+
+          glUniformMatrix4fv(modelUni, 1, GL_FALSE, glm::value_ptr(transform->get_world_matrix()));
 
           // Render
           glBindVertexArray(geometry->get_vao());

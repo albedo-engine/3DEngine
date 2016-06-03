@@ -58,7 +58,8 @@ namespace Engine
     void
     Transform::rotate(float angle, const glm::vec3& axis)
     {
-      glm::quat rotation_quat = glm::angleAxis(glm::radians(angle), axis);
+      glm::vec3 normalized_axis = glm::normalize(axis);
+      glm::quat rotation_quat = glm::angleAxis(glm::radians(angle), normalized_axis);
       rotate(rotation_quat);
     }
 
