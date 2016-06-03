@@ -2,6 +2,7 @@
 
 #include <utils/headers/common.hpp>
 #include <components/component.hpp>
+#include <components/transform/transform.hpp>
 
 namespace Engine
 {
@@ -24,6 +25,7 @@ namespace Engine
 
       public:
         const glm::mat4& get_projection_matrix() const;
+        const glm::mat4& get_view_matrix();
 
       protected:
         float     viewport_width_;
