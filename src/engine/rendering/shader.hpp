@@ -6,38 +6,42 @@
 
 namespace Engine
 {
-    namespace Rendering
+  namespace Rendering
+  {
+    class Shader
     {
-        class Shader
-        {
-          private:
-            Shader(const GLchar* vertexShader, const GLchar* fragmentShader);
+      private:
+        Shader(const GLchar* vertexShader, const GLchar* fragmentShader);
 
-          public:
+      public:
 
-            static Shader
-            createFromStrings(const GLchar* vertexShader, const GLchar* fragmentShader);
+        static Shader
+                createFromStrings(const GLchar* vertexShader,
+                                  const GLchar* fragmentShader);
 
-            static Shader
-            createFromFiles(const GLchar* vertexShaderPath, const GLchar* fragmentShaderPath);
-
-
-            bool compile();
-            const GLchar* get_compilation_info();
-
-            void use_shader() const;
+        static Shader
+                createFromFiles(const GLchar* vertexShaderPath,
+                                const GLchar* fragmentShaderPath);
 
 
-          private:
-            bool has_compiled(GLuint shader);
+        bool compile();
+        const GLchar* get_compilation_info();
 
-          private:
-            const GLchar* vertexShader_;
-            const GLchar* fragmentShader_;
+        void use_shader() const;
 
-            GLuint program_;
+        const GLuint& get_program() const;
 
-            GLchar compileInfo_[512];
-        };
-    } // namespace Rendering
+
+      private:
+        bool has_compiled(GLuint shader);
+
+      private:
+        const GLchar* vertexShader_;
+        const GLchar* fragmentShader_;
+
+        GLuint program_;
+
+        GLchar compileInfo_[512];
+    };
+  } // namespace Rendering
 } // namespace Engine

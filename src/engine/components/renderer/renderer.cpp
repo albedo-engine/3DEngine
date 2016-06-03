@@ -97,10 +97,20 @@ namespace Engine
       for (Scene::Node::NodePtr child : get_target()->get_children())
       {
         Geometry::GeometryPtr geometry = child->component<Geometry>();
+        Transform::TransformPtr transform = child->component<Transform>();
         Material::MaterialPtr material = child->component<Material>();
         if (geometry && material)
         {
           material->get_shader().use_shader();
+
+          // Set transform
+          GLint transformLoc = glGetUniformLocation(
+                  material->get_shader().get_program(), "transform");
+          transform->get_world_position();
+          glUniformMatrix4fv(transformLoc, 1, GL_FALSE,
+                             glm::value_ptr(transform->get_world_matrix()));
+
+          // Render
           glBindVertexArray(geometry->get_vao());
           glDrawElements(GL_TRIANGLES, (GLsizei)geometry->get_indices().size(),
                          GL_UNSIGNED_INT, 0);

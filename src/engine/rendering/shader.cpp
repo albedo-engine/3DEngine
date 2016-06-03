@@ -114,5 +114,11 @@ namespace Engine
     {
       glUseProgram(program_);
     }
+
+    const GLuint&
+    Shader::get_program() const
+    {
+      return program_;
+    }
   }
 }

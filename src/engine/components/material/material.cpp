@@ -29,9 +29,10 @@ namespace Engine
     {
       return "#version 330 core\n"
               "layout (location = 0) in vec3 position;\n"
+              "uniform mat4 transform;\n"
               "void main()\n"
               "{\n"
-              "gl_Position = vec4(position.x, position.y, position.z, 1.0);\n"
+              "gl_Position = transform * vec4(position, 1.0);\n"
               "}\0";
     }
 
