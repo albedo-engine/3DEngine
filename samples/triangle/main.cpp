@@ -1,11 +1,8 @@
 #include <engine.hpp>
 #include <GLFW/glfw3.h>
 
-#include <components/transform/transform.hpp>
-#include <components/geometry/geometry.hpp>
 #include <components/geometry/triangle.hpp>
 #include <components/renderer/renderer.hpp>
-#include <components/material/material.hpp>
 #include <components/geometry/cube.hpp>
 
 using namespace Engine;
@@ -56,6 +53,8 @@ int main()
   // Create the triangle node
   Node::NodePtr triangle = Node::create("triangle");
   triangle->add_component(Transform::create());
+  triangle->component<Transform>()->rotate(45.0f, glm::vec3(0, 1, 0));
+  triangle->component<Transform>()->translate(glm::vec3(-5, 0, -10));
   triangle->add_component(Cube::create());
   triangle->add_component(Material::create());
 
@@ -64,6 +63,8 @@ int main()
   camera->add_component(PerspectiveCamera::create(width, height));
   Renderer::RendererPtr renderer = Renderer::create(camera, width, height);
   camera->add_component(renderer);
+  camera->add_component(Transform::create());
+  camera->component<Transform>()->translate_to(glm::vec3(0, 0, 50));
 
   // Link components in a single scene by adding them to a root node
   Node::NodePtr root = Node::create("root");
