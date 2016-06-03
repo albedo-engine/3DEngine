@@ -25,7 +25,7 @@ namespace Engine
             bool compile();
             const GLchar* get_compilation_info();
 
-            void use_shader();
+            void use_shader() const;
 
 
           private:

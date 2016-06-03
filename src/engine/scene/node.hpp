@@ -44,7 +44,7 @@ namespace Engine
 
       public:
         bool has_child(NodePtr n);
-        NodePtr& get_child_at(size_t i);
+        const NodeList& get_children() const;
         NodePtr get_parent();
 
         bool has_component(Component::ComponentPtr c);

@@ -5,6 +5,7 @@
 #include <components/geometry/geometry.hpp>
 #include <components/geometry/triangle.hpp>
 #include <components/renderer/renderer.hpp>
+#include <components/material/material.hpp>
 
 using namespace Engine;
 using namespace Engine::Scene;
@@ -50,20 +51,22 @@ int main()
   // Initializes the engine
   Engine::Engine::initialize();
 
-  // Create a camera
-  Node::NodePtr camera = Node::create("camera");
 
-  Renderer::RendererPtr renderer = Renderer::create(width, height);
   // Create the triangle node
   Node::NodePtr triangle = Node::create("triangle");
   triangle->add_component(Transform::create());
   triangle->add_component(Triangle::create());
-  triangle->add_component(renderer);
+  triangle->add_component(Material::create());
+
+  // Create a camera with a renderer attached to it
+  Renderer::RendererPtr renderer = Renderer::create(width, height);
+  Node::NodePtr camera = Node::create("camera");
+  camera->add_component(renderer);
 
   // Link components in a single scene by adding them to a root node
   Node::NodePtr root = Node::create("root");
   root->add_child(camera);
-  root->add_child(triangle);
+  camera->add_child(triangle);
 
   while (!glfwWindowShouldClose(window))
   {

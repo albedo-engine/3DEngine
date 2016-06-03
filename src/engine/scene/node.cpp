@@ -56,10 +56,10 @@ namespace Engine
       children_.clear();
     }
 
-    Node::NodePtr&
-    Node::get_child_at(size_t i)
+    const Node::NodeList&
+    Node::get_children() const
     {
-      return children_.at(i);
+      return children_;
     }
 
     Node::NodePtr

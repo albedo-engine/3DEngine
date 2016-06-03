@@ -94,7 +94,19 @@ namespace Engine
     void
     Renderer::render()
     {
-
+      for (Scene::Node::NodePtr child : get_target()->get_children())
+      {
+        Geometry::GeometryPtr geometry = child->component<Geometry>();
+        Material::MaterialPtr material = child->component<Material>();
+        if (geometry && material)
+        {
+          material->get_shader().use_shader();
+          glBindVertexArray(geometry->get_vao());
+          glDrawElements(GL_TRIANGLES, (GLsizei)geometry->get_indices().size(),
+                         GL_UNSIGNED_INT, 0);
+          glBindVertexArray(0);
+        }
+      }
     }
 
     void

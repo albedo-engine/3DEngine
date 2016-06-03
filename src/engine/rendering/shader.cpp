@@ -110,7 +110,7 @@ namespace Engine
     }
 
     void
-    Shader::use_shader()
+    Shader::use_shader() const
     {
       glUseProgram(program_);
     }

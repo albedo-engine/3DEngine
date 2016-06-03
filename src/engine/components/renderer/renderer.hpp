@@ -4,6 +4,8 @@
 #include <components/component.hpp>
 #include <components/geometry/quad.hpp>
 #include <rendering/shader.hpp>
+#include <components/transform/transform.hpp>
+#include <components/material/material.hpp>
 
 namespace Engine
 {
@@ -17,7 +19,7 @@ namespace Engine
       public:
         RendererPtr
         static inline
-        create(int width, int height, bool renderToScreen = true)
+        create(int width, int height)
         {
           return std::make_shared<Renderer>(width, height);
         }

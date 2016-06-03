@@ -103,7 +103,6 @@ void test_node()
 
   parent->add_child(child);
 
-  ASSERT(parent->get_child_at(0) == child, "get_child_at");
   ASSERT(parent->has_child(child), "has_child");
 }
 
