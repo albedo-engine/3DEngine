@@ -35,8 +35,7 @@ namespace Engine
       for (int i = 0; i < 9; i += 3)
       {
         Vertex v;
-        v.position = glm::vec3(positions[i], positions[i + 1],
-                               positions[i + 2]);
+        v.position = glm::vec3(positions[i], positions[i + 1], positions[i + 2]);
         v.normal = glm::vec3(normals[i], normals[i + 1], normals[i + 2]);
         v.texcoords = glm::vec3(texcoords[i], texcoords[i + 1], texcoords[i + 2]);
 

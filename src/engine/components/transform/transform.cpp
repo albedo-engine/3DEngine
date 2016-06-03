@@ -50,6 +50,12 @@ namespace Engine
     }
 
     void
+    Transform::translate_to(const glm::vec3& position)
+    {
+      local_pos_ = position;
+    }
+
+    void
     Transform::rotate(float angle, const glm::vec3& axis)
     {
       glm::quat rotation_quat = glm::angleAxis(glm::radians(angle), axis);

@@ -39,6 +39,7 @@ namespace Engine
       public:
         void translate(const glm::vec3& translation_vector);
         void translate(float amount, Direction relative_direction);
+        void translate_to(const glm::vec3& position);
 
         void rotate(float angle_degrees, const glm::vec3& axis);
         void rotate(const glm::quat& quaternion);
