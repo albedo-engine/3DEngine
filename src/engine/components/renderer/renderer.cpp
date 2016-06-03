@@ -111,22 +111,22 @@ namespace Engine
           GLuint program = material->get_shader().get_program();
 
           // Hardcoded view till the camera view works
-          glm::mat4 view;
-          view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+          const glm::mat4& view = camera_->get_view_matrix();
+          //glm::mat4 view;
+          //view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
 
           GLint modelUni = glGetUniformLocation(program, "model");
           GLint viewUni = glGetUniformLocation(program, "view");
           GLint projectionUni = glGetUniformLocation(program, "projection");
 
+          // Sends the view matrix
           glUniformMatrix4fv(viewUni, 1, GL_FALSE, glm::value_ptr(view));
-          glUniformMatrix4fv(projectionUni, 1, GL_FALSE,
-                             glm::value_ptr(camera_->get_projection_matrix()));
-
-          //glm::mat4 model;
-          //model = glm::rotate(model, 1.f, glm::vec3(1));
-          //glUniformMatrix4fv(modelUni, 1, GL_FALSE, glm::value_ptr(model));
-
+          // Sends the projection
+          glUniformMatrix4fv(projectionUni, 1, GL_FALSE, glm::value_ptr(camera_->get_projection_matrix()));
+          // Sends the model matrix
+          glm::mat4 model;
           glUniformMatrix4fv(modelUni, 1, GL_FALSE, glm::value_ptr(transform->get_world_matrix()));
+          //glUniformMatrix4fv(modelUni, 1, GL_FALSE, glm::value_ptr(model));
 
           // Render
           glBindVertexArray(geometry->get_vao());

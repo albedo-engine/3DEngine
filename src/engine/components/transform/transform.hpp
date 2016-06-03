@@ -10,14 +10,15 @@ namespace Engine
   {
     class Transform : public Component
     {
-      enum Direction {
-        FORWARD,
-        BACKWARD,
-        WESTWARD,
-        EASTWARD,
-        UPWARD,
-        DOWNWARD
-      };
+      public:
+        enum Direction {
+          FORWARD,
+          BACKWARD,
+          WESTWARD,
+          EASTWARD,
+          UPWARD,
+          DOWNWARD
+        };
 
       public:
         typedef std::shared_ptr<Transform>    TransformPtr;

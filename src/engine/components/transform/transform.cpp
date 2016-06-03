@@ -142,7 +142,8 @@ namespace Engine
     const glm::mat4&
     Transform::get_world_matrix()
     {
-      world_matrix_ = glm::translate(glm::mat4(1.0), get_world_position())
+      auto world_pos = get_world_position();
+      world_matrix_ = glm::translate(glm::mat4(1.0), world_pos)
                       * glm::mat4_cast(quaternion_)
                       * glm::scale(glm::mat4(1.0), local_scale_);
       return world_matrix_;

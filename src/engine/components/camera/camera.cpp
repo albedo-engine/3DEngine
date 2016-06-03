@@ -33,6 +33,7 @@ namespace Engine
         throw new std::logic_error("A Camera component should be linked to a Transform component.");
 
       auto transform = get_target()->component<Transform>();
+
       auto position = transform->get_world_position();
       auto direction = transform->get_direction();
       auto up = transform->get_up();
