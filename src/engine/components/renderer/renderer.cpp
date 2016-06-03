@@ -92,21 +92,20 @@ namespace Engine
     }
 
     void
-    Renderer::render()
+    Renderer::render(Scene::Node::NodePtr node)
     {
-      for (Scene::Node::NodePtr child : get_target()->get_children())
+      for (Scene::Node::NodePtr child : node->get_children())
       {
         Geometry::GeometryPtr geometry = child->component<Geometry>();
         Transform::TransformPtr transform = child->component<Transform>();
         Material::MaterialPtr material = child->component<Material>();
-        if (geometry && material)
+        if (geometry && material && transform)
         {
           material->get_shader().use_shader();
 
           // Set transform
           GLint transformLoc = glGetUniformLocation(
                   material->get_shader().get_program(), "transform");
-          transform->get_world_position();
           glUniformMatrix4fv(transformLoc, 1, GL_FALSE,
                              glm::value_ptr(transform->get_world_matrix()));
 
@@ -116,6 +115,8 @@ namespace Engine
                          GL_UNSIGNED_INT, 0);
           glBindVertexArray(0);
         }
+
+        render(child);
       }
     }
 
@@ -127,7 +128,7 @@ namespace Engine
       glClearColor(1.0f, 0.0f, 0.0f, 1.0f); //R - Quad
       glClear(GL_COLOR_BUFFER_BIT);
 
-      render();
+      render(get_target());
 
       glBindFramebuffer(GL_FRAMEBUFFER, 0);
       glClearColor(0.0f, 0.0f, 1.0f, 1.0f); //B - Screen

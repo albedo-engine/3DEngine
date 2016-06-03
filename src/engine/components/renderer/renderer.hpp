@@ -32,7 +32,7 @@ namespace Engine
         bool unique() override;
 
       public:
-        void render();
+        void render(Scene::Node::NodePtr node);
         void display();
 
       private:
