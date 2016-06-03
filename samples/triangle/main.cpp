@@ -49,32 +49,34 @@ int main()
   // Initializes the engine
   Engine::Engine::initialize();
 
-
   // Create the triangle node
   Node::NodePtr triangle = Node::create("triangle");
   triangle->add_component(Transform::create());
   triangle->component<Transform>()->rotate(45.0f, glm::vec3(0, 1, 0));
-  triangle->component<Transform>()->translate(glm::vec3(-5, 0, -10));
+  triangle->component<Transform>()->translate(glm::vec3(-10, 0, -10));
   triangle->add_component(Cube::create());
   triangle->add_component(Material::create());
 
   // Create a camera with a renderer attached to it
   Node::NodePtr camera = Node::create("camera");
   camera->add_component(PerspectiveCamera::create(width, height));
-  Renderer::RendererPtr renderer = Renderer::create(camera, width, height);
-  camera->add_component(renderer);
   camera->add_component(Transform::create());
-  camera->component<Transform>()->translate_to(glm::vec3(0, 0, 50));
+  camera->component<Transform>()->look_at(glm::vec3(-5, 0, -10));
 
   // Link components in a single scene by adding them to a root node
   Node::NodePtr root = Node::create("root");
+  Renderer::RendererPtr renderer = Renderer::create(camera, width, height);
+  root->add_component(renderer);
   root->add_child(camera);
-  camera->add_child(triangle);
+  root->add_child(triangle);
 
   while (!glfwWindowShouldClose(window))
   {
     glfwPollEvents();
 
+    auto t = triangle->component<Transform>();
+    t->translate(glm::vec3(0.05, 0, 0));
+    camera->component<Transform>()->look_at(t->get_world_position());
     renderer->display();
 
     glfwSwapBuffers(window);
