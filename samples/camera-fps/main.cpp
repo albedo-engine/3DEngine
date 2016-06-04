@@ -11,14 +11,25 @@ using namespace Engine::Components;
 
 static void error_callback(int error, const char* description);
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+static void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 
 static void update_camera();
+static void update_camera_lookat(GLfloat x_offset, GLfloat y_offset);
 
 // Global attributes
-Node::NodePtr camera_node = nullptr;  // Holds a pointer to the camera to make it move
-GLfloat game_time         = 0.0f;     // Makes animations frame independant
-GLfloat last_frame        = 0.0f;     // Makes animations frame independant
-bool keys[1024];                      // Dictionnary allowing to know whether a key is pressed/released
+bool                keys[1024];               // Dictionnary allowing to know whether a key is pressed/released
+
+Node::NodePtr       camera_node   = nullptr;  // Holds a pointer to the camera to make it move
+GLfloat             camera_yaw    = 0.0f;
+GLfloat             camera_pitch  = 0.0f;
+
+GLfloat             last_mouse_x  = 0.0f;
+GLfloat             last_mouse_y  = 0.0f;
+
+bool                first         = true;
+
+GLfloat             game_time     = 0.0f;     // Makes animations frame independant
+GLfloat             last_frame    = 0.0f;     // Makes animations frame independant
 
 int main()
 {
@@ -41,10 +52,13 @@ int main()
   }
   glfwMakeContextCurrent(window);
   glfwSetKeyCallback(window, key_callback);
+  glfwSetCursorPosCallback(window, mouse_callback);
 
   // Define the viewport dimensions
   glfwGetFramebufferSize(window, &width, &height);
   glViewport(0, 0, width, height);
+  last_mouse_x = width / 2;
+  last_mouse_y = height / 2;
 
   // Initializes the engine
   Engine::Engine::initialize();
@@ -104,6 +118,23 @@ static void update_camera()
     camera_transfrom->translate(game_time * 5.0f, Transform::Direction::EASTWARD);
 }
 
+static void update_camera_lookat(GLfloat x_offset, GLfloat y_offset)
+{
+  x_offset *= 0.5f;
+  y_offset *= 0.5f;
+
+  camera_yaw += x_offset;
+  camera_pitch += y_offset;
+
+  auto camera_transform = camera_node->component<Transform>();
+  //glm::quat quat = glm::angleAxis(x_offset, glm::vec3(0, 1, 0));
+  //camera_transform->rotate(quat);
+  //quat = glm::angleAxis(y_offset, camera_transform->get_right());
+  glm::quat quat = glm::angleAxis(glm::radians(-camera_pitch), glm::vec3(1,0,0));
+  quat *= glm::angleAxis(glm::radians(camera_yaw), glm::vec3(0,1,0));
+  camera_transform->rotate_to(quat);
+}
+
 static void error_callback(int error, const char* description)
 {
   std::cerr << "Error " << error << ": " << description;
@@ -122,4 +153,21 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
     keys[key] = true;
   else if (action == GLFW_RELEASE)
     keys[key] = false;
+}
+
+static void mouse_callback(GLFWwindow* window, double xpos, double ypos)
+{
+  if (first)
+  {
+    last_mouse_x = xpos;
+    last_mouse_y = ypos;
+    first = false;
+  }
+  GLfloat x_offset = xpos - last_mouse_x;
+  GLfloat y_offset = last_mouse_y - ypos;
+
+  last_mouse_x = xpos;
+  last_mouse_y = ypos;
+
+  update_camera_lookat(x_offset, y_offset);
 }
