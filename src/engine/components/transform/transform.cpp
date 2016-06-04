@@ -66,7 +66,13 @@ namespace Engine
     void
     Transform::rotate(const glm::quat& quaternion)
     {
-      quaternion_ = quaternion * quaternion_;
+      quaternion_ = glm::normalize(quaternion) * quaternion_;
+    }
+
+    void
+    Transform::rotate_to(const glm::quat& quaternion)
+    {
+      quaternion_ = quaternion;
     }
 
     void
@@ -124,19 +130,25 @@ namespace Engine
     glm::vec3
     Transform::get_direction() const
     {
-      return glm::conjugate(quaternion_) * glm::vec3(0, 0, -1);
+      return glm::normalize(glm::conjugate(quaternion_) * glm::vec3(0, 0, -1));
     }
 
     glm::vec3
     Transform::get_up() const
     {
-      return glm::conjugate(quaternion_) * glm::vec3(0, 1, 0);
+      return glm::normalize(glm::conjugate(quaternion_) * glm::vec3(0, 1, 0));
     }
 
     glm::vec3
     Transform::get_right() const
     {
-      return glm::conjugate(quaternion_) * glm::vec3(1, 0, 0);
+      return glm::normalize(glm::conjugate(quaternion_) * glm::vec3(1, 0, 0));
+    }
+
+    const glm::quat&
+    Transform::get_rotation_quat()
+    {
+      return quaternion_;
     }
 
     const glm::mat4&
