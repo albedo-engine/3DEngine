@@ -2,7 +2,6 @@
 
 #include <utils/headers/common.hpp>
 #include <components/component.hpp>
-#include <components/geometry/quad.hpp>
 #include <rendering/shader.hpp>
 #include <components/transform/transform.hpp>
 #include <components/material/material.hpp>
@@ -37,8 +36,8 @@ namespace Engine
         void display();
 
       private:
-        const GLchar* get_quad_vertex_shader();
-        const GLchar* get_quad_fragment_shader();
+        const GLchar* get_gbuffer_vertex_shader();
+        const GLchar* get_gbuffer_fragment_shader();
 
       private:
         int renderWidth_;
@@ -46,13 +45,13 @@ namespace Engine
 
         Camera::CameraPtr camera_;
 
-        Rendering::Shader quadShader_;
-        Components::Geometry::GeometryPtr quadGeometry_;
+        Rendering::Shader gBufferShader_;
 
+        GLuint gFrameBuffer_;
 
-        GLuint frameBuffer_;
-        GLuint renderBuffer_;
-        GLuint renderTexture_;
+        // Position, Diffuse, Normal, Texcoords
+        GLuint gTextures[4];
+        GLuint gDepthTexture;
 
     };
   } // namespace Component

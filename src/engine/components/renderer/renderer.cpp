@@ -8,54 +8,57 @@ namespace Engine
             : renderWidth_(width)
             , renderHeight_(height)
             , camera_(camera->component<Camera>())
-            , quadShader_(
+            , gBufferShader_(
                     Rendering::Shader::createFromStrings(
-                            get_quad_vertex_shader(),
-                            get_quad_fragment_shader()))
+                            get_gbuffer_vertex_shader(),
+                            get_gbuffer_fragment_shader()))
     {
       if (!camera_)
         throw std::invalid_argument(
                 "Camera node doesn't contain a camera component.");
 
-      if (!quadShader_.compile())
-        throw std::logic_error("Quad shader " + std::string(
-                quadShader_.get_compilation_info()));
+      if (!gBufferShader_.compile())
+        throw std::logic_error("gBuffer shader " + std::string(
+                gBufferShader_.get_compilation_info()));
 
-      quadGeometry_ = Components::Quad::create();
 
-      glGenFramebuffers(1, &frameBuffer_);
-      glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer_);
+      // Create the FBO
+      glGenFramebuffers(1, &gFrameBuffer_);
+      glBindFramebuffer(GL_FRAMEBUFFER, gFrameBuffer_);
 
-      glGenTextures(1, &renderTexture_);
-      glBindTexture(GL_TEXTURE_2D, renderTexture_);
-      glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, renderWidth_, renderHeight_, 0,
-                   GL_RGB, GL_UNSIGNED_BYTE, 0);
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-      glBindTexture(GL_TEXTURE_2D, 0);
-      glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-                             GL_TEXTURE_2D, renderTexture_, 0);
+      // gBuffer Textures
+      glGenTextures(4, gTextures);
+      for (unsigned int i = 0 ; i < 4; i++)
+      {
+        glBindTexture(GL_TEXTURE_2D, gTextures[i]);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, renderWidth_, renderHeight_, 0, GL_RGB, GL_FLOAT, NULL);
+        glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, gTextures[i], 0);
+      }
 
-      glGenRenderbuffers(1, &renderBuffer_);
-      glBindRenderbuffer(GL_RENDERBUFFER, renderBuffer_);
-      glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8,
-                            renderWidth_, renderHeight_);
-      glBindRenderbuffer(GL_RENDERBUFFER, 0);
+      // Depth
+      glGenTextures(1, &gDepthTexture);
+      glBindTexture(GL_TEXTURE_2D, gDepthTexture);
+      glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32F, renderWidth_, renderHeight_, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+      glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, gDepthTexture, 0);
 
-      glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT,
-                                GL_RENDERBUFFER, renderBuffer_);
+      GLenum DrawBuffers[] = { GL_COLOR_ATTACHMENT0,
+                               GL_COLOR_ATTACHMENT1,
+                               GL_COLOR_ATTACHMENT2,
+                               GL_COLOR_ATTACHMENT3 };
+      glDrawBuffers(4, DrawBuffers);
 
-      if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-        throw std::logic_error("Framebuffer initialization error");
+      GLenum Status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 
-      glBindFramebuffer(GL_FRAMEBUFFER, 0);
+      if (Status != GL_FRAMEBUFFER_COMPLETE)
+        throw std::logic_error("gBuffer framebuffer error.");
+
+      // restore default FBO
+      glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
     }
 
     Renderer::~Renderer()
     {
-      glDeleteFramebuffers(1, &frameBuffer_);
-      glDeleteTextures(1, &renderTexture_);
-      glDeleteRenderbuffers(1, &renderBuffer_);
+
     }
 
     bool
@@ -65,34 +68,46 @@ namespace Engine
     }
 
     const GLchar*
-    Renderer::get_quad_vertex_shader()
+    Renderer::get_gbuffer_vertex_shader()
     {
-      return "#version 330 core\n"
-              "layout (location = 0) in vec3 position;\n"
-              "layout (location = 1) in vec3 normal;\n"
-              "layout (location = 2) in vec2 texCoords;\n"
-              "\n"
-              "out vec2 TexCoords;\n"
-              "\n"
+      return "#version 330\n"
+              "layout (location = 0) in vec3 Position;\n"
+              "layout (location = 1) in vec3 Normal;\n"
+              "layout (location = 2) in vec2 TexCoord;\n"
+              "uniform mat4 model;\n"
+              "uniform mat4 view;\n"
+              "uniform mat4 projection;\n"
+              "out vec2 TexCoord0;\n"
+              "out vec3 Normal0;\n"
+              "out vec3 WorldPos0;\n"
               "void main()\n"
               "{\n"
-              "    gl_Position = vec4(position.x, position.y, position.z, 1.0f);\n"
-              "    TexCoords = texCoords;\n"
+              "    vec4 worldPos  = model * vec4(Position, 1.0f);\n"
+              "    gl_Position    = projection * view * worldPos;\n"
+              "    TexCoord0      = TexCoord;\n"
+              "    Normal0        = transpose(inverse(mat3(model))) * Normal;\n"
+              "    WorldPos0      = worldPos.xyz;\n"
               "}\n\0";
     }
 
     const GLchar*
-    Renderer::get_quad_fragment_shader()
+    Renderer::get_gbuffer_fragment_shader()
     {
-      return "#version 330 core\n"
-              "in vec2 TexCoords;\n"
-              "out vec4 color;\n"
-              "\n"
-              "uniform sampler2D screenTexture;\n"
-              "\n"
+      return "#version 330\n"
+              "in vec2 TexCoord0;\n"
+              "in vec3 Normal0;\n"
+              "in vec3 WorldPos0;\n"
+              "layout (location = 0) out vec3 WorldPosOut;\n"
+              "layout (location = 1) out vec3 DiffuseOut;\n"
+              "layout (location = 2) out vec3 NormalOut;\n"
+              "layout (location = 3) out vec3 TexCoordOut;\n"
+              "uniform sampler2D gColorMap;\n"
               "void main()\n"
-              "{ \n"
-              "    color = texture(screenTexture, TexCoords);\n"
+              "{\n"
+              "    WorldPosOut     = WorldPos0;\n"
+              "    DiffuseOut      = texture(gColorMap, TexCoord0).xyz;\n"
+              "    NormalOut       = normalize(Normal0);\n"
+              "    TexCoordOut     = vec3(TexCoord0, 0.0);\n"
               "}\n\0";
     }
 
@@ -107,26 +122,20 @@ namespace Engine
 
         if (geometry && material && transform)
         {
-          material->get_shader().use_shader();
-          GLuint program = material->get_shader().get_program();
-
-          // Hardcoded view till the camera view works
-          const glm::mat4& view = camera_->get_view_matrix();
-          //glm::mat4 view;
-          //view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
-
+          GLuint program = gBufferShader_.get_program();
           GLint modelUni = glGetUniformLocation(program, "model");
           GLint viewUni = glGetUniformLocation(program, "view");
           GLint projectionUni = glGetUniformLocation(program, "projection");
 
           // Sends the view matrix
-          glUniformMatrix4fv(viewUni, 1, GL_FALSE, glm::value_ptr(view));
+          glUniformMatrix4fv(viewUni, 1, GL_FALSE,
+                             glm::value_ptr(camera_->get_view_matrix()));
           // Sends the projection
-          glUniformMatrix4fv(projectionUni, 1, GL_FALSE, glm::value_ptr(camera_->get_projection_matrix()));
+          glUniformMatrix4fv(projectionUni, 1, GL_FALSE,
+                             glm::value_ptr(camera_->get_projection_matrix()));
           // Sends the model matrix
-          glm::mat4 model;
-          glUniformMatrix4fv(modelUni, 1, GL_FALSE, glm::value_ptr(transform->get_world_matrix()));
-          //glUniformMatrix4fv(modelUni, 1, GL_FALSE, glm::value_ptr(model));
+          glUniformMatrix4fv(modelUni, 1, GL_FALSE,
+                             glm::value_ptr(transform->get_world_matrix()));
 
           // Render
           glBindVertexArray(geometry->get_vao());
@@ -142,23 +151,34 @@ namespace Engine
     void
     Renderer::display()
     {
-      glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer_);
+      gBufferShader_.use_shader();
 
-      glClearColor(1.0f, 0.0f, 0.0f, 1.0f); //R - Quad
+      glBindFramebuffer(GL_DRAW_FRAMEBUFFER, gFrameBuffer_);
+
+      glClearColor(0.2zf, 0.0f, 0.0f, 1.0f); // R - Quad
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+      // Render models
       render(get_target());
 
-      glBindFramebuffer(GL_FRAMEBUFFER, 0);
-      glClearColor(0.0f, 0.0f, 1.0f, 1.0f); //B - Screen
+      glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+      glBindFramebuffer(GL_READ_FRAMEBUFFER, gFrameBuffer_);
 
-      quadShader_.use_shader();
-      glBindVertexArray(quadGeometry_->get_vao());
-      glBindTexture(GL_TEXTURE_2D, renderTexture_);
-      glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+      GLint HalfWidth = (GLint)(renderWidth_ / 2.0f);
+      GLint HalfHeight = (GLint)(renderHeight_ / 2.0f);
 
-      glBindVertexArray(0);
+      glReadBuffer(GL_COLOR_ATTACHMENT0);
+      glBlitFramebuffer(0, 0, renderWidth_, renderHeight_, 0, 0, HalfWidth, HalfHeight, GL_COLOR_BUFFER_BIT, GL_LINEAR);
+
+      glReadBuffer(GL_COLOR_ATTACHMENT1);
+      glBlitFramebuffer(0, 0, renderWidth_, renderHeight_, 0, HalfHeight, HalfWidth, renderHeight_, GL_COLOR_BUFFER_BIT, GL_LINEAR);
+
+      glReadBuffer(GL_COLOR_ATTACHMENT2);
+      glBlitFramebuffer(0, 0, renderWidth_, renderHeight_, HalfWidth, HalfHeight, renderWidth_, renderHeight_, GL_COLOR_BUFFER_BIT, GL_LINEAR);
+
+      glReadBuffer(GL_COLOR_ATTACHMENT3);
+      glBlitFramebuffer(0, 0, renderWidth_, renderHeight_, HalfWidth, 0, renderWidth_, HalfHeight, GL_COLOR_BUFFER_BIT, GL_LINEAR);
     }
 
   } // namespace Components
