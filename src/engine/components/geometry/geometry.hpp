@@ -40,6 +40,7 @@ namespace Engine
       private:
         void init();
 
+
       private:
         VertexList vertices_;
         IndexList indices_;
