@@ -155,7 +155,7 @@ namespace Engine
 
       glBindFramebuffer(GL_DRAW_FRAMEBUFFER, gFrameBuffer_);
 
-      glClearColor(0.2zf, 0.0f, 0.0f, 1.0f); // R - Quad
+      glClearColor(0.2f, 0.0f, 0.0f, 1.0f); // R - Quad
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
       // Render models
