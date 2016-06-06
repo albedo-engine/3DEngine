@@ -53,7 +53,7 @@ int main()
   Node::NodePtr triangle = Node::create("triangle");
   triangle->add_component(Transform::create());
   triangle->component<Transform>()->rotate(45.0f, glm::vec3(0, 1, 0));
-  triangle->component<Transform>()->translate(glm::vec3(-10, 0, -10));
+  triangle->component<Transform>()->translate(glm::vec3(0, 0, 0));
   triangle->add_component(Cube::create());
   triangle->add_component(Material::create());
 
@@ -61,11 +61,13 @@ int main()
   Node::NodePtr camera = Node::create("camera");
   camera->add_component(PerspectiveCamera::create(width, height));
   camera->add_component(Transform::create());
-  camera->component<Transform>()->look_at(glm::vec3(-5, 0, -10));
+  camera->component<Transform>()->translate(glm::vec3(0, 0, 5));
+  camera->component<Transform>()->look_at(glm::vec3(0, 0, 0));
 
   // Link components in a single scene by adding them to a root node
   Node::NodePtr root = Node::create("root");
   Renderer::RendererPtr renderer = Renderer::create(camera, width, height);
+  renderer->toggle_debug(true);
   root->add_component(renderer);
   root->add_child(camera);
   root->add_child(triangle);
@@ -75,8 +77,6 @@ int main()
     glfwPollEvents();
 
     auto t = triangle->component<Transform>();
-    t->translate(glm::vec3(0.05, 0, 0));
-    camera->component<Transform>()->look_at(t->get_world_position());
     renderer->display();
 
     glfwSwapBuffers(window);

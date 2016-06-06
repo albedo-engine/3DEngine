@@ -41,8 +41,8 @@ int main()
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
-  int width = 640;
-  int height = 480;
+  int width = 800;
+  int height = 600;
   GLFWwindow* window = glfwCreateWindow(width, height, "Triangle Sample", NULL, NULL);
 
   if (!window)
@@ -78,6 +78,7 @@ int main()
   // Link components in a single scene by adding them to a root node
   Node::NodePtr root = Node::create("root");
   Renderer::RendererPtr renderer = Renderer::create(camera_node, width, height);
+  renderer->toggle_debug(true);
   root->add_component(renderer);
   root->add_child(camera_node);
   root->add_child(cube);
