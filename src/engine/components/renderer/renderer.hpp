@@ -35,6 +35,8 @@ namespace Engine
         void render(Scene::Node::NodePtr node);
         void display();
 
+        void toggle_debug(bool debug);
+
       private:
         const GLchar* get_gbuffer_vertex_shader();
         const GLchar* get_gbuffer_fragment_shader();
@@ -52,6 +54,8 @@ namespace Engine
         // Position, Diffuse, Normal, Texcoords
         GLuint gTextures[4];
         GLuint gDepthTexture;
+
+        bool debug_ = false;
 
     };
   } // namespace Component
