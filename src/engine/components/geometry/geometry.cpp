@@ -57,7 +57,6 @@ namespace Engine
     void
     Geometry::init()
     {
-
       glGenVertexArrays(1, &vao_);
       glGenBuffers(1, &vbo_);
       glGenBuffers(1, &ebo_);
