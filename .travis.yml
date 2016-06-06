@@ -23,4 +23,4 @@ matrix:
             - libglew-dev
 script:
   - export CXX=$COMPILER; 
-  - mkdir build; cd build/; cmake ..; make engine
+  - mkdir build; cd build/; cmake ..; make check
