@@ -14,26 +14,43 @@ void test_transform()
   Node::NodePtr child = Node::create();
 
   ASSERT(parent->component<Transform>() != nullptr, "get existing component");
-  ASSERT(parent->component<Geometry>() == nullptr, "get non-existing component");
-  ASSERT(parent->component<Transform>()->get_local_position() == glm::vec3(0, 0, 0), "check local position");
+  ASSERT(parent->component<Geometry>() == nullptr,
+         "get non-existing component");
+  ASSERT(
+    parent->component<Transform>()->get_local_position() == glm::vec3(0, 0, 0),
+    "check local position");
   ASSERT(parent->get_parent() == nullptr, "check for null parents");
-  ASSERT(parent->component<Transform>()->get_world_position() == glm::vec3(0, 0, 0), "check world position");
+  ASSERT(
+    parent->component<Transform>()->get_world_position() == glm::vec3(0, 0, 0),
+    "check world position");
 
   // Checks position without parent
   parent->component<Transform>()->translate(glm::vec3(5, 0, 0));
-  ASSERT(parent->component<Transform>()->get_local_position() == glm::vec3(5, 0, 0), "check local position");
-  ASSERT(parent->component<Transform>()->get_world_position() == glm::vec3(5, 0, 0), "check world position");
+  ASSERT(
+    parent->component<Transform>()->get_local_position() == glm::vec3(5, 0, 0),
+    "check local position");
+  ASSERT(
+    parent->component<Transform>()->get_world_position() == glm::vec3(5, 0, 0),
+    "check world position");
 
   // Checks position before adding parent
   child->add_component(Transform::create());
   child->component<Transform>()->translate(glm::vec3(0, 1, 0));
-  ASSERT(child->component<Transform>()->get_local_position() == glm::vec3(0, 1, 0), "check local position");
-  ASSERT(child->component<Transform>()->get_world_position() == glm::vec3(0, 1, 0), "check world position");
+  ASSERT(
+    child->component<Transform>()->get_local_position() == glm::vec3(0, 1, 0),
+    "check local position");
+  ASSERT(
+    child->component<Transform>()->get_world_position() == glm::vec3(0, 1, 0),
+    "check world position");
 
   // Checks position relative to parent
   parent->add_child(child);
-  ASSERT(child->component<Transform>()->get_local_position() == glm::vec3(0, 1, 0), "check local position");
-  ASSERT(child->component<Transform>()->get_world_position() == glm::vec3(5, 1, 0), "check world position");
+  ASSERT(
+    child->component<Transform>()->get_local_position() == glm::vec3(0, 1, 0),
+    "check local position");
+  ASSERT(
+    child->component<Transform>()->get_world_position() == glm::vec3(5, 1, 0),
+    "check world position");
 
   // Check centered rotation
   Node::NodePtr rotate_node = Node::create("rotate_node");
@@ -103,7 +120,8 @@ void test_node()
 
 void test_camera()
 {
-  PerspectiveCamera::PerspectiveCameraPtr camera = PerspectiveCamera::create();
+  PerspectiveCamera::PerspectiveCameraPtr camera = PerspectiveCamera::create(
+    800.f, 600.f);
 
   ASSERT(camera->get_fov() == 45.0f, "get_fov");
   ASSERT(camera->get_fov() != 90.0f, "get_fov");
