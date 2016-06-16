@@ -1,0 +1,1 @@
+#define GET_SHADER(SHADER) *shader_source_ ##SHADER

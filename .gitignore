@@ -1,4 +1,5 @@
 build/
+src/engine/shaders/formatted
 
 # cLion
 .idea
