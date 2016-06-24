@@ -78,7 +78,7 @@ namespace Engine
     void
     Transform::scale(const glm::vec3& scale)
     {
-      local_scale_ += scale;
+      local_scale_ *= scale;
     }
 
     void
