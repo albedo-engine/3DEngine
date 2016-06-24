@@ -5,12 +5,17 @@ namespace Engine
 {
   namespace Components
   {
+    int Material::ID = 0;
+
     Material::Material()
             : shader_(Rendering::Shader::createFromStrings(
             get_vertex_shader(),
             get_fragment_shader()))
     {
       shader_.compile();
+
+      // Updates the global material ID
+      material_id_ = ID++;
     }
 
     Material::~Material()
@@ -23,6 +28,11 @@ namespace Engine
       return shader_;
     }
 
+    const int&
+    Material::get_material_id() const
+    {
+      return material_id_;
+    }
 
     const GLchar*
     Material::get_vertex_shader()
@@ -46,7 +56,7 @@ namespace Engine
               "void main()\n"
               "{\n"
               "color = vec4(1.0f, 0.8f, 0.3f, 1.0f);\n"
-              "}\n\0";;
+              "}\n\0";
     }
 
     bool
