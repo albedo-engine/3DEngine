@@ -8,6 +8,8 @@
 #include <components/geometry/geometry.hpp>
 #include <components/camera/perspective-camera.hpp>
 
+#include <data/data-container.hpp>
+
 namespace Engine
 {
   class Engine

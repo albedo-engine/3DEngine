@@ -4,6 +4,7 @@ set(EngineSource engine.cpp)
 
 add_subdirectory(components)
 add_subdirectory(rendering)
+add_subdirectory(data)
 add_subdirectory(scene)
 add_subdirectory(shaders)
 

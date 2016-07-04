@@ -1,46 +1,35 @@
 #pragma once
 
 #include <memory>
+#include <vector>
+#include <boost/variant.hpp>
 
-class DataContainer
+#include "engine/components/material/material.hpp"
+#include "data-container.hpp"
+#include "singleton.hpp"
+
+namespace Engine
 {
-  public:
-    typedef std::shared_ptr<DataContainer>  DataContainerPtr;
-
-    template <typename DataType>
-    using DataListPtr       =   std::shared_ptr<std::vector<DataType>>;
-    using DataListContainer =   std::vector<DataListPtr>;
-
-  public:
-    DataContainerPtr
-    static inline
-    instance()
+  namespace Data
+  {
+    template <typename ... DataTypes>
+    class DataContainerType : public Singleton<DataContainerType<DataTypes ...>>
     {
-      if (instance_ == nullptr)
-        instance_ = std::make_shared<DataContainer>();
-      return instance_;
-    }
+      public:
+        using DataListContainer = std::tuple<std::vector<DataTypes>...>;
 
-  public:
-    DataContainer();
+      public:
+        template<typename DataType>
+        std::vector<DataType>&
+        get_list()
+        {
+          return std::get<std::vector<DataType>>(data_);
+        }
 
-  public:
-    template <typename DataType>
-    std::vector<DataType>&
-    get_list()
-    {
-      for (auto& elt : data_)
-      {
-        auto list = boost::get<std::shared_ptr<std::vector<DataType>>(elt);
-        if (list != nullptr)
-          return *list;
-      }
+      private:
+        DataListContainer data_;
+    };
 
-      return nullptr;
-    }
-
-  private:
-    DataContainerPtr    instance_;
-
-    DataListContainer   data_;
-};
+    using DataContainer = DataContainerType<Components::Material::MaterialPtr>;
+  } // namespace Data
+} // namespace Engine
