@@ -21,6 +21,7 @@ matrix:
           packages:
             - cmake
             - libglew-dev
+            - libboost-dev
 script:
   - export CXX=$COMPILER; 
   - mkdir build; cd build/; cmake ..; make check
