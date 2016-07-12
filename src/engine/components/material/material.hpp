@@ -4,19 +4,20 @@
 #include <components/component.hpp>
 #include <components/geometry/quad.hpp>
 #include <rendering/shader.hpp>
-#include <boost/variant.hpp>
-#include <unordered_map>
+#include <data/store.hpp>
 
 namespace Engine
 {
   namespace Components
   {
+    /** \class Material
+     *
+     * \brief Link between an actual shader and its data, contained in a Store.
+     */
     class Material : public Component
     {
       public:
         typedef std::shared_ptr<Material>                         MaterialPtr;
-        typedef boost::variant<glm::vec3, glm::mat4>            AttributeType;
-        typedef std::unordered_map<std::string, AttributeType>  AttributesMap;
 
       public:
         MaterialPtr
@@ -34,6 +35,11 @@ namespace Engine
         bool unique() override;
 
       public:
+        /** \brief Set the pointer to the actual shader using this material.
+         *
+         * \param shader
+         * the pointer to the shader using this material.
+         */
         void set_shader(Rendering::Shader::ShaderPtr shader);
 
       public:
@@ -41,13 +47,15 @@ namespace Engine
 
         const GLuint& get_material_id() const;
 
+        const Data::Store::StorePtr get_store() const;
+
       private:
         static GLuint ID;
 
       private:
         Rendering::Shader::ShaderPtr  shader_;
-        AttributesMap                 attributes_;
         GLuint                        material_id_;
+        Data::Store::StorePtr         store_;
 
     };
   } // namespace Component

@@ -14,8 +14,7 @@ namespace Engine
     }
 
     Material::~Material()
-    {
-    }
+    { }
 
     void
     Material::set_shader(Rendering::Shader::ShaderPtr shader)
@@ -33,6 +32,12 @@ namespace Engine
     Material::get_material_id() const
     {
       return material_id_;
+    }
+
+    const Data::Store::StorePtr
+    Material::get_store() const
+    {
+      return store_;
     }
 
     bool

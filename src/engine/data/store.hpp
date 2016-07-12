@@ -10,6 +10,13 @@ namespace Engine
 {
   namespace Data
   {
+    /** \class Store
+     *
+     * \brief Container class storing different types elements into an unique
+     * unordered map.
+     * The class is used as bridge between the application and the shaders.
+     * It allows to map data to uniforms.
+     */
     class Store
     {
       public:
@@ -31,6 +38,13 @@ namespace Engine
           return boost::get<T>(attributes_[attribute_name]);
         }
 
+        /** \brief Adds/Modifies an attribute in the store.
+         *
+         * \param attribute_name
+         * the key (represented by a string) of the attribute to add/modify.
+         * \param value
+         * The value to add at the given key.
+         */
         template<typename T>
         void set_attribute(std::string attribute_name, T value)
         {
