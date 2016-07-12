@@ -14,17 +14,12 @@ namespace Engine
         typedef std::shared_ptr<Shader> ShaderPtr;
 
       public:
-
-        static ShaderPtr
-                createFromStrings(const GLchar* vertexShader,
-                                  const GLchar* fragmentShader);
+        Shader(const GLchar* vertexShader, const GLchar* fragmentShader);
 
         static ShaderPtr
                 createFromFiles(const GLchar* vertexShaderPath,
                                 const GLchar* fragmentShaderPath);
 
-      public:
-        Shader(const GLchar* vertexShader, const GLchar* fragmentShader);
 
       public:
         bool compile();

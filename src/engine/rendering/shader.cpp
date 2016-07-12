@@ -4,16 +4,11 @@ namespace Engine
 {
   namespace Rendering
   {
-    Shader::Shader(const GLchar* vertexShader, const GLchar* fragmentShader)
-            : vertexShader_(vertexShader), fragmentShader_(fragmentShader)
-    { }
 
-    Shader::ShaderPtr
-    Shader::createFromStrings(const GLchar* vertexShader,
-                              const GLchar* fragmentShader)
-    {
-      return std::make_shared<Shader>(vertexShader, fragmentShader);
-    }
+    Shader::Shader(const GLchar* vertexShader, const GLchar* fragmentShader)
+            : vertexShader_(vertexShader)
+            , fragmentShader_(fragmentShader)
+    { }
 
     Shader::ShaderPtr
     Shader::createFromFiles(const GLchar* vertexShaderPath,

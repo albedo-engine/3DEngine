@@ -5,7 +5,14 @@
 #include <rendering/shader.hpp>
 #include <components/transform/transform.hpp>
 #include <components/material/material.hpp>
+#include <components/geometry/quad.hpp>
 #include <components/camera/camera.hpp>
+#include <components/light/light.hpp>
+
+#include <deferred_fs.h>
+#include <deferred_vs.h>
+#include <gbuffer_fs.h>
+#include <gbuffer_vs.h>
 
 namespace Engine
 {
@@ -14,7 +21,7 @@ namespace Engine
     class Renderer : public Component
     {
       public:
-        typedef std::shared_ptr<Renderer>  RendererPtr;
+        typedef std::shared_ptr<Renderer> RendererPtr;
 
       public:
         RendererPtr
@@ -32,14 +39,28 @@ namespace Engine
         bool unique() override;
 
       public:
-        void render(Scene::Node::NodePtr node);
         void display();
 
-        void toggle_debug(bool debug);
+        enum DebugOptions
+        {
+          SHOW_POSITION_BUFFER = 1,
+          SHOW_DIFFUSE_BUFFER = 2,
+          SHOW_NORMAL_BUFFER = 4,
+          WIREFRAME_MODE = 8,
+        };
+        void toggle_debug(unsigned int options);
 
       private:
-        const GLchar* get_gbuffer_vertex_shader();
-        const GLchar* get_gbuffer_fragment_shader();
+        void render();
+        void render_geometry(Scene::Node::NodePtr node);
+        void render_lights();
+        void build_lights_vector(std::vector<Scene::Node::NodePtr>& vec,
+                                 Scene::Node::NodePtr node);
+
+
+        void debug_display();
+        void debug_display_framebuffer(GLint width, GLint height,
+                                       unsigned int position);
 
       private:
         int renderWidth_;
@@ -48,15 +69,17 @@ namespace Engine
         Camera::CameraPtr camera_;
 
         Rendering::Shader gBufferShader_;
+        Rendering::Shader deferredShader_;
+
+        Components::Quad::QuadPtr renderQuad_;
 
         GLuint gFrameBuffer_;
 
-        // Position, Diffuse, Normal, Texcoords
-        GLuint gTextures[4];
+        // Position, Normal, Diffuse
+        GLuint gTextures[3];
         GLuint gDepthTexture;
 
-        bool debug_ = false;
-
+        unsigned int debugOptions_ = 0;
     };
   } // namespace Component
 } // namespace Engine

@@ -1,48 +1,52 @@
 #include <engine.hpp>
 #include <GLFW/glfw3.h>
+#include <ctime>
 
 #include <components/geometry/triangle.hpp>
 #include <components/renderer/renderer.hpp>
 #include <components/geometry/cube.hpp>
+#include <components/light/pointlight.hpp>
 
 using namespace Engine;
 using namespace Engine::Scene;
 using namespace Engine::Components;
 
 static void error_callback(int error, const char* description);
-static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+static void key_callback(GLFWwindow* window, int key, int scancode, int action,
+                         int mods);
 static void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 
 static void update_camera();
 static void update_camera_lookat(GLfloat x_offset, GLfloat y_offset);
 
 // Global attributes
-bool                keys[1024];               // Dictionnary allowing to know whether a key is pressed/released
+bool keys[1024];               // Dictionnary allowing to know whether a key is pressed/released
 
-Node::NodePtr       camera_node   = nullptr;  // Holds a pointer to the camera to make it move
-GLfloat             camera_yaw    = 0.0f;
-GLfloat             camera_pitch  = 0.0f;
+Node::NodePtr camera_node = nullptr;  // Holds a pointer to the camera to make it move
+GLfloat camera_yaw = 0.0f;
+GLfloat camera_pitch = 0.0f;
 
-GLfloat             last_mouse_x  = 0.0f;
-GLfloat             last_mouse_y  = 0.0f;
+GLfloat last_mouse_x = 0.0f;
+GLfloat last_mouse_y = 0.0f;
 
-bool                first         = true;
+bool first = true;
 
-GLfloat             game_time     = 0.0f;     // Makes animations frame independant
-GLfloat             last_frame    = 0.0f;     // Makes animations frame independant
+GLfloat game_time = 0.0f;     // Makes animations frame independant
+GLfloat last_frame = 0.0f;     // Makes animations frame independant
 
 int main()
 {
   glfwSetErrorCallback(error_callback);
-  glewExperimental = GL_TRUE;
+
   if (!glfwInit())
     throw 1;
+
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
-  int width = 800;
-  int height = 600;
+  int width = 1500;
+  int height = 900;
   GLFWwindow* window = glfwCreateWindow(width, height, "Triangle Sample", NULL, NULL);
 
   if (!window)
@@ -75,13 +79,39 @@ int main()
   camera_node->add_component(Transform::create());
   camera_node->component<Transform>()->translate(glm::vec3(0, 0, 5));
 
-  // Link components in a single scene by adding them to a root node
+  // Root node
   Node::NodePtr root = Node::create("root");
   Renderer::RendererPtr renderer = Renderer::create(camera_node, width, height);
-  renderer->toggle_debug(true);
+  /*renderer->toggle_debug(
+          Renderer::DebugOptions::SHOW_POSITION_BUFFER |
+          Renderer::DebugOptions::SHOW_NORMAL_BUFFER |
+          Renderer::DebugOptions::SHOW_DIFFUSE_BUFFER
+  );*/
   root->add_component(renderer);
   root->add_child(camera_node);
   root->add_child(cube);
+
+  // Create some randomized lights
+  srand(time(0));
+  for (int i = 0; i < 32; ++i)
+  {
+    // Light
+    Node::NodePtr light = Node::create();
+    PointLight::PointLightPtr pointlight = PointLight::create();
+    pointlight->set_color(glm::vec3((rand() % 100) / 200.0f + 0.6f,
+                                    (rand() % 100) / 200.0f + 0.6f,
+                                    (rand() % 100) / 200.0f + 0.6f));
+    light->add_component(pointlight);
+
+    // Position
+    light->add_component(Transform::create());
+    light->component<Transform>()->translate(glm::vec3((rand() % 100) / 50.0f * 3.0f,
+                                                       (rand() % 100) / 50.0f * 3.0f,
+                                                       (rand() % 100) / 50.0f * 3.0f));
+
+    root->add_child(light);
+  }
+
 
   while (!glfwWindowShouldClose(window))
   {
@@ -109,14 +139,18 @@ int main()
 static void update_camera()
 {
   auto camera_transfrom = camera_node->component<Transform>();
-  if(keys[GLFW_KEY_W])
-    camera_transfrom->translate(game_time * 5.0f, Transform::Direction::FORWARD);
-  if(keys[GLFW_KEY_S])
-    camera_transfrom->translate(game_time * 5.0f, Transform::Direction::BACKWARD);
-  if(keys[GLFW_KEY_A])
-    camera_transfrom->translate(game_time * 5.0f, Transform::Direction::WESTWARD);
-  if(keys[GLFW_KEY_D])
-    camera_transfrom->translate(game_time * 5.0f, Transform::Direction::EASTWARD);
+  if (keys[GLFW_KEY_W])
+    camera_transfrom->translate(game_time * 5.0f,
+                                Transform::Direction::FORWARD);
+  if (keys[GLFW_KEY_S])
+    camera_transfrom->translate(game_time * 5.0f,
+                                Transform::Direction::BACKWARD);
+  if (keys[GLFW_KEY_A])
+    camera_transfrom->translate(game_time * 5.0f,
+                                Transform::Direction::WESTWARD);
+  if (keys[GLFW_KEY_D])
+    camera_transfrom->translate(game_time * 5.0f,
+                                Transform::Direction::EASTWARD);
 }
 
 static void update_camera_lookat(GLfloat x_offset, GLfloat y_offset)
@@ -131,8 +165,9 @@ static void update_camera_lookat(GLfloat x_offset, GLfloat y_offset)
   //glm::quat quat = glm::angleAxis(x_offset, glm::vec3(0, 1, 0));
   //camera_transform->rotate(quat);
   //quat = glm::angleAxis(y_offset, camera_transform->get_right());
-  glm::quat quat = glm::angleAxis(glm::radians(-camera_pitch), glm::vec3(1,0,0));
-  quat *= glm::angleAxis(glm::radians(camera_yaw), glm::vec3(0,1,0));
+  glm::quat quat = glm::angleAxis(glm::radians(-camera_pitch),
+                                  glm::vec3(1, 0, 0));
+  quat *= glm::angleAxis(glm::radians(camera_yaw), glm::vec3(0, 1, 0));
   camera_transform->rotate_to(quat);
 }
 
@@ -141,7 +176,8 @@ static void error_callback(int error, const char* description)
   std::cerr << "Error " << error << ": " << description;
 }
 
-static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+static void key_callback(GLFWwindow* window, int key, int scancode, int action,
+                         int mods)
 {
   if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
     glfwSetWindowShouldClose(window, GL_TRUE);

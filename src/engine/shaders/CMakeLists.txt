@@ -4,22 +4,17 @@ separate_arguments(FILES)
 
 foreach (file ${FILES})
 
-    message(STATUS " Embedding shader " ${file})
-    message(STATUS " Dir: " ${PROJECT_BINARY_DIR})
     get_filename_component(name ${file} NAME_WE)
     get_filename_component(extension ${file} EXT)
-
-    message(STATUS " NAME " ${name})
-    message(STATUS " EXT  " ${extension})
 
     string(REGEX REPLACE "\\." "" ext_no_dot ${extension})
 
 
     set(outfile formatted/${name}_${ext_no_dot}.h)
-    message(STATUS " write " ${outfile}/)
 
 
     file(STRINGS ${file} lines)
+    unset(source)
     foreach (line ${lines})
         set(source "${source}    \"${line}\\n\"\n")
     endforeach()
