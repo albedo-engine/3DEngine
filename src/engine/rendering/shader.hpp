@@ -10,27 +10,29 @@ namespace Engine
   {
     class Shader
     {
-      private:
-        Shader(const GLchar* vertexShader, const GLchar* fragmentShader);
+      public:
+        typedef std::shared_ptr<Shader> ShaderPtr;
 
       public:
 
-        static Shader
+        static ShaderPtr
                 createFromStrings(const GLchar* vertexShader,
                                   const GLchar* fragmentShader);
 
-        static Shader
+        static ShaderPtr
                 createFromFiles(const GLchar* vertexShaderPath,
                                 const GLchar* fragmentShaderPath);
 
+      public:
+        Shader(const GLchar* vertexShader, const GLchar* fragmentShader);
 
+      public:
         bool compile();
         const GLchar* get_compilation_info();
 
         void use_shader() const;
 
         const GLuint& get_program() const;
-
 
       private:
         bool has_compiled(GLuint shader);

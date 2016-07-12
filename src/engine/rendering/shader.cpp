@@ -8,14 +8,14 @@ namespace Engine
             : vertexShader_(vertexShader), fragmentShader_(fragmentShader)
     { }
 
-    Shader
+    Shader::ShaderPtr
     Shader::createFromStrings(const GLchar* vertexShader,
                               const GLchar* fragmentShader)
     {
-      return Shader(vertexShader, fragmentShader);
+      return std::make_shared<Shader>(vertexShader, fragmentShader);
     }
 
-    Shader
+    Shader::ShaderPtr
     Shader::createFromFiles(const GLchar* vertexShaderPath,
                             const GLchar* fragmentShaderPath)
     {
@@ -45,7 +45,7 @@ namespace Engine
       else
         throw std::invalid_argument("Fragment shader file cannot be opened");
 
-      return Shader(vertexShader.c_str(), fragmentShader.c_str());
+      return std::make_shared<Shader>(vertexShader.c_str(), fragmentShader.c_str());
     }
 
     bool
