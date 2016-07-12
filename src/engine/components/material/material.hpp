@@ -41,18 +41,6 @@ namespace Engine
 
         const GLuint& get_material_id() const;
 
-        template <typename T>
-        const AttributeType& get_attribute(std::string attribute_name)
-        {
-          return boost::get<T>(attributes_[attribute_name]);
-        }
-
-        template <typename T>
-        void set_attribute(std::string attribute_name, T value)
-        {
-          attributes_[attribute_name] = value;
-        }
-
       private:
         static GLuint ID;
 
