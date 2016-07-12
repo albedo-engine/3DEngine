@@ -4,7 +4,7 @@
 #include <vector>
 #include <boost/variant.hpp>
 
-#include "engine/components/material/material.hpp"
+#include <components/material/material.hpp>
 #include "data-container.hpp"
 #include "singleton.hpp"
 
@@ -13,7 +13,7 @@ namespace Engine
   namespace Data
   {
     template <typename ... DataTypes>
-    class DataContainerType : public Singleton<DataContainerType<DataTypes ...>>
+    class DataContainerType
     {
       public:
         using DataListContainer = std::tuple<std::vector<DataTypes>...>;
