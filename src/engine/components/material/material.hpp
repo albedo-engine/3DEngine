@@ -34,9 +34,12 @@ namespace Engine
         bool unique() override;
 
       public:
-        const Rendering::Shader get_shader() const;
+        void set_shader(Rendering::Shader::ShaderPtr shader);
 
-        const int& get_material_id() const;
+      public:
+        const Rendering::Shader::ShaderPtr get_shader() const;
+
+        const GLuint& get_material_id() const;
 
         template <typename T>
         const AttributeType& get_attribute(std::string attribute_name)
@@ -51,16 +54,12 @@ namespace Engine
         }
 
       private:
-        const GLchar* get_vertex_shader();
-        const GLchar* get_fragment_shader();
+        static GLuint ID;
 
       private:
-        static int ID;
-
-      private:
-        Rendering::Shader shader_;
-        AttributesMap     attributes_;
-        int               material_id_;
+        Rendering::Shader::ShaderPtr  shader_;
+        AttributesMap                 attributes_;
+        GLuint                        material_id_;
 
     };
   } // namespace Component
