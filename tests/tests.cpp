@@ -1,10 +1,13 @@
 #include "utils/test_utils.hpp"
 
 #include "engine.hpp"
+#include <components/component-factory.hpp>
+#include <components/light/pointlight.hpp>
 
 using namespace Engine;
 using namespace Engine::Scene;
 using namespace Engine::Components;
+using namespace Engine::Data;
 
 void test_transform()
 {
@@ -131,12 +134,46 @@ void test_camera()
   ASSERT(camera->get_fov() == 90.0f, "set_fov");
 }
 
+void test_store()
+{
+  auto pointlight = ComponentFactory::instance()->component<PointLight>();
+  ASSERT(pointlight->get_color() == glm::vec3(), "test store with light");
+
+  pointlight->set_color(glm::vec3(0.5f, 0.0f, 0.1f));
+  auto color = pointlight->get_color();
+  ASSERT(color.r == 0.5f && color.g == 0.0f && color.b == 0.1f, "test store with light");
+}
+
+void test_data_container()
+{
+  /* Material linear list test */
+  auto factory = ComponentFactory::instance();
+  auto& data = factory->get_data_container();
+  auto& material_list = data.get<Material::MaterialPtr>();
+  ASSERT(material_list.size() == 0, "global material list size");
+
+  auto mat = factory->component<Material>();
+  ASSERT(mat->get_material_id() == 0, "check material id from factory");
+  auto mat2 = factory->component<Material>();
+  ASSERT(mat2->get_material_id() == 1, "check material id from factory");
+
+  ASSERT(material_list.size() == 2, "global material list size");
+
+  /* Light linear list test */
+  auto& light_list = factory->get_data_container().get<Light::LightPtr>();
+  ASSERT(light_list.size() == 0, "global light list size");
+  auto light = factory->component<PointLight>();
+  ASSERT(light_list.size() == 1, "global light list size");
+}
+
 int main()
 {
   // Tests for components
   LAUNCH(test_node);
   LAUNCH(test_components);
   LAUNCH(test_camera);
+  LAUNCH(test_data_container);
+  LAUNCH(test_store);
 
   return 0;
 }
