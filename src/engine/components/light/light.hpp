@@ -3,6 +3,7 @@
 #include <utils/headers/common.hpp>
 #include <components/component.hpp>
 #include <components/transform/transform.hpp>
+#include <data/store.hpp>
 
 namespace Engine
 {
@@ -26,7 +27,7 @@ namespace Engine
         void set_color(glm::vec3 color);
 
       private:
-        glm::vec3 color_;
+        Data::Store store_;
 
     };
   } // Namespace Component

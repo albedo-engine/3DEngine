@@ -5,7 +5,9 @@ namespace Engine
   namespace Components
   {
     Light::Light()
-    { }
+    {
+      this->set_color(glm::vec3());
+    }
 
     Light::~Light()
     { }
@@ -19,13 +21,13 @@ namespace Engine
     const glm::vec3&
     Light::get_color() const
     {
-      return color_;
+      return store_.get<glm::vec3>("color");
     }
 
     void
     Light::set_color(glm::vec3 color)
     {
-      color_ = color;
+      store_.set<glm::vec3>("color", color);
     }
 
   } // Namespace Components
