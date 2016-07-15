@@ -1,13 +1,10 @@
-//
-// Created by david on 09/07/16.
-//
-
 #pragma once
 
 #include <memory>
 #include <data/data-container.hpp>
 #include <data/singleton.hpp>
 #include <components/material/material.hpp>
+#include <components/light/pointlight.hpp>
 
 namespace Engine
 {
@@ -23,6 +20,8 @@ namespace Engine
           return get_component_ptr<T>();
         }
 
+        Data::DataContainer& get_data_container();
+
       private:
         template<typename T>
         std::shared_ptr<T>
@@ -35,12 +34,26 @@ namespace Engine
         Data::DataContainer data_container_;
     };
 
+    // TODO: Factorize the specilization code using a common function
     template<>
     Material::MaterialPtr
     ComponentFactory::component<Material>()
     {
       auto component_ptr = get_component_ptr<Material>();
-      data_container_.get_list<Material::MaterialPtr>().push_back(component_ptr);
+      auto& material_list = data_container_.get<Material::MaterialPtr>();
+      material_list.push_back(component_ptr);
+
+      return component_ptr;
+    }
+
+    // TODO: Fix the template specialization using boost (enable_if, is_base_of)
+    template<>
+    PointLight::PointLightPtr
+    ComponentFactory::component<PointLight>()
+    {
+      auto component_ptr = get_component_ptr<PointLight>();
+      auto& material_list = data_container_.get<Light::LightPtr>();
+      material_list.push_back(component_ptr);
 
       return component_ptr;
     }
