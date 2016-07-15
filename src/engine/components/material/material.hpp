@@ -17,7 +17,7 @@ namespace Engine
     class Material : public Component
     {
       public:
-        typedef std::shared_ptr<Material>                         MaterialPtr;
+        typedef std::shared_ptr<Material> MaterialPtr;
 
       public:
         MaterialPtr

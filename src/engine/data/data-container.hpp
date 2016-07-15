@@ -5,6 +5,9 @@
 #include <boost/variant.hpp>
 
 #include <components/material/material.hpp>
+#include <components/light/light.hpp>
+#include <components/light/pointlight.hpp>
+
 #include "data-container.hpp"
 #include "singleton.hpp"
 
@@ -21,7 +24,7 @@ namespace Engine
       public:
         template<typename DataType>
         std::vector<DataType>&
-        get_list()
+        get()
         {
           return std::get<std::vector<DataType>>(data_);
         }
@@ -30,6 +33,7 @@ namespace Engine
         DataListContainer data_;
     };
 
-    using DataContainer = DataContainerType<Components::Material::MaterialPtr>;
+    using DataContainer = DataContainerType<Components::Material::MaterialPtr,
+      Components::Light::LightPtr>;
   } // namespace Data
 } // namespace Engine
