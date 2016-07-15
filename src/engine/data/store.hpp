@@ -21,7 +21,7 @@ namespace Engine
     {
       public:
         typedef std::shared_ptr<Store> StorePtr;
-        typedef std::unordered_map<std::string, boost::any> AttributesMap;
+        typedef std::unordered_map<std::string, boost::any*> AttributesMap;
 
       public:
         static inline
@@ -32,10 +32,14 @@ namespace Engine
         }
 
       public:
+        ~Store();
+
+      public:
         template<typename T>
-        const T& get_attribute(std::string attribute_name)
+        const T&
+        get(std::string attribute_name) const
         {
-          return boost::get<T>(attributes_[attribute_name]);
+          return *boost::unsafe_any_cast<T>(attributes_.at(attribute_name));
         }
 
         /** \brief Adds/Modifies an attribute in the store.
@@ -46,9 +50,40 @@ namespace Engine
          * The value to add at the given key.
          */
         template<typename T>
-        void set_attribute(std::string attribute_name, T value)
+        void
+        set(std::string attribute_name, T value)
         {
-          attributes_[attribute_name] = value;
+          auto attribute = get_ptr(attribute_name);
+          if (attribute != nullptr)
+          {
+            delete attribute;
+            attributes_.erase(attribute_name);
+          }
+
+          attributes_[attribute_name] = new boost::any(value);
+        }
+
+        template<typename T>
+        void
+        remove(std::string attribute_name)
+        {
+          auto attribute = get_ptr(attribute_name);
+          if (attribute == nullptr)
+            return;
+
+          delete attribute;
+          attributes_.erase(attribute_name);
+        }
+
+      private:
+        boost::any*
+        get_ptr(std::string attribute_name)
+        {
+          auto pair = attributes_.find(attribute_name);
+          if (pair == attributes_.end() || (*pair).second == nullptr)
+            return nullptr;
+
+          return attributes_[attribute_name];
         }
 
       private:
