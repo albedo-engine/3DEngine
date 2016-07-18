@@ -1,6 +1,7 @@
-set(SAMPLE_LIST ${SAMPLE_LIST} triangle PARENT_SCOPE)
+set(SAMPLE_LIST ${SAMPLE_LIST} camera-fps PARENT_SCOPE)
 
 add_executable(camera-fps
+  ../utils/glfw_freecam.cpp
   main.cpp
 )
 
