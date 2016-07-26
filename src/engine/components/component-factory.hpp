@@ -14,11 +14,42 @@ namespace Engine
     {
       public:
         template<typename T>
-        std::shared_ptr<T>
+        typename std::enable_if<!std::is_base_of<Light, T>::value
+                                && !std::is_base_of<Material, T>::value,
+                                std::shared_ptr<T>
+                                >::type
         component()
         {
           return get_component_ptr<T>();
         }
+
+        template<typename T>
+        typename std::enable_if<std::is_base_of<Light, T>::value
+                                && !std::is_base_of<Material, T>::value,
+                                std::shared_ptr<T>
+                                >::type
+        component()
+        {
+          auto component_ptr = get_component_ptr<T>();
+          auto& material_list = data_container_.get<Light::LightPtr>();
+          material_list.push_back(component_ptr);
+
+          return component_ptr;
+        };
+
+        template<typename T>
+        typename std::enable_if<!std::is_base_of<Light, T>::value
+                                && std::is_base_of<Material, T>::value,
+                                std::shared_ptr<T>
+                                >::type
+        component()
+        {
+          auto component_ptr = get_component_ptr<T>();
+          auto& material_list = data_container_.get<Material::MaterialPtr>();
+          material_list.push_back(component_ptr);
+
+          return component_ptr;
+        };
 
         Data::DataContainer& get_data_container();
 
@@ -34,29 +65,16 @@ namespace Engine
         Data::DataContainer data_container_;
     };
 
-    // TODO: Factorize the specilization code using a common function
-    template<>
+    // TODO: Factorize the specialization code using a common function
+    /*template<>
     Material::MaterialPtr
-    ComponentFactory::component<Material>()
-    {
-      auto component_ptr = get_component_ptr<Material>();
-      auto& material_list = data_container_.get<Material::MaterialPtr>();
-      material_list.push_back(component_ptr);
-
-      return component_ptr;
-    }
+    ComponentFactory::component<Material>();*/
 
     // TODO: Fix the template specialization using boost (enable_if, is_base_of)
-    template<>
+    // TODO: in order to support every derived type easily
+    /*template<>
     PointLight::PointLightPtr
-    ComponentFactory::component<PointLight>()
-    {
-      auto component_ptr = get_component_ptr<PointLight>();
-      auto& material_list = data_container_.get<Light::LightPtr>();
-      material_list.push_back(component_ptr);
-
-      return component_ptr;
-    }
+    ComponentFactory::component<PointLight>();*/
 
   } // namespace Components
 } // namespace Engine

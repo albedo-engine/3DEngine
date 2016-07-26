@@ -1,5 +1,7 @@
 #include "renderer.hpp"
 #include <iostream>
+#include <components/component-factory.hpp>
+
 namespace Engine
 {
   namespace Components
@@ -191,17 +193,21 @@ namespace Engine
       glActiveTexture(GL_TEXTURE2);
       glBindTexture(GL_TEXTURE_2D, gTextures[2]);
 
-      std::vector<Scene::Node::NodePtr> lights_vec;
-      build_lights_vector(lights_vec, get_target());
+      /*std::vector<Scene::Node::NodePtr> lights_vec;
+      build_lights_vector(lights_vec, get_target());*/
+
+      auto& lights_vec = ComponentFactory::instance()
+                          ->get_data_container().get<Light::LightPtr>();
+
       int idx = 0;
-      for (Scene::Node::NodePtr lights : lights_vec)
+      for (auto lights : lights_vec)
       {
-        glm::vec3 light_colors = lights->component<Light>()->get_color();
+        glm::vec3 light_colors = lights->get_color();
         glUniform3fv(
                 glGetUniformLocation(deferredShader_.get_program(),
                                      ("lights[" + std::to_string(idx) + "].Position").c_str()),
                 1,
-                &lights->component<Transform>()->get_world_position()[0]);
+                &lights->get_target()->component<Transform>()->get_world_position()[0]);
         glUniform3fv(
                 glGetUniformLocation(deferredShader_.get_program(),
                                      ("lights[" + std::to_string(idx) + "].Color").c_str()),

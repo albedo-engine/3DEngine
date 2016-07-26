@@ -4,6 +4,7 @@
 #include <components/geometry/triangle.hpp>
 #include <components/renderer/renderer.hpp>
 #include <components/geometry/cube.hpp>
+#include <components/component-factory.hpp>
 
 using namespace Engine;
 using namespace Engine::Scene;
@@ -46,7 +47,7 @@ int main()
   {
     // Light
     Node::NodePtr light = Node::create();
-    PointLight::PointLightPtr pointlight = PointLight::create();
+    PointLight::PointLightPtr pointlight = ComponentFactory::instance()->component<PointLight>();
     pointlight->set_color(glm::vec3((rand() % 100) / 200.0f + 0.6f,
                                     (rand() % 100) / 200.0f + 0.6f,
                                     (rand() % 100) / 200.0f + 0.6f));
