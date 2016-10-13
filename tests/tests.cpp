@@ -1,7 +1,6 @@
 #include "utils/test_utils.hpp"
 
 #include "engine.hpp"
-#include <components/component-factory.hpp>
 #include <components/light/pointlight.hpp>
 
 using namespace Engine;
@@ -105,20 +104,10 @@ void test_transform()
   ASSERT(glm::abs(dir[2] - 0.0f) <= 0.00001, "check center look_at");
 }
 
-void test_material()
-{
-  auto mat = ComponentFactory::instance()->component<Material>();
-  ASSERT(mat->get_material_id() == 0, "check material id");
-  auto mat2 = ComponentFactory::instance()->component<Material>();
-  ASSERT(mat2->get_material_id() == 1, "check material id");
-}
-
 void test_components()
 {
   // Executes the test suite on the Transform class
   test_transform();
-  // Executes the test suite of the Material class
-  test_material();
 }
 
 void test_node()
@@ -143,24 +132,12 @@ void test_camera()
 
   ASSERT(camera->get_fov() == 90.0f, "set_fov");
 }
-
-void test_store()
-{
-  auto pointlight = ComponentFactory::instance()->component<PointLight>();
-  ASSERT(pointlight->get_color() == glm::vec3(), "test store with light");
-
-  pointlight->set_color(glm::vec3(0.5f, 0.0f, 0.1f));
-  auto color = pointlight->get_color();
-  ASSERT(color.r == 0.5f && color.g == 0.0f && color.b == 0.1f, "test store with light");
-}
-
 int main()
 {
   // Tests for components
   LAUNCH(test_node);
   LAUNCH(test_components);
   LAUNCH(test_camera);
-  LAUNCH(test_store);
 
   return 0;
 }
