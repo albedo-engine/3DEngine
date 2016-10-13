@@ -105,10 +105,20 @@ void test_transform()
   ASSERT(glm::abs(dir[2] - 0.0f) <= 0.00001, "check center look_at");
 }
 
+void test_material()
+{
+  auto mat = ComponentFactory::instance()->component<Material>();
+  ASSERT(mat->get_material_id() == 0, "check material id");
+  auto mat2 = ComponentFactory::instance()->component<Material>();
+  ASSERT(mat2->get_material_id() == 1, "check material id");
+}
+
 void test_components()
 {
   // Executes the test suite on the Transform class
   test_transform();
+  // Executes the test suite of the Material class
+  test_material();
 }
 
 void test_node()
@@ -144,35 +154,12 @@ void test_store()
   ASSERT(color.r == 0.5f && color.g == 0.0f && color.b == 0.1f, "test store with light");
 }
 
-void test_data_container()
-{
-  /* Material linear list test */
-  auto factory = ComponentFactory::instance();
-  auto& data = factory->get_data_container();
-  auto& material_list = data.get<Material::MaterialPtr>();
-  ASSERT(material_list.size() == 0, "global material list size");
-
-  auto mat = factory->component<Material>();
-  ASSERT(mat->get_material_id() == 0, "check material id from factory");
-  auto mat2 = factory->component<Material>();
-  ASSERT(mat2->get_material_id() == 1, "check material id from factory");
-
-  ASSERT(material_list.size() == 2, "global material list size");
-
-  /* Light linear list test */
-  auto& light_list = factory->get_data_container().get<Light::LightPtr>();
-  ASSERT(light_list.size() == 0, "global light list size");
-  auto light = factory->component<PointLight>();
-  ASSERT(light_list.size() == 1, "global light list size");
-}
-
 int main()
 {
   // Tests for components
   LAUNCH(test_node);
   LAUNCH(test_components);
   LAUNCH(test_camera);
-  LAUNCH(test_data_container);
   LAUNCH(test_store);
 
   return 0;

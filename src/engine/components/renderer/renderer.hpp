@@ -2,7 +2,10 @@
 
 #include <utils/headers/common.hpp>
 #include <components/component.hpp>
+#include <components/component-manager.hpp>
+
 #include <rendering/shader.hpp>
+
 #include <components/transform/transform.hpp>
 #include <components/material/material.hpp>
 #include <components/geometry/quad.hpp>

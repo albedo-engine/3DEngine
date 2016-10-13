@@ -4,7 +4,6 @@
 #include <components/geometry/triangle.hpp>
 #include <components/renderer/renderer.hpp>
 #include <components/geometry/cube.hpp>
-#include <components/component-factory.hpp>
 
 using namespace Engine;
 using namespace Engine::Scene;
@@ -21,7 +20,7 @@ int main()
   // Initializes the engine
   Engine::Engine::initialize();
 
-  // Create the triangle node
+  // Create the cube node
   Node::NodePtr cube = Node::create("cube");
   cube->add_component(Transform::create());
   cube->add_component(Cube::create());
@@ -43,11 +42,11 @@ int main()
 
   // Create some randomized lights
   srand(time(0));
-  for (int i = 0; i < 32; ++i)
+  for (int i = 0; i < 20; ++i)
   {
     // Light
     Node::NodePtr light = Node::create();
-    PointLight::PointLightPtr pointlight = ComponentFactory::instance()->component<PointLight>();
+    PointLight::PointLightPtr pointlight = PointLight::create();
     pointlight->set_color(glm::vec3((rand() % 100) / 200.0f + 0.6f,
                                     (rand() % 100) / 200.0f + 0.6f,
                                     (rand() % 100) / 200.0f + 0.6f));

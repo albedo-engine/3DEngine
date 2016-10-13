@@ -1,15 +1,18 @@
 #pragma once
 
 #include <utils/headers/common.hpp>
+
+#include <components/component-manager.hpp>
 #include <components/component.hpp>
 #include <components/transform/transform.hpp>
+
 #include <data/store.hpp>
 
 namespace Engine
 {
   namespace Components
   {
-    class Light : public Component
+    class Light : public Component, public std::enable_shared_from_this<Light>
     {
       public:
         typedef std::shared_ptr<Light> LightPtr;

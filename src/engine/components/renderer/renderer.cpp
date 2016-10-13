@@ -1,6 +1,5 @@
 #include "renderer.hpp"
 #include <iostream>
-#include <components/component-factory.hpp>
 
 namespace Engine
 {
@@ -196,8 +195,7 @@ namespace Engine
       /*std::vector<Scene::Node::NodePtr> lights_vec;
       build_lights_vector(lights_vec, get_target());*/
 
-      auto& lights_vec = ComponentFactory::instance()
-                          ->get_data_container().get<Light::LightPtr>();
+      auto& lights_vec = ComponentManager::instance()->getLights();
 
       int idx = 0;
       for (auto lights : lights_vec)

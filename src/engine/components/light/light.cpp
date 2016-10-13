@@ -7,6 +7,9 @@ namespace Engine
     Light::Light()
     {
       this->set_color(glm::vec3());
+
+      auto this_ptr = std::shared_ptr<Light>(this, [](Light*){});
+      ComponentManager::instance()->getLights().push_back(this_ptr);
     }
 
     Light::~Light()
