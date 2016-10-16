@@ -1,3 +1,5 @@
+add_subdirectory(nodes)
+
 file(GLOB_RECURSE FILES *.vs *.fs)
 
 separate_arguments(FILES)
@@ -34,3 +36,7 @@ foreach (file ${FILES})
             PARENT_SCOPE)
 
 endforeach()
+
+set(EngineSource ${EngineSource}
+        ${CMAKE_CURRENT_SOURCE_DIR}/shader-generator.cpp
+        PARENT_SCOPE)
