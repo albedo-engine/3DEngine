@@ -12,7 +12,9 @@ ShaderNode*
 ShaderNode::output(ShaderNode* n)
 {
   // Adds given outputs
+  outputs_.push_back(n);
   n->input(this);
+
   return this;
 }
 

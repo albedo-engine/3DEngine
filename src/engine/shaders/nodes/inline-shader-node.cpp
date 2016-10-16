@@ -4,23 +4,32 @@ std::string
 InlineShaderNode::toString()
 {
   if (text_.empty())
-    throw std::logic_error("ShaderNode: The InlineShaderNode is empty");
+    throw std::logic_error("ShaderNode: the InlineShaderNode is empty");
 
-  for (auto& input : inputs_)
+  for (size_t i = 0; i < inputs_.size(); ++i)
   {
-    std::size_t pos = text_.find("${" + input->getName() + "}");
-    // The value to replace is found in the text
-    if (pos != std::string::npos)
-      text_.replace(pos, input->getName().size() + 3, input->getName());
+    std::string toReplace = "${input" + std::to_string(i) + "}";
+    std::size_t pos = text_.find(toReplace);
+    while (pos != std::string::npos)
+    {
+      text_.replace(pos, toReplace.size(), inputs_[i]->getName());
+      pos = text_.find(toReplace);
+    }
   }
 
-  for (auto& output : outputs_)
+  for (size_t i = 0; i < outputs_.size(); ++i)
   {
-    std::size_t pos = text_.find("${" + output->getName() + "}");
-    // The value to replace is found in the text
-    if (pos != std::string::npos)
-      text_.replace(pos, output->getName().size() + 3, output->getName());
+    std::string toReplace = "${output" + std::to_string(i) + "}";
+    std::size_t pos = text_.find(toReplace);
+    while (pos != std::string::npos)
+    {
+      text_.replace(pos, toReplace.size(), outputs_[i]->getName());
+      pos = text_.find(toReplace);
+    }
   }
+
+  if (text_.find("${") != std::string::npos)
+    throw std::logic_error("ShaderNode: the InlineShaderNode inputs/outputs does not match the one to replace");
 
   return text_;
 }
@@ -31,8 +40,9 @@ InlineShaderNode::getName() const
   return "InlineNode";
 }
 
-void
+InlineShaderNode*
 InlineShaderNode::text(std::string text)
 {
   this->text_ = text;
+  return this;
 }

@@ -27,11 +27,14 @@ ShaderGenerator::generateShader()
   }
   fragmentStack_.push_back("\t// END VARIABLE DECLARATION\n");
 
-  fragmentStack_.push_back("}");
+  traverse(output);
+
+  fragmentStack_.push_back("\n}");
 
   // Cleans every allocated nodes
-  for (auto& nodePtr : nodes_)
+  for (auto& nodeVist : nodes_)
   {
+    auto& nodePtr = nodeVist.first;
     if (nodePtr != nullptr)
       delete nodePtr;
   }
@@ -47,16 +50,40 @@ ShaderGenerator::createVariable(std::string type, std::string name)
   var->setName(name);
 
   variablesMap_[name] = var;
+  return var;
 }
 
 ShaderNode*
 ShaderGenerator::generateFragmentShaderGraph()
 {
-  this->createVariable("vec4", "alpha");
-  this->createVariable("int", "lama");
+  auto alphavar = this->createVariable("vec4", "alpha");
+  auto integer = this->createVariable("int", "integer");
   this->createVariable("vec4", "lol");
 
+  std::string alphaInline = "${output0} = ${input0} * 4;";
+  auto node = createNode<InlineShaderNode>()->text(alphaInline)
+              ->input(integer)
+              ->output(integer);
 
-  auto node = createNode<InlineShaderNode>();
   return node;
+}
+
+void ShaderGenerator::traverse(ShaderNode* node)
+{
+  if (nodes_[node])
+    return;
+  nodes_[node] = true;
+
+  /*if (node->getInputs().size() == 0) {
+    fragmentStack_.push_back("\t" + node->toString());
+    return;
+  }*/
+
+  for (auto input : node->getInputs())
+  {
+    traverse(input);
+  }
+
+  if (!node->toString().empty())
+    fragmentStack_.push_back("\t" + node->toString());
 }

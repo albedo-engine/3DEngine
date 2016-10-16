@@ -10,7 +10,7 @@ class InlineShaderNode : public ShaderNode
 
   public:
     std::string toString() override;
-    void text(std::string text);
+    InlineShaderNode* text(std::string text);
 
   private:
     std::string text_;

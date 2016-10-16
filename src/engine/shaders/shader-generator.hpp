@@ -11,26 +11,27 @@
 class ShaderGenerator
 {
   public:
-    typedef std::shared_ptr<ShaderNode> ShaderNodePtr;
-
-  public:
     ShaderGenerator(std::string name);
     ~ShaderGenerator();
 
   public:
     std::vector<std::string> generateShader();
     VariableShaderNode* createVariable(std::string type, std::string name);
+
     template <typename NodeType>
     NodeType*
     createNode()
     {
       NodeType* n = new NodeType();
-      nodes_.push_back(n);
+      nodes_[n] = false;
       return n;
     }
 
   private:
     virtual ShaderNode* generateFragmentShaderGraph();
+
+  private:
+    void traverse(ShaderNode* node);
 
   private:
     std::string                                           name_;
@@ -39,5 +40,5 @@ class ShaderGenerator
     std::vector<std::string>                              fragmentStack_;
 
     std::unordered_map<std::string, VariableShaderNode*>  variablesMap_;
-    std::vector<ShaderNode*>                              nodes_;
+    std::unordered_map<ShaderNode*, bool>                 nodes_;
 };
