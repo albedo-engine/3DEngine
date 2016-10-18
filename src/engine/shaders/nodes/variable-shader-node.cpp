@@ -2,7 +2,7 @@
 
 std::string VariableShaderNode::toString()
 {
-  return "";
+  return name_;
 }
 
 void

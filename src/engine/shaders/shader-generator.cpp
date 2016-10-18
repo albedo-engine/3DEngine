@@ -1,4 +1,5 @@
 #include <shaders/nodes/inline-shader-node.hpp>
+#include <shaders/nodes/call-shader-node.hpp>
 #include "shader-generator.hpp"
 
 ShaderGenerator::ShaderGenerator(std::string name)
@@ -60,12 +61,16 @@ ShaderGenerator::generateFragmentShaderGraph()
   auto integer = this->createVariable("int", "integer");
   this->createVariable("vec4", "lol");
 
-  std::string alphaInline = "${output0} = ${input0} * 4;";
+  std::string alphaInline = "${output0} = ${input0} * ${input1};";
   auto node = createNode<InlineShaderNode>()->text(alphaInline)
-              ->input(integer)
+              ->input(integer)->input(integer)
               ->output(integer);
 
-  return node;
+  auto callNode = createNode<CallShaderNode>()->setName("clamp")
+                  ->setReturnType("vec4")
+                  ->input(alphavar)->input(integer);
+
+  return callNode;
 }
 
 void ShaderGenerator::traverse(ShaderNode* node)
@@ -74,16 +79,9 @@ void ShaderGenerator::traverse(ShaderNode* node)
     return;
   nodes_[node] = true;
 
-  /*if (node->getInputs().size() == 0) {
-    fragmentStack_.push_back("\t" + node->toString());
-    return;
-  }*/
-
   for (auto input : node->getInputs())
-  {
     traverse(input);
-  }
 
-  if (!node->toString().empty())
-    fragmentStack_.push_back("\t" + node->toString());
+  if (dynamic_cast<VariableShaderNode*>(node) == nullptr)
+    fragmentStack_.push_back("\t" + node->toString() + "\n");
 }
