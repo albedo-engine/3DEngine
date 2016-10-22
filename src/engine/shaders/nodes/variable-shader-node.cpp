@@ -16,6 +16,11 @@ void VariableShaderNode::setType(std::string type)
   type_ = type;
 }
 
+void VariableShaderNode::setPrefix(std::string prefix)
+{
+  prefix_ = prefix;
+}
+
 const std::string
 VariableShaderNode::getName() const
 {
@@ -26,4 +31,10 @@ const std::string
 VariableShaderNode::getType() const
 {
   return type_;
+}
+
+const std::string
+VariableShaderNode::getPrefix() const
+{
+  return prefix_;
 }
