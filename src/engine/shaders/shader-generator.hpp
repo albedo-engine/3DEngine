@@ -7,6 +7,7 @@
 
 #include "nodes/shader-node.hpp"
 #include "nodes/variable-shader-node.hpp"
+#include "nodes/uniform-shader-node.hpp"
 
 class ShaderGenerator
 {
@@ -16,8 +17,8 @@ class ShaderGenerator
 
   public:
     std::vector<std::string> generateShader();
-    VariableShaderNode* createVariable(std::string type, std::string name);
 
+  public:
     template <typename NodeType>
     NodeType*
     createNode()
@@ -31,6 +32,14 @@ class ShaderGenerator
     virtual ShaderNode* generateFragmentShaderGraph();
 
   private:
+    void include(std::string text);
+    VariableShaderNode* createVariable(std::string type,
+                                       std::string name,
+                                       std::string prefix = "");
+    UniformShaderNode* requestUniform(std::string type,
+                                      std::string name,
+                                      std::string defaultValue = "");
+
     void traverse(ShaderNode* node);
 
   private:
@@ -38,6 +47,10 @@ class ShaderGenerator
     std::vector<std::string>                              vertexStack_;
     std::vector<std::string>                              fragmentStack_;
 
+    std::vector<std::string>                              includeStack_;
+
     std::unordered_map<std::string, VariableShaderNode*>  variablesMap_;
+    std::unordered_map<std::string, UniformShaderNode*>   uniformMap_;
+
     std::unordered_map<ShaderNode*, bool>                 nodes_;
 };

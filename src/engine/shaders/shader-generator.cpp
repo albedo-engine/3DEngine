@@ -16,6 +16,27 @@ ShaderGenerator::generateShader()
   if (output == nullptr)
     throw std::logic_error("ShaderGenerator: at least one output should be given");
 
+  // Creates all required uniforms
+  // at the beginning of the file
+  fragmentStack_.push_back("// UNIFORMS DECLARATION\n");
+  for (auto uIt = uniformMap_.begin(); uIt != uniformMap_.end(); ++uIt)
+  {
+    auto& u = uIt->second;
+    fragmentStack_.push_back("uniform " + u->getType() + " " + u->getName());
+    if (!u->getDefaultValue().empty())
+      fragmentStack_.push_back(" = " + u->getDefaultValue() + ";");
+    fragmentStack_.push_back("\n");
+  }
+  fragmentStack_.push_back("// END UNIFORMS DECLARATION\n\n");
+
+  // Adds all include to the top of the file
+  fragmentStack_.push_back("// INCLUDES\n");
+  for (auto& text : includeStack_)
+    fragmentStack_.push_back(text);
+  fragmentStack_.push_back("\n// END INCLUDES\n\n");
+
+  // Begins the main function
+  // containing the shader logic
   fragmentStack_.push_back("void main()\n{\n");
 
   // Creates all required variable at
@@ -24,7 +45,10 @@ ShaderGenerator::generateShader()
   for (auto vIt = variablesMap_.begin(); vIt != variablesMap_.end(); ++vIt)
   {
     auto& var = vIt->second;
-    fragmentStack_.push_back("\t" + var->getType() + " " + var->getName() + ";\n");
+    fragmentStack_.push_back("\t");
+    if (!var->getPrefix().empty())
+      fragmentStack_.push_back(var->getPrefix() + " ");
+    fragmentStack_.push_back(var->getType() + " " + var->getName() + ";\n");
   }
   fragmentStack_.push_back("\t// END VARIABLE DECLARATION\n");
 
@@ -43,23 +67,57 @@ ShaderGenerator::generateShader()
   return fragmentStack_;
 }
 
-VariableShaderNode*
-ShaderGenerator::createVariable(std::string type, std::string name)
+void
+ShaderGenerator::include(std::string text)
 {
+  includeStack_.push_back(text);
+}
+
+VariableShaderNode*
+ShaderGenerator::createVariable(std::string type,
+                                std::string name,
+                                std::string prefix)
+{
+  auto elt = variablesMap_.find(name);
+  if (elt != variablesMap_.end())
+    return elt->second;
+
   auto var = createNode<VariableShaderNode>();
   var->setType(type);
   var->setName(name);
+  var->setPrefix(prefix);
 
   variablesMap_[name] = var;
   return var;
 }
 
+UniformShaderNode*
+ShaderGenerator::requestUniform(std::string type,
+                                std::string name,
+                                std::string defaultValue)
+{
+  auto elt = uniformMap_.find(name);
+  if (elt != uniformMap_.end())
+    return elt->second;
+
+  auto uniformNode = createNode<UniformShaderNode>();
+  uniformNode->setType(type);
+  uniformNode->setName(name);
+  uniformNode->setDefaultValue(defaultValue);
+
+  uniformMap_[name] = uniformNode;
+
+  return uniformNode;
+}
+
 ShaderNode*
 ShaderGenerator::generateFragmentShaderGraph()
 {
-  auto alphavar = this->createVariable("vec4", "alpha");
+  auto alphavar = this->createVariable("vec4", "alpha", "const");
   auto integer = this->createVariable("int", "integer");
-  this->createVariable("vec4", "lol");
+  this->createVariable("vec4", "vec");
+
+  this->requestUniform("vec2", "positionUniform", "vec2(1.0f, 0.0f)");
 
   std::string alphaInline = "${output0} = ${input0} * ${input1};";
   auto node = createNode<InlineShaderNode>()->text(alphaInline)
@@ -69,6 +127,8 @@ ShaderGenerator::generateFragmentShaderGraph()
   auto callNode = createNode<CallShaderNode>()->setName("clamp")
                   ->setReturnType("vec4")
                   ->input(alphavar)->input(integer);
+
+  this->include("function test(in vec4 a) {\n  \ttest \n}");
 
   return callNode;
 }
