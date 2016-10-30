@@ -5,7 +5,7 @@
 
 #include "shader-node.hpp"
 
-class VariableShaderNode : public ShaderNode
+class VariableNode : public ShaderNode
 {
   public:
     virtual std::string toString();
@@ -23,4 +23,5 @@ class VariableShaderNode : public ShaderNode
     std::string name_;
     std::string type_;
     std::string prefix_;
+
 };
