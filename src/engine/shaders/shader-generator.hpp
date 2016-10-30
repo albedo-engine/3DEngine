@@ -6,51 +6,75 @@
 #include <unordered_map>
 
 #include "nodes/shader-node.hpp"
-#include "nodes/variable-shader-node.hpp"
-#include "nodes/uniform-shader-node.hpp"
+#include "nodes/variable-node.hpp"
+#include "nodes/uniform-node.hpp"
+#include "nodes/operation-node.hpp"
+#include "nodes/inline-node.hpp"
+#include "nodes/call-node.hpp"
 
-class ShaderGenerator
+#include "type-dec.hpp"
+
+namespace Engine
 {
-  public:
-    ShaderGenerator(std::string name);
-    ~ShaderGenerator();
-
-  public:
-    std::vector<std::string> generateShader();
-
-  public:
-    template <typename NodeType>
-    NodeType*
-    createNode()
+  namespace Shader
+  {
+    class ShaderGenerator
     {
-      NodeType* n = new NodeType();
-      nodes_[n] = false;
-      return n;
-    }
+      public:
+        ShaderGenerator(std::string name);
+        ~ShaderGenerator();
 
-  private:
-    virtual ShaderNode* generateFragmentShaderGraph();
+      public:
+        std::vector<std::string> generateShader();
 
-  private:
-    void include(std::string text);
-    VariableShaderNode* createVariable(std::string type,
-                                       std::string name,
-                                       std::string prefix = "");
-    UniformShaderNode* requestUniform(std::string type,
-                                      std::string name,
-                                      std::string defaultValue = "");
+      public:
+        template <typename NodeType>
+        NodeType*
+        createNode()
+        {
+          NodeType* n = new NodeType();
+          nodes_[n] = false;
+          return n;
+        }
 
-    void traverse(ShaderNode* node);
+      private:
+        virtual ShaderNode* generateFragmentShaderGraph();
 
-  private:
-    std::string                                           name_;
-    std::vector<std::string>                              vertexStack_;
-    std::vector<std::string>                              fragmentStack_;
+      private:
+        void include(std::string text);
 
-    std::vector<std::string>                              includeStack_;
+        TypeDec* declareStruct(std::string name);
 
-    std::unordered_map<std::string, VariableShaderNode*>  variablesMap_;
-    std::unordered_map<std::string, UniformShaderNode*>   uniformMap_;
+        UniformNode* requestUniform(std::string type,
+                                    std::string name,
+                                    std::string defaultValue = "");
 
-    std::unordered_map<ShaderNode*, bool>                 nodes_;
-};
+        VariableNode* createVariable(std::string type,
+                                     std::string name,
+                                     std::string prefix = "");
+
+        void traverse(ShaderNode* node);
+
+        void clean();
+
+      private:
+        std::string                                           name_;
+        std::vector<std::string>                              vertexStack_;
+        std::vector<std::string>                              fragmentStack_;
+
+        std::vector<std::string>                              includeStack_;
+
+        std::unordered_map<std::string, VariableNode*>        variablesMap_;
+        std::unordered_map<std::string, TypeDec*>             typeDecMap_;
+        std::unordered_map<std::string, UniformNode*>         uniformMap_;
+
+        std::unordered_map<ShaderNode*, bool>                 nodes_;
+    };
+
+    class StructDec
+    {
+
+    };
+
+  } // namespace Shader
+} // namespace Engine

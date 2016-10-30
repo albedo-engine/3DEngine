@@ -39,4 +39,5 @@ endforeach()
 
 set(EngineSource ${EngineSource}
         ${CMAKE_CURRENT_SOURCE_DIR}/shader-generator.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/type-dec.cpp
         PARENT_SCOPE)
