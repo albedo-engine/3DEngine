@@ -11,11 +11,16 @@ namespace Engine
     class InlineNode : public ShaderNode
     {
       public:
-        virtual const std::string getName() const;
+        virtual
+        const std::string
+        getName() const;
 
       public:
-        std::string toString() override;
-        InlineNode* text(std::string text);
+        std::string
+        toString() override;
+
+        InlineNode*
+        text(std::string text);
 
       private:
         std::string text_;

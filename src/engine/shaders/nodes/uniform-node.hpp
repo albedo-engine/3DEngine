@@ -6,27 +6,39 @@
 
 namespace Engine
 {
-namespace Shader
-{
-class UniformNode : public ShaderNode
-{
-public:
-  virtual std::string toString();
-  virtual const std::string getName() const;
+  namespace Shader
+  {
+    class UniformNode : public ShaderNode
+    {
+      public:
+        virtual
+        std::string
+        toString();
 
-public:
-  void setName(std::string name);
+        virtual
+        const std::string
+        getName() const;
 
-  void setType(std::string type);
-  const std::string getType() const;
+      public:
+        void
+        setName(std::string name);
 
-  void setDefaultValue(std::string value);
-  const std::string getDefaultValue() const;
+        void
+        setType(std::string type);
 
-private:
-  std::string name_;
-  std::string type_;
-  std::string defaultValue_;
-};
-} // namespace Shader
+        void
+        setDefaultValue(std::string value);
+
+        const std::string
+        getType() const;
+
+        const std::string
+        getDefaultValue() const;
+
+      private:
+        std::string name_;
+        std::string type_;
+        std::string defaultValue_;
+    };
+  } // namespace Shader
 } // namespace Engine

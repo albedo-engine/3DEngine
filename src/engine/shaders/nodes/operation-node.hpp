@@ -21,11 +21,17 @@ namespace Engine
         };
 
       public:
-        virtual std::string toString();
-        virtual const std::string getName() const;
+        virtual
+        std::string
+        toString();
+
+        virtual
+        const std::string
+        getName() const;
 
       public:
-        OperationNode* setOperation(Operation op);
+        OperationNode*
+        setOperation(Operation op);
 
       private:
         Operation operation_;

@@ -27,7 +27,11 @@ namespace Engine
       public:
         std::vector<std::string> generateShader();
 
-      public:
+      private:
+        virtual ShaderNode*
+        generateFragmentShaderGraph();
+
+      private:
         template <typename NodeType>
         NodeType*
         createNode()
@@ -38,24 +42,37 @@ namespace Engine
         }
 
       private:
-        virtual ShaderNode* generateFragmentShaderGraph();
+        VariableNode*
+        createVariable(std::string type,
+                       std::string name,
+                       std::string prefix = "");
+
+        StructVariableNode*
+        createStructVariable(std::string type,
+                             std::string name,
+                             std::string prefix = "");
+
+        StructVariableNode*
+        createStructVariableRec(std::string type,
+                                std::string name);
+
+        TypeDec*
+        declareStruct(std::string name);
+
+        UniformNode*
+        requestUniform(std::string type,
+                       std::string name,
+                       std::string defaultValue = "");
 
       private:
-        void include(std::string text);
+        void
+        include(std::string text);
 
-        TypeDec* declareStruct(std::string name);
+        void
+        traverse(ShaderNode* node);
 
-        UniformNode* requestUniform(std::string type,
-                                    std::string name,
-                                    std::string defaultValue = "");
-
-        VariableNode* createVariable(std::string type,
-                                     std::string name,
-                                     std::string prefix = "");
-
-        void traverse(ShaderNode* node);
-
-        void clean();
+        void
+        clean();
 
       private:
         std::string                                           name_;
@@ -69,11 +86,6 @@ namespace Engine
         std::unordered_map<std::string, UniformNode*>         uniformMap_;
 
         std::unordered_map<ShaderNode*, bool>                 nodes_;
-    };
-
-    class StructDec
-    {
-
     };
 
   } // namespace Shader

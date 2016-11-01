@@ -4,11 +4,14 @@ namespace Engine
 {
   namespace Shader
   {
-    std::string CallNode::toString()
+    std::string
+    CallNode::toString()
     {
       if (outputs_.size() > 1)
-        throw std::logic_error(
-          "ShaderNode: CallShaderNode cannot have more than one output");
+      {
+        throw std::logic_error("ShaderNode: CallShaderNode cannot have "
+                               "more than one output");
+      }
 
       std::string format = "";
       if (outputs_.size() == 1)
@@ -23,7 +26,8 @@ namespace Engine
       return format;
     }
 
-    const std::string CallNode::getName() const
+    const std::string
+    CallNode::getName() const
     {
       return name_;
     }
@@ -42,7 +46,8 @@ namespace Engine
       return this;
     }
 
-    const std::string CallNode::getReturnType() const
+    const std::string
+    CallNode::getReturnType() const
     {
       return returnType_;
     }

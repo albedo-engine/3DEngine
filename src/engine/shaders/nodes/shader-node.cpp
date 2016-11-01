@@ -7,7 +7,6 @@ namespace Engine
     ShaderNode*
     ShaderNode::input(ShaderNode* n)
     {
-      // Adds given input
       inputs_.push_back(n);
       return this;
     }
@@ -15,7 +14,6 @@ namespace Engine
     ShaderNode*
     ShaderNode::output(ShaderNode* n)
     {
-      // Adds given outputs
       outputs_.push_back(n);
       n->input(this);
 

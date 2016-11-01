@@ -17,7 +17,8 @@ namespace Engine
     {
       auto output = generateFragmentShaderGraph();
       if (output == nullptr)
-        throw std::logic_error("ShaderGenerator: at least one output should be given");
+        throw std::logic_error("ShaderGenerator: at least one output "
+                               "should be given");
 
       // Creates all user defined types
       // at the beginning of the file
@@ -29,7 +30,10 @@ namespace Engine
 
         auto& fields = tIt->second->getFields();
         for (auto fIt = fields.begin(); fIt != fields.end(); fIt++)
-          fragmentStack_.push_back("\t" + fIt->second + " " + fIt->first + ";\n");
+        {
+          auto fieldStr = fIt->second + " " + fIt->first;
+          fragmentStack_.push_back("\t" + fieldStr + ";\n");
+        }
 
         fragmentStack_.push_back("};\n");
       }
@@ -41,7 +45,10 @@ namespace Engine
       for (auto uIt = uniformMap_.begin(); uIt != uniformMap_.end(); ++uIt)
       {
         auto& u = uIt->second;
-        fragmentStack_.push_back("uniform " + u->getType() + " " + u->getName());
+        auto uniformStr = "uniform " + u->getType() + " " + u->getName();
+
+        fragmentStack_.push_back(uniformStr);
+
         if (!u->getDefaultValue().empty())
           fragmentStack_.push_back(" = " + u->getDefaultValue() + ";");
         fragmentStack_.push_back("\n");
@@ -69,7 +76,7 @@ namespace Engine
           fragmentStack_.push_back(var->getPrefix() + " ");
         fragmentStack_.push_back(var->getType() + " " + var->getName() + ";\n");
       }
-      fragmentStack_.push_back("\t// END VARIABLE DECLARATION\n");
+      fragmentStack_.push_back("\t// END VARIABLE DECLARATION\n\n");
 
       traverse(output);
 
@@ -84,39 +91,105 @@ namespace Engine
     ShaderGenerator::generateFragmentShaderGraph()
     {
       // Declares the light structure
-      auto t = declareStruct("Light")
-        ->addField("position", "vec3")
+      declareStruct("Material")
         ->addField("color", "vec3");
 
+      declareStruct("Light")
+        ->addField("position", "vec3")
+        ->addField("material", "Material");
+
       auto alphavar = this->createVariable("vec4", "alpha", "const");
-      auto integer = this->createVariable("int", "integer");
-      this->createVariable("vec4", "vec");
+      auto light = this->createStructVariable("Light", "light");
+      auto light2 = this->createStructVariable("Light", "lightBlue", "const");
 
-      this->requestUniform("vec2", "positionUniform", "vec2(1.0f, 0.0f)");
+      auto inlineCode1 = this->createNode<InlineNode>()
+                          ->text("${output0} = vec4(0, 0, 0, 0);")
+                          ->output(alphavar);
 
-      std::string alphaInline = "${output0} = ${input0} * ${input1};";
-      auto node = createNode<InlineNode>()->text(alphaInline)
-                  ->input(integer)->input(integer)
-                  ->output(integer);
+      auto inlineCode = this->createNode<InlineNode>()
+                        ->text("${output0} = ${input0};")
+                        ->input(light2->field("material")->field("color"))
+                        ->output(light->field("material")->field("color"));
 
-      this->include("function test(in vec4 a) {\n  \ttest \n}");
-
-      this->createNode<OperationNode>()
-          ->setOperation(OperationNode::Operation::ADD)
-          ->input(alphavar)->input(alphavar)->input(alphavar)
-          ->output(integer);
-
-      auto callNode = createNode<CallNode>()->setName("clamp")
-        ->setReturnType("vec4")
-        ->input(alphavar)->input(integer);
-
-      return callNode;
+      return inlineCode;
     }
 
-    void
-    ShaderGenerator::include(std::string text)
+    VariableNode*
+    ShaderGenerator::createVariable(std::string type,
+                                    std::string name,
+                                    std::string prefix)
     {
-      includeStack_.push_back(text);
+      auto elt = variablesMap_.find(name);
+      if (elt != variablesMap_.end())
+        return elt->second;
+
+      auto typeDecElt = typeDecMap_.find(type);
+      if (typeDecElt != typeDecMap_.end())
+      {
+        throw std::logic_error("ShaderGenerator: use the createStructVariable "
+                               "method for user defined types");
+      }
+
+      auto var = createNode<VariableNode>();
+      var->setType(type);
+      var->setName(name);
+      var->setPrefix(prefix);
+
+      variablesMap_[name] = var;
+
+      return var;
+    }
+
+    StructVariableNode*
+    ShaderGenerator::createStructVariable(std::string type,
+                                          std::string name,
+                                          std::string prefix)
+    {
+
+      auto var = createStructVariableRec(type, name);
+      var->setPrefix(prefix);
+
+      variablesMap_[name] = var;
+      return var;
+    }
+
+    StructVariableNode*
+    ShaderGenerator::createStructVariableRec(std::string type, std::string name)
+    {
+      auto typeDecElt = typeDecMap_.find(type);
+      if (typeDecElt == typeDecMap_.end())
+      {
+        throw std::logic_error("ShaderGenerator: use the createVariable "
+                                 "method for predefined types");
+      }
+
+      std::unordered_map<std::string, VariableNode*> vars;
+
+      auto& structFields = typeDecElt->second->getFields();
+      for (auto fIt = structFields.begin(); fIt != structFields.end(); ++fIt)
+      {
+        auto varName = name + "." + fIt->first;
+
+        VariableNode* varField = nullptr;
+        if (typeDecMap_.find(fIt->second) == typeDecMap_.end())
+        {
+          varField = createNode<VariableNode>();
+          varField->setType(fIt->second);
+          varField->setName(varName);
+        }
+        else
+          varField = createStructVariableRec(fIt->second, varName);
+
+        vars[fIt->first] = varField;
+      }
+
+      auto var = createNode<StructVariableNode>();
+      var->init(vars);
+
+      var->setName(name);
+      var->setType(type);
+
+      return var;
     }
 
     TypeDec*
@@ -125,7 +198,7 @@ namespace Engine
       auto elt = typeDecMap_.find(name);
       if (elt != typeDecMap_.end())
         throw std::logic_error("ShaderGenerator: you cannot declare twice "
-                               " the same structure");
+                                 " the same structure");
 
       TypeDec* type = new TypeDec(name);
       typeDecMap_[name] = type;
@@ -152,49 +225,10 @@ namespace Engine
       return uniformNode;
     }
 
-    VariableNode*
-    ShaderGenerator::createVariable(std::string type,
-                                    std::string name,
-                                    std::string prefix)
+    void
+    ShaderGenerator::include(std::string text)
     {
-      auto elt = variablesMap_.find(name);
-      if (elt != variablesMap_.end())
-        return elt->second;
-
-      // Checks that the requested variable has a primitive type
-      auto typeDecElt = typeDecMap_.find(type);
-      if (typeDecElt == typeDecMap_.end())
-      {
-        auto var = createNode<VariableNode>();
-        var->setType(type);
-        var->setName(name);
-        var->setPrefix(prefix);
-        variablesMap_[name] = var;
-
-        return var;
-      }
-
-      std::unordered_map<std::string, VariableNode*> vars;
-      auto& structFields = typeDecElt->second->getFields();
-      for (auto fIt = structFields.begin(); fIt != structFields.end(); ++fIt)
-      {
-        /*auto varField = createNode<VariableNode>();
-        auto varName = name + "." + fIt->first;
-        varField->setType(fIt->second);
-        varField->setName(fIt->first);
-
-        vars[varName] = varField;*/
-
-        auto varName = name + "." + fIt->first;
-        auto varField = createVariable(fIt->second, varName);
-
-        vars[fIt->first] = varField;
-      }
-
-      auto var = new StructVariableNode(vars);
-      nodes_[var] = false;
-
-      return var;
+      includeStack_.push_back(text);
     }
 
     void
@@ -210,7 +244,6 @@ namespace Engine
       if (dynamic_cast<VariableNode*>(node) == nullptr)
         fragmentStack_.push_back("\t" + node->toString() + "\n");
     }
-
 
     void
     ShaderGenerator::clean()

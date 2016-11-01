@@ -21,6 +21,12 @@ namespace Engine
       name_ = name;
     }
 
+    VariableNode*
+    VariableNode::field(std::string fieldName)
+    {
+      return this;
+    }
+
     void
     VariableNode::setType(std::string type)
     {
@@ -55,19 +61,24 @@ namespace Engine
      * StructVariableNode class
      */
 
-    StructVariableNode::StructVariableNode(VarList fieldVars)
-                       : fieldVars_(fieldVars)
-    {}
-
     VariableNode*
     StructVariableNode::field(std::string fieldName)
     {
       auto elt = fieldVars_.find(fieldName);
       if (elt == fieldVars_.end())
-        throw std::logic_error("ShaderNode: the StructVariableNode does not "
-                               "contains this field");
+      {
+        throw std::logic_error("ShaderNode: the StructVariableNode "
+                               "does not contains this field");
+      }
 
       return elt->second;
     }
+
+    void
+    StructVariableNode::init(VarList varList)
+    {
+      fieldVars_ = varList;
+    }
+
   } // namespace Shader
 } // namespace Engine

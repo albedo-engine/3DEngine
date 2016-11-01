@@ -14,12 +14,15 @@ namespace Engine
         TypeDec(std::string name);
 
       public:
-        TypeDec* addField(std::string type, std::string);
-        FieldsList& getFields();
+        TypeDec*
+        addField(std::string type, std::string);
+
+        FieldsList&
+        getFields();
 
       private:
         std::string name_;
-        FieldsList fieldDec_;
+        FieldsList  fieldDec_;
     };
   } // namespace Shader
 } // namespace Engine
