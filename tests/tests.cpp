@@ -1,12 +1,13 @@
 #include "utils/test_utils.hpp"
 
 #include "engine.hpp"
-#include <components/light/pointlight.hpp>
+#include <shaders/shader-generator.hpp>
 
 using namespace Engine;
 using namespace Engine::Scene;
 using namespace Engine::Components;
 using namespace Engine::Data;
+using namespace Engine::Shader;
 
 void test_transform()
 {
@@ -132,12 +133,27 @@ void test_camera()
 
   ASSERT(camera->get_fov() == 90.0f, "set_fov");
 }
+
+void test_shader_nodes(ShaderGenerator& generator)
+{
+  //auto node = generator.createNode<ShaderNode>("test", "test");
+  for (auto& a : generator.generateShader())
+    std::cout << a;
+  std::cout << std::endl;
+}
+
+void test_shader_generator()
+{
+  ShaderGenerator shaderGenerator("cell-shading");
+  test_shader_nodes(shaderGenerator);
+}
+
 int main()
 {
   // Tests for components
   LAUNCH(test_node);
   LAUNCH(test_components);
   LAUNCH(test_camera);
-
+  LAUNCH(test_shader_generator);
   return 0;
 }

@@ -67,8 +67,9 @@ namespace Engine
       auto elt = fieldVars_.find(fieldName);
       if (elt == fieldVars_.end())
       {
-        throw std::logic_error("ShaderNode: the StructVariableNode "
-                               "does not contains this field");
+        throw std::logic_error(
+          "ShaderNode: the StructVariableNode does not contains this field"
+        );
       }
 
       return elt->second;

@@ -6,19 +6,22 @@ namespace Engine
   {
 
     ShaderGenerator::ShaderGenerator(std::string name)
-                    : name_(name)
-    { }
+      : name_(name)
+    {}
 
     ShaderGenerator::~ShaderGenerator()
-    { }
+    {}
 
     std::vector<std::string>
     ShaderGenerator::generateShader()
     {
       auto output = generateFragmentShaderGraph();
       if (output == nullptr)
-        throw std::logic_error("ShaderGenerator: at least one output "
-                               "should be given");
+      {
+        throw std::logic_error(
+          "ShaderGenerator: at least one output should be given"
+        );
+      }
 
       // Creates all user defined types
       // at the beginning of the file
@@ -90,26 +93,20 @@ namespace Engine
     ShaderNode*
     ShaderGenerator::generateFragmentShaderGraph()
     {
-      // Declares the light structure
-      declareStruct("Material")
-        ->addField("color", "vec3");
-
-      declareStruct("Light")
-        ->addField("position", "vec3")
-        ->addField("material", "Material");
+      declareStruct("List")
+        ->addField("int", "nb")
+        ->addField("List", "next");
 
       auto alphavar = this->createVariable("vec4", "alpha", "const");
-      auto light = this->createStructVariable("Light", "light");
-      auto light2 = this->createStructVariable("Light", "lightBlue", "const");
+      auto list    = this->createStructVariable("List", "l");
 
       auto inlineCode1 = this->createNode<InlineNode>()
-                          ->text("${output0} = vec4(0, 0, 0, 0);")
-                          ->output(alphavar);
+        ->text("${output0} = 5;")
+        ->output(list->field("nb"));
 
       auto inlineCode = this->createNode<InlineNode>()
-                        ->text("${output0} = ${input0};")
-                        ->input(light2->field("material")->field("color"))
-                        ->output(light->field("material")->field("color"));
+        ->text("${output0} = null;")
+        ->output(list->field("next"));
 
       return inlineCode;
     }
@@ -126,8 +123,9 @@ namespace Engine
       auto typeDecElt = typeDecMap_.find(type);
       if (typeDecElt != typeDecMap_.end())
       {
-        throw std::logic_error("ShaderGenerator: use the createStructVariable "
-                               "method for user defined types");
+        throw std::logic_error(
+          "ShaderGenerator: use the createStructVariable method for user defined types"
+        );
       }
 
       auto var = createNode<VariableNode>();
@@ -159,8 +157,9 @@ namespace Engine
       auto typeDecElt = typeDecMap_.find(type);
       if (typeDecElt == typeDecMap_.end())
       {
-        throw std::logic_error("ShaderGenerator: use the createVariable "
-                                 "method for predefined types");
+        throw std::logic_error(
+          "ShaderGenerator: use the createVariable method for predefined types"
+        );
       }
 
       std::unordered_map<std::string, VariableNode*> vars;
@@ -176,8 +175,7 @@ namespace Engine
           varField = createNode<VariableNode>();
           varField->setType(fIt->second);
           varField->setName(varName);
-        }
-        else
+        } else
           varField = createStructVariableRec(fIt->second, varName);
 
         vars[fIt->first] = varField;
@@ -197,8 +195,11 @@ namespace Engine
     {
       auto elt = typeDecMap_.find(name);
       if (elt != typeDecMap_.end())
-        throw std::logic_error("ShaderGenerator: you cannot declare twice "
-                                 " the same structure");
+      {
+        throw std::logic_error(
+          "ShaderGenerator: you cannot declare twice the same structure"
+        );
+      }
 
       TypeDec* type = new TypeDec(name);
       typeDecMap_[name] = type;
