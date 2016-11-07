@@ -3,9 +3,10 @@
 out vec4 FragColor;
 in vec2 TexCoords;
 
-uniform sampler2D position;
+//uniform sampler2D position;
 uniform sampler2D normal;
 uniform sampler2D albedo;
+uniform sampler2D depth;
 
 struct Light {
   vec3 Position;
@@ -19,10 +20,25 @@ const int MAX_LIGHTS = 32;
 uniform Light lights[MAX_LIGHTS];
 uniform vec3 viewPos;
 
+uniform mat4 view;
+uniform mat4 projection;
+
+vec3 getViewPositionFromDepth(float depth)
+{
+    depth = (depth * 2.0) - 1.0;
+    vec2 ndc = (TexCoords * 2.0) - 1.0;
+    vec4 pos = vec4(ndc, depth, 1.0);
+    mat4 matInvProj = inverse(projection * view);
+    pos = matInvProj * pos;
+    return vec3(pos.xyz / pos.w);
+}
+
 void main()
 {
   // gBuffer
-  vec3 FragPos = texture(position, TexCoords).rgb;
+  //vec3 FragPos = texture(position, TexCoords).rgb;
+  float d = texture(depth, TexCoords).r;
+  vec3 FragPos = getViewPositionFromDepth(d);
   vec3 Normal = texture(normal, TexCoords).rgb;
   vec3 Diffuse = texture(albedo, TexCoords).rgb;
   float Specular = texture(albedo, TexCoords).a;
@@ -54,4 +70,5 @@ void main()
     }
   }
   FragColor = vec4(lighting, 1.0);
+  //FragColor = vec4(d, d, d, 1.0);
 }

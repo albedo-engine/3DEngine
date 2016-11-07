@@ -12,6 +12,8 @@
 #include <components/camera/camera.hpp>
 #include <components/light/light.hpp>
 
+#include <rendering/gbuffer.hpp>
+
 #include <deferred_fs.h>
 #include <deferred_vs.h>
 #include <gbuffer_fs.h>
@@ -57,9 +59,6 @@ namespace Engine
         void render();
         void render_geometry(Scene::Node::NodePtr node);
         void render_lights();
-        void build_lights_vector(std::vector<Scene::Node::NodePtr>& vec,
-                                 Scene::Node::NodePtr node);
-
 
         void debug_display();
         void debug_display_framebuffer(GLint width, GLint height,
@@ -79,6 +78,7 @@ namespace Engine
         GLuint gFrameBuffer_;
 
         // Position, Normal, Diffuse
+        GBuffer gbuffer_;
         GLuint gTextures[3];
         GLuint gDepthTexture;
 
