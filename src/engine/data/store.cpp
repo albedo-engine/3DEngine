@@ -16,6 +16,13 @@ namespace Engine
           delete p.second;
       }
     }
+
+    const Store::AttributesMap&
+    Store::getAttributesMap()
+    {
+      return attributes_;
+    }
+
   } // namespace Data
 } // namespace Engine
 

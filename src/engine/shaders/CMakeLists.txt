@@ -1,4 +1,4 @@
-file(GLOB_RECURSE FILES *.vs *.fs)
+file(GLOB_RECURSE FILES *.vs *.fs *.glsl)
 
 separate_arguments(FILES)
 

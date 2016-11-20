@@ -10,10 +10,6 @@ namespace Engine
       , renderHeight_(height)
       , camera_(camera->component<Camera>())
       , gbuffer_(width, height)
-      , gBufferShader_(
-        Rendering::Shader(
-          GET_SHADER(gbuffer_vs),
-          GET_SHADER(gbuffer_fs)))
       , deferredShader_(
         Rendering::Shader(
           GET_SHADER(deferred_vs),
@@ -25,13 +21,6 @@ namespace Engine
         throw std::invalid_argument(
           "Camera node doesn't contain a camera component."
         );
-      }
-
-      if (!gBufferShader_.compile())
-      {
-        throw std::logic_error("gBuffer shader compilation error "
-                               + std::string(
-          gBufferShader_.get_compilation_info()));
       }
 
       if (!deferredShader_.compile())
@@ -55,63 +44,6 @@ namespace Engine
       );
 
       gbuffer_.init();
-
-      // Create the FBO
-      //glGenFramebuffers(1, &gFrameBuffer_);
-      //glBindFramebuffer(GL_FRAMEBUFFER, gFrameBuffer_);
-
-      // gBuffer Textures
-      /*glGenTextures(4, gTextures);
-      for (unsigned int i = 0; i < 4; i++)
-      {
-        glBindTexture(GL_TEXTURE_2D, gTextures[i]);
-
-        if (i == 2) // Diffuse
-        {
-          glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, renderWidth_, renderHeight_,
-                       0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
-        }
-        else if (i == 3) // Material ID
-        {
-          glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, renderWidth_, renderHeight_,
-                       0, GL_RED_INTEGER, , NULL);
-        }
-        else
-        {
-          glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, renderWidth_, renderHeight_,
-                       0, GL_RGB, GL_FLOAT, NULL);
-        }
-
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i,
-                               GL_TEXTURE_2D, gTextures[i], 0);
-      }*/
-
-
-
-      // Depth
-      /*glGenTextures(1, &gDepthTexture);
-      glBindTexture(GL_TEXTURE_2D, gDepthTexture);
-      glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32F, renderWidth_,
-                   renderHeight_, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-      glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
-                             GL_TEXTURE_2D, gDepthTexture, 0);
-
-      GLenum DrawBuffers[] = {GL_COLOR_ATTACHMENT0,
-                              GL_COLOR_ATTACHMENT1,
-                              GL_COLOR_ATTACHMENT2};
-      glDrawBuffers(3, DrawBuffers);
-
-      GLenum Status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-
-      if (Status != GL_FRAMEBUFFER_COMPLETE)
-        throw std::logic_error("gBuffer framebuffer error.");
-
-      glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);*/
-
-
-
     }
 
     Renderer::~Renderer()
@@ -137,17 +69,19 @@ namespace Engine
       glPolygonMode(GL_FRONT_AND_BACK,
                     (debugOptions_ & WIREFRAME_MODE) ? GL_LINE : GL_FILL);
 
+      // G-Buffer pass
       glBindFramebuffer(GL_DRAW_FRAMEBUFFER, gbuffer_.getId());
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-      gBufferShader_.use_shader();
       render_geometry(get_target());
 
       glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 
+      // Lightning pass
       render_lights();
 
       glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+
       glBindFramebuffer(GL_READ_FRAMEBUFFER, gbuffer_.getId());
       if (debugOptions_ > 0)
         debug_display();
@@ -171,13 +105,18 @@ namespace Engine
       {
         Geometry::GeometryPtr   geometry  = child->component<Geometry>();
         Transform::TransformPtr transform = child->component<Transform>();
+        Material::MaterialPtr   material  = child->component<Material>();
 
-        if (geometry && transform)
+        if (geometry && transform && material)
         {
-          GLuint program       = gBufferShader_.get_program();
-          GLint  modelUni      = glGetUniformLocation(program, "model");
-          GLint  viewUni       = glGetUniformLocation(program, "view");
-          GLint  projectionUni = glGetUniformLocation(program, "projection");
+          auto& shader = material->get_shader();
+          shader->use_shader();
+          auto& program = shader->get_program();
+          material->sendUniforms();
+
+          GLint modelUni      = glGetUniformLocation(program, "model");
+          GLint viewUni       = glGetUniformLocation(program, "view");
+          GLint projectionUni = glGetUniformLocation(program, "projection");
 
           // View matrix
           glUniformMatrix4fv(viewUni, 1, GL_FALSE,
@@ -212,7 +151,7 @@ namespace Engine
 
       auto& lights_vec = ComponentManager::instance()->getLights();
 
-      int idx = 0;
+      int       idx = 0;
       for (auto lights : lights_vec)
       {
         GLuint program       = deferredShader_.get_program();
@@ -282,7 +221,6 @@ namespace Engine
         1,
         &camera_->get_target()->component<Transform>()->get_world_position()[0]);
     }
-
 
     void
     Renderer::debug_display()

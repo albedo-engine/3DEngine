@@ -17,12 +17,18 @@ namespace Engine
     { }
 
     void
+    Material::sendUniforms()
+    {
+      shader_->sendStoreData(store_);
+    }
+
+    void
     Material::set_shader(Rendering::Shader::ShaderPtr shader)
     {
       shader_ = shader;
     }
 
-    const Rendering::Shader::ShaderPtr
+    const Rendering::Shader::ShaderPtr&
     Material::get_shader() const
     {
       return shader_;
@@ -34,7 +40,7 @@ namespace Engine
       return material_id_;
     }
 
-    const Data::Store::StorePtr
+    const Data::Store&
     Material::get_store() const
     {
       return store_;

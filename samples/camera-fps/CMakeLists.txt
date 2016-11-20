@@ -7,5 +7,5 @@ add_executable(camera-fps
 
 target_link_libraries(camera-fps LINK_PUBLIC
   engine
-  GLEW glfw3 GL X11 Xi Xrandr Xxf86vm Xinerama Xcursor rt m pthread dl
+  GLEW SOIL glfw3 GL X11 Xi Xrandr Xxf86vm Xinerama Xcursor rt m pthread dl
 )

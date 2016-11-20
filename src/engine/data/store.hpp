@@ -36,10 +36,14 @@ namespace Engine
 
       public:
         template<typename T>
-        const T&
+        const T*
         get(std::string attribute_name) const
         {
-          return *boost::unsafe_any_cast<T>(attributes_.at(attribute_name));
+          auto found = attributes_.find(attribute_name);
+          if (found == attributes_.end())
+            return nullptr;
+
+          return boost::any_cast<T>(attributes_.at(attribute_name));
         }
 
         /** \brief Adds/Modifies an attribute in the store.
@@ -74,6 +78,10 @@ namespace Engine
           delete attribute;
           attributes_.erase(attribute_name);
         }
+
+      public:
+        const AttributesMap&
+        getAttributesMap();
 
       private:
         boost::any*

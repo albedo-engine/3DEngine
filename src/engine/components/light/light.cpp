@@ -24,7 +24,7 @@ namespace Engine
     const glm::vec3&
     Light::get_color() const
     {
-      return store_.get<glm::vec3>("color");
+      return *store_.get<glm::vec3>("color");
     }
 
     void

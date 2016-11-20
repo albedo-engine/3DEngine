@@ -8,10 +8,15 @@ in vec2 TexCoords;
 in vec3 FragPos;
 in vec3 Normal;
 
+uniform sampler2D uAlbedoMap;
+uniform vec4 uAlbedoFactor;
+
 void main()
 {
   //position = FragPos;
   normal = normalize(Normal);
-  albedo.rgb = vec3(0,1,1); // Diffuse
-  albedo.a = 1; // Specular
+  //albedo.rgb = vec3(0,1,1); // Diffuse
+  albedo.rgba = texture2D(uAlbedoMap, TexCoords); // Diffuse
+  //albedo.rgba = uAlbedoFactor; // Diffuse
+  //albedo.a = 1; // Specular
 }

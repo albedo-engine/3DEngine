@@ -7,7 +7,7 @@ namespace Engine
     Camera::Camera(float viewport_width, float viewport_height)
             : viewport_width_{viewport_width}
             , viewport_height_{viewport_height}
-            , far_{100.0f}
+            , far_{500.0f}
             , near_{1.0f}
     { }
 
