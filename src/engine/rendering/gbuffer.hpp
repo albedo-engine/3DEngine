@@ -1,32 +1,38 @@
 #pragma once
 
-#include "render-target.hpp"
+#include "texture-2d.hpp"
 
-class GBuffer
+namespace Engine
 {
-  public:
-    GBuffer(GLuint width, GLuint height);
+  namespace Rendering
+  {
+    class GBuffer
+    {
+      public:
+        GBuffer(GLuint width, GLuint height);
 
-  public:
-    void
-    init();
+      public:
+        void
+        init();
 
-    void
-    bindRenderTargets();
+        void
+        bindRenderTargets();
 
-  public:
-    GLuint
-    getId();
+      public:
+        GLuint
+        getId();
 
-    RenderTarget& getNormalRT();
-    RenderTarget& getBaseColorRT();
-    RenderTarget& getDepthRT();
+        Texture2D& getNormalRT();
+        Texture2D& getBaseColorRT();
+        Texture2D& getDepthRT();
 
-  private:
-    GLuint framebufferId_;
+      private:
+        GLuint framebufferId_;
 
-    RenderTarget normalRT_; ///< normal, roumaterial ID
-    RenderTarget baseColorRT_; ///< base color, material data
-    RenderTarget metalRoughSpecAORT_; ///< metalness, specular, roughness and AO
-    RenderTarget depthRT_; ///< depth
-};
+        Texture2D normalRT_; ///< normal, roumaterial ID
+        Texture2D baseColorRT_; ///< base color, material data
+        Texture2D metalRoughSpecAORT_; ///< metalness, specular, roughness and AO
+        Texture2D depthRT_; ///< depth
+    };
+  } // namespace Rendering
+} // namespace Engine

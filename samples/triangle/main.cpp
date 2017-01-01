@@ -55,7 +55,7 @@ int main()
   triangle->component<Transform>()->rotate(45.0f, glm::vec3(0, 1, 0));
   triangle->component<Transform>()->translate(glm::vec3(0, 0, 0));
   triangle->add_component(Cube::create());
-  triangle->add_component(Material::create());
+  //triangle->add_component(Material::create());
 
   // Create a camera with a renderer attached to it
   Node::NodePtr camera = Node::create("camera");

@@ -5,7 +5,6 @@
 #include <components/component-manager.hpp>
 
 #include <rendering/shader.hpp>
-
 #include <components/transform/transform.hpp>
 #include <components/material/material.hpp>
 #include <components/geometry/quad.hpp>
@@ -56,9 +55,14 @@ namespace Engine
         void toggle_debug(unsigned int options);
 
       private:
-        void render();
-        void render_geometry(Scene::Node::NodePtr node);
-        void render_lights();
+        void
+        render();
+
+        void
+        render_geometry(Scene::Node::NodePtr node);
+
+        void
+        render_lights();
 
         void debug_display();
         void debug_display_framebuffer(GLint width, GLint height,
@@ -70,7 +74,6 @@ namespace Engine
 
         Camera::CameraPtr camera_;
 
-        Rendering::Shader gBufferShader_;
         Rendering::Shader deferredShader_;
 
         Components::Quad::QuadPtr renderQuad_;
@@ -78,7 +81,7 @@ namespace Engine
         GLuint gFrameBuffer_;
 
         // Position, Normal, Diffuse
-        GBuffer gbuffer_;
+        Rendering::GBuffer gbuffer_;
         GLuint gTextures[3];
         GLuint gDepthTexture;
 

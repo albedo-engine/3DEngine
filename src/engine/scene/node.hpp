@@ -64,10 +64,11 @@ namespace Engine
         }
 
       private:
-        const std::string name_;
+        const std::string   name_;
         std::weak_ptr<Node> parent_;
-        NodeList children_;
-        ComponentList components_;
+        NodeList            children_;
+
+        ComponentList       components_;
     };
   } // namespace Scene
 } // namespace Engine

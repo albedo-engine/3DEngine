@@ -1,77 +1,94 @@
 #include "gbuffer.hpp"
 
-GBuffer::GBuffer(GLuint width, GLuint height)
-  : normalRT_(width, height)
-  , baseColorRT_(width, height)
-  , metalRoughSpecAORT_(width, height)
-  , depthRT_(width, height)
-{ }
-
-void
-GBuffer::init()
+namespace Engine
 {
-  // The following code generates each textures
-  // and bind them to the framebuffer.
+  namespace Rendering
+  {
 
-  glGenFramebuffers(1, &framebufferId_);
-  glBindFramebuffer(GL_FRAMEBUFFER, framebufferId_);
+    GBuffer::GBuffer(GLuint width, GLuint height)
+      : normalRT_(width, height)
+      , baseColorRT_(width, height)
+      , metalRoughSpecAORT_(width, height)
+      , depthRT_(width, height)
+    {}
 
-  normalRT_.init();
-  glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-                         GL_TEXTURE_2D, normalRT_.getId(), 0);
+    void
+    GBuffer::init()
+    {
+      // The following code generates each textures
+      // and bind them to the framebuffer.
 
-  baseColorRT_.init();
-  glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT1,
-                         GL_TEXTURE_2D, baseColorRT_.getId(), 0);
+      glGenFramebuffers(1, &framebufferId_);
+      glBindFramebuffer(GL_FRAMEBUFFER, framebufferId_);
 
-  metalRoughSpecAORT_.init();
-  glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT2,
-                         GL_TEXTURE_2D, metalRoughSpecAORT_.getId(), 0);
+      normalRT_.setMinMaxFilteringMode(GL_NEAREST, GL_NEAREST);
+      normalRT_.load(NULL);
+      glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                             GL_TEXTURE_2D, normalRT_.getTextureId(), 0);
 
-  depthRT_.init(GL_DEPTH_COMPONENT32F, GL_DEPTH_COMPONENT, GL_FLOAT);
-  glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
-                         GL_TEXTURE_2D, depthRT_.getId(), 0);
+      baseColorRT_.setMinMaxFilteringMode(GL_NEAREST, GL_NEAREST);
+      baseColorRT_.load(NULL);
+      glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT1,
+                             GL_TEXTURE_2D, baseColorRT_.getTextureId(), 0);
 
-  GLenum DrawBuffers[] = {GL_COLOR_ATTACHMENT0,
-                          GL_COLOR_ATTACHMENT1,
-                          GL_COLOR_ATTACHMENT2};
-  glDrawBuffers(3, DrawBuffers);
+      metalRoughSpecAORT_.setMinMaxFilteringMode(GL_NEAREST, GL_NEAREST);
+      metalRoughSpecAORT_.load(NULL);
+      glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT2,
+                             GL_TEXTURE_2D, metalRoughSpecAORT_.getTextureId(), 0);
 
-  GLenum Status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-  if (Status != GL_FRAMEBUFFER_COMPLETE)
-    throw std::runtime_error("Renderer: The GBuffer could not been set up.");
+      depthRT_.setMinMaxFilteringMode(GL_NEAREST, GL_NEAREST);
+      depthRT_.setInternalFormat(GL_DEPTH_COMPONENT32F);
+      depthRT_.setFormat(GL_DEPTH_COMPONENT);
+      depthRT_.setDataType(GL_FLOAT);
+      depthRT_.load(NULL);
+      glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
+                             GL_TEXTURE_2D, depthRT_.getTextureId(), 0);
 
-  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-}
+      GLenum DrawBuffers[] = {GL_COLOR_ATTACHMENT0,
+                              GL_COLOR_ATTACHMENT1,
+                              GL_COLOR_ATTACHMENT2};
+      glDrawBuffers(3, DrawBuffers);
 
-void
-GBuffer::bindRenderTargets()
-{
-  glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D, normalRT_.getId());
-  glActiveTexture(GL_TEXTURE1);
-  glBindTexture(GL_TEXTURE_2D, baseColorRT_.getId());
-  glActiveTexture(GL_TEXTURE2);
-  glBindTexture(GL_TEXTURE_2D, depthRT_.getId());
-}
+      GLenum Status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+      if (Status != GL_FRAMEBUFFER_COMPLETE)
+      {
+        throw std::runtime_error(
+          "Renderer: The GBuffer could not been set up.");
+      }
 
-GLuint
-GBuffer::getId()
-{
-  return framebufferId_;
-}
+      glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+    }
 
-RenderTarget& GBuffer::getNormalRT()
-{
-  return normalRT_;
-}
+    void
+    GBuffer::bindRenderTargets()
+    {
+      glActiveTexture(GL_TEXTURE0);
+      glBindTexture(GL_TEXTURE_2D, normalRT_.getTextureId());
+      glActiveTexture(GL_TEXTURE1);
+      glBindTexture(GL_TEXTURE_2D, baseColorRT_.getTextureId());
+      glActiveTexture(GL_TEXTURE2);
+      glBindTexture(GL_TEXTURE_2D, depthRT_.getTextureId());
+    }
 
-RenderTarget& GBuffer::getBaseColorRT()
-{
-  return baseColorRT_;
-}
+    GLuint
+    GBuffer::getId()
+    {
+      return framebufferId_;
+    }
 
-RenderTarget& GBuffer::getDepthRT()
-{
-  return depthRT_;
-}
+    Texture2D& GBuffer::getNormalRT()
+    {
+      return normalRT_;
+    }
+
+    Texture2D& GBuffer::getBaseColorRT()
+    {
+      return baseColorRT_;
+    }
+
+    Texture2D& GBuffer::getDepthRT()
+    {
+      return depthRT_;
+    }
+  } // namespace Rendering
+} // namespace Engine
