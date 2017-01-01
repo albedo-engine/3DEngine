@@ -10,7 +10,7 @@ namespace Engine
     Material::Material()
     {
       // Updates the global material ID
-      material_id_ = ID++;
+      materialId_ = ID++;
     }
 
     Material::~Material()
@@ -23,25 +23,25 @@ namespace Engine
     }
 
     void
-    Material::set_shader(Rendering::Shader::ShaderPtr shader)
+    Material::setShader(Rendering::Shader::ShaderPtr shader)
     {
       shader_ = shader;
     }
 
     const Rendering::Shader::ShaderPtr&
-    Material::get_shader() const
+    Material::getShader() const
     {
       return shader_;
     }
 
     const GLuint&
-    Material::get_material_id() const
+    Material::getMaterialId() const
     {
-      return material_id_;
+      return materialId_;
     }
 
     const Data::Store&
-    Material::get_store() const
+    Material::getStore() const
     {
       return store_;
     }

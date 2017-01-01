@@ -40,50 +40,50 @@ namespace Engine
         ~Renderer();
 
       public:
-        bool unique() override;
+        bool
+        unique() override;
 
       public:
-        void display();
+        void
+        display();
 
         enum DebugOptions
         {
           SHOW_POSITION_BUFFER = 1,
-          SHOW_DIFFUSE_BUFFER = 2,
-          SHOW_NORMAL_BUFFER = 4,
-          WIREFRAME_MODE = 8,
+          SHOW_DIFFUSE_BUFFER  = 2,
+          SHOW_NORMAL_BUFFER   = 4,
+          WIREFRAME_MODE       = 8,
         };
-        void toggle_debug(unsigned int options);
+
+        void
+        toggleDebug(unsigned int options);
 
       private:
         void
         render();
 
         void
-        render_geometry(Scene::Node::NodePtr node);
+        renderGeometry(Scene::Node::NodePtr node);
 
         void
-        render_lights();
+        renderLights();
 
-        void debug_display();
-        void debug_display_framebuffer(GLint width, GLint height,
-                                       unsigned int position);
+        void
+        debugDisplay();
+
+        void
+        debugDisplayFramebuffer(GLint width, GLint height,
+                                unsigned int position);
 
       private:
         int renderWidth_;
         int renderHeight_;
 
-        Camera::CameraPtr camera_;
-
-        Rendering::Shader deferredShader_;
-
+        Rendering::GBuffer        gbuffer_;
+        Rendering::Shader         deferredShader_;
         Components::Quad::QuadPtr renderQuad_;
 
-        GLuint gFrameBuffer_;
-
-        // Position, Normal, Diffuse
-        Rendering::GBuffer gbuffer_;
-        GLuint gTextures[3];
-        GLuint gDepthTexture;
+        Camera::CameraPtr camera_;
 
         unsigned int debugOptions_ = 0;
     };

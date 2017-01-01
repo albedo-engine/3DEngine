@@ -27,20 +27,20 @@ namespace Engine
       {
         throw std::logic_error("deferred shader compilation error "
                                + std::string(
-          deferredShader_.get_compilation_info()));
+          deferredShader_.getCompilationInfo()));
       }
 
-      deferredShader_.use_shader();
+      deferredShader_.useShader();
       glUniform1i(
-        glGetUniformLocation(deferredShader_.get_program(), "normal"), 0
+        glGetUniformLocation(deferredShader_.getProgram(), "normal"), 0
       );
 
       glUniform1i(
-        glGetUniformLocation(deferredShader_.get_program(), "albedo"), 1
+        glGetUniformLocation(deferredShader_.getProgram(), "albedo"), 1
       );
 
       glUniform1i(
-        glGetUniformLocation(deferredShader_.get_program(), "depth"), 2
+        glGetUniformLocation(deferredShader_.getProgram(), "depth"), 2
       );
 
       gbuffer_.init();
@@ -58,7 +58,7 @@ namespace Engine
     }
 
     void
-    Renderer::toggle_debug(unsigned int options)
+    Renderer::toggleDebug(unsigned int options)
     {
       debugOptions_ = options;
     }
@@ -73,18 +73,18 @@ namespace Engine
       glBindFramebuffer(GL_DRAW_FRAMEBUFFER, gbuffer_.getId());
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-      render_geometry(get_target());
+      renderGeometry(getTarget());
 
       glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 
       // Lightning pass
-      render_lights();
+      renderLights();
 
       glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 
       glBindFramebuffer(GL_READ_FRAMEBUFFER, gbuffer_.getId());
       if (debugOptions_ > 0)
-        debug_display();
+        debugDisplay();
     }
 
     void
@@ -92,16 +92,16 @@ namespace Engine
     {
       render();
 
-      glBindVertexArray(renderQuad_->get_vao());
-      glDrawElements(GL_TRIANGLES, (GLsizei)renderQuad_->get_indices().size(),
+      glBindVertexArray(renderQuad_->getVao());
+      glDrawElements(GL_TRIANGLES, (GLsizei)renderQuad_->getIndices().size(),
                      GL_UNSIGNED_INT, 0);
       glBindVertexArray(0);
     }
 
     void
-    Renderer::render_geometry(Scene::Node::NodePtr node)
+    Renderer::renderGeometry(Scene::Node::NodePtr node)
     {
-      for (Scene::Node::NodePtr child : node->get_children())
+      for (Scene::Node::NodePtr child : node->getChildren())
       {
         Geometry::GeometryPtr   geometry  = child->component<Geometry>();
         Transform::TransformPtr transform = child->component<Transform>();
@@ -109,9 +109,9 @@ namespace Engine
 
         if (geometry && transform && material)
         {
-          auto& shader = material->get_shader();
-          shader->use_shader();
-          auto& program = shader->get_program();
+          auto& shader = material->getShader();
+          shader->useShader();
+          auto& program = shader->getProgram();
           material->sendUniforms();
 
           GLint modelUni      = glGetUniformLocation(program, "model");
@@ -120,32 +120,32 @@ namespace Engine
 
           // View matrix
           glUniformMatrix4fv(viewUni, 1, GL_FALSE,
-                             glm::value_ptr(camera_->get_view_matrix()));
+                             glm::value_ptr(camera_->getView()));
           // Projection matrix
           glUniformMatrix4fv(projectionUni, 1, GL_FALSE,
-                             glm::value_ptr(camera_->get_projection_matrix()));
+                             glm::value_ptr(camera_->getProjection()));
           // Model matrix
           glUniformMatrix4fv(modelUni, 1, GL_FALSE,
-                             glm::value_ptr(transform->get_world_matrix()));
+                             glm::value_ptr(transform->getWorldMatrix()));
 
           // Render
-          glBindVertexArray(geometry->get_vao());
-          glDrawElements(GL_TRIANGLES, (GLsizei)geometry->get_indices().size(),
+          glBindVertexArray(geometry->getVao());
+          glDrawElements(GL_TRIANGLES, (GLsizei)geometry->getIndices().size(),
                          GL_UNSIGNED_INT, 0);
           glBindVertexArray(0);
         }
 
-        render_geometry(child);
+        renderGeometry(child);
       }
     }
 
     void
-    Renderer::render_lights()
+    Renderer::renderLights()
     {
       glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-      deferredShader_.use_shader();
+      deferredShader_.useShader();
 
       gbuffer_.bindRenderTargets();
 
@@ -154,25 +154,25 @@ namespace Engine
       int       idx = 0;
       for (auto lights : lights_vec)
       {
-        GLuint program       = deferredShader_.get_program();
+        GLuint program       = deferredShader_.getProgram();
         GLint  viewUni       = glGetUniformLocation(program, "view");
         GLint  projectionUni = glGetUniformLocation(program, "projection");
         // View matrix
         glUniformMatrix4fv(viewUni, 1, GL_FALSE,
-                           glm::value_ptr(camera_->get_view_matrix()));
+                           glm::value_ptr(camera_->getView()));
         // Projection matrix
         glUniformMatrix4fv(projectionUni, 1, GL_FALSE,
-                           glm::value_ptr(camera_->get_projection_matrix()));
+                           glm::value_ptr(camera_->getProjection()));
 
-        glm::vec3 light_colors = lights->get_color();
+        glm::vec3 light_colors = lights->getColor();
         glUniform3fv(
-          glGetUniformLocation(deferredShader_.get_program(),
+          glGetUniformLocation(deferredShader_.getProgram(),
                                ("lights[" + std::to_string(idx) +
                                 "].Position").c_str()),
           1,
-          &lights->get_target()->component<Transform>()->get_world_position()[0]);
+          &lights->getTarget()->component<Transform>()->getWorldPos()[0]);
         glUniform3fv(
-          glGetUniformLocation(deferredShader_.get_program(),
+          glGetUniformLocation(deferredShader_.getProgram(),
                                ("lights[" + std::to_string(idx) +
                                 "].Color").c_str()),
           1,
@@ -183,12 +183,12 @@ namespace Engine
         const GLfloat linear    = 0.7;
         const GLfloat quadratic = 1.8;
         glUniform1f(
-          glGetUniformLocation(deferredShader_.get_program(),
+          glGetUniformLocation(deferredShader_.getProgram(),
                                ("lights[" + std::to_string(idx) +
                                 "].Linear").c_str()),
           linear);
         glUniform1f(
-          glGetUniformLocation(deferredShader_.get_program(),
+          glGetUniformLocation(deferredShader_.getProgram(),
                                ("lights[" + std::to_string(idx) +
                                 "].Quadratic").c_str()),
           quadratic);
@@ -208,7 +208,7 @@ namespace Engine
                   ))
                   / (2 * quadratic);
         glUniform1f(
-          glGetUniformLocation(deferredShader_.get_program(),
+          glGetUniformLocation(deferredShader_.getProgram(),
                                ("lights[" + std::to_string(idx) +
                                 "].Radius").c_str()),
           radius);
@@ -216,14 +216,14 @@ namespace Engine
       }
 
       glUniform3fv(
-        glGetUniformLocation(deferredShader_.get_program(),
+        glGetUniformLocation(deferredShader_.getProgram(),
                              "viewPos"),
         1,
-        &camera_->get_target()->component<Transform>()->get_world_position()[0]);
+        &camera_->getTarget()->component<Transform>()->getWorldPos()[0]);
     }
 
     void
-    Renderer::debug_display()
+    Renderer::debugDisplay()
     {
       GLint width  = (GLint)(renderWidth_ / 5.0f);
       GLint height = (GLint)(renderHeight_ / 5.0f);
@@ -232,24 +232,24 @@ namespace Engine
       if (debugOptions_ & SHOW_POSITION_BUFFER)
       {
         glReadBuffer(GL_COLOR_ATTACHMENT0);
-        debug_display_framebuffer(width, height, i++);
+        debugDisplayFramebuffer(width, height, i++);
       }
 
       if (debugOptions_ & SHOW_NORMAL_BUFFER)
       {
         glReadBuffer(GL_COLOR_ATTACHMENT1);
-        debug_display_framebuffer(width, height, i++);
+        debugDisplayFramebuffer(width, height, i++);
       }
 
       if (debugOptions_ & SHOW_DIFFUSE_BUFFER)
       {
         glReadBuffer(GL_COLOR_ATTACHMENT2);
-        debug_display_framebuffer(width, height, i++);
+        debugDisplayFramebuffer(width, height, i++);
       }
     }
 
     void
-    Renderer::debug_display_framebuffer(GLint width, GLint height,
+    Renderer::debugDisplayFramebuffer(GLint width, GLint height,
                                         unsigned int position)
     {
       glBlitFramebuffer(0, 0, renderWidth_, renderHeight_,

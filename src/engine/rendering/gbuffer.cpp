@@ -34,7 +34,8 @@ namespace Engine
       metalRoughSpecAORT_.setMinMaxFilteringMode(GL_NEAREST, GL_NEAREST);
       metalRoughSpecAORT_.load(NULL);
       glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT2,
-                             GL_TEXTURE_2D, metalRoughSpecAORT_.getTextureId(), 0);
+                             GL_TEXTURE_2D, metalRoughSpecAORT_.getTextureId(),
+                             0);
 
       depthRT_.setMinMaxFilteringMode(GL_NEAREST, GL_NEAREST);
       depthRT_.setInternalFormat(GL_DEPTH_COMPONENT32F);

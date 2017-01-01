@@ -49,7 +49,8 @@ namespace Engine
         Transform();
 
       public:
-        bool unique() override;
+        bool
+        unique() override;
 
       public:
         /** \brief Moves the transform by a given vector in its local coordinates system,
@@ -58,7 +59,8 @@ namespace Engine
          * \param translation_vector
          * the vector translating the transform.
          */
-        void translate(const glm::vec3& translation_vector);
+        void
+        translate(const glm::vec3& translation_vector);
 
 
         /** \brief Moves the transform by a given amount in its local coordinates system,
@@ -69,7 +71,8 @@ namespace Engine
          * \param relative_direction
          * the given direction that will be replaced by its equivalent normalized vector.
          */
-        void translate(float amount, Direction relative_direction);
+        void
+        translate(float amount, Direction relative_direction);
 
 
         /** \brief Moves the transform to a given point in its local coordinates system,
@@ -78,18 +81,20 @@ namespace Engine
          * \param position
          * the new position at which the transform should be located.
          */
-        void translate_to(const glm::vec3& position);
+        void
+        translateTo(const glm::vec3& position);
 
 
         /** \brief Rotates the transform by a given amount,
          * relative to its local origin, the transform center of mass.
          *
-         * \param angle_degrees
+         * \param angleDegrees
          * a floating point value representing the rotation amount, in degrees.
          * \param axis
          * a 3D vector representing the rotation-axis, arround which the Transform will be rotated.
          */
-        void rotate(float angle_degrees, const glm::vec3& axis);
+        void
+        rotate(float angleDegrees, const glm::vec3& axis);
 
 
         /** \brief Rotates the transform by a given amount,
@@ -98,7 +103,8 @@ namespace Engine
           * \param quaternion
           * the quaternion representing the rotation to apply on the Transform.
           */
-        void rotate(const glm::quat& quaternion);
+        void
+        rotate(const glm::quat& quaternion);
 
 
         /** \brief Rotates the transform from the
@@ -108,60 +114,63 @@ namespace Engine
           * \param quaternion
           * the quaternion representing the rotation to apply on the Transform.
           */
-        void rotate_to(const glm::quat& quaternion);
+        void
+        rotateTo(const glm::quat& quaternion);
 
 
         /** \brief Scales the transform by the given vector,
          * relative to its local coordinates system.
          *
-         * \param scale_vector
+         * \param scale
          * the vector composed by the scale amount on 3 axis.
          */
-        void scale(const glm::vec3& scale_vector);
+        void
+        scale(const glm::vec3& scale);
 
 
         /** \brief Scales the transform to the given vector,
          * relative to its local coordinates system.
          *
-         * \param scale_vector
+         * \param scale
          * the vector composed by the scale amount on 3 axis.
          */
-        void scale_to(const glm::vec3& scale_vector);
+        void
+        scaleTo(const glm::vec3& scale);
 
 
         /** \brief Makes the Transform look at a given 3D point.
          *
-         * \param target_point
+         * \param targetPoint
          * the 3D target point represented as a vector, expressed in the world coordinates system.
          */
-        void look_at(const glm::vec3& target_point);
+        void lookAt(const glm::vec3& targetPoint);
 
 
         /** \brief Makes the Transform look at a given Transform.
          *
-         * \param transform_target
+         * \param transformTarget
          * the target Transform.
          */
-        void look_at(const TransformPtr& transform_target);
+        void lookAt(const TransformPtr& transformTarget);
 
       public:
-        glm::vec3 get_local_position() const;
-        glm::vec3 get_world_position();
+        glm::vec3 getLocalPos() const;
+        glm::vec3 getWorldPos();
 
-        glm::vec3 get_direction() const;
-        glm::vec3 get_up() const;
-        glm::vec3 get_right() const;
+        glm::vec3 getDirection() const;
+        glm::vec3 getUp() const;
+        glm::vec3 getRight() const;
 
-        const glm::quat& get_rotation_quat();
+        const glm::quat& getRotationQuat();
 
-        const glm::mat4& get_world_matrix();
+        const glm::mat4& getWorldMatrix();
 
       private:
-        glm::vec3 local_pos_;
-        glm::vec3 local_scale_;
+        glm::vec3 localPos_;
+        glm::vec3 localScale_;
         glm::quat quaternion_;
 
-        glm::mat4 world_matrix_;
+        glm::mat4 worldMatrix_;
 
     };
   } // namespace Component

@@ -35,19 +35,33 @@ namespace Engine
         Node(const std::string& name);
 
       public:
-        bool add_child(NodePtr n);
-        bool remove_child(NodePtr n);
-        void clear_children();
+        bool
+        addChild(NodePtr n);
 
-        bool add_component(Component::ComponentPtr c);
-        bool remove_component(Component::ComponentPtr c);
+        bool
+        removeChild(NodePtr n);
+
+        void
+        clearChildren();
+
+        bool
+        addComponent(Component::ComponentPtr c);
+
+        bool
+        removeComponent(Component::ComponentPtr c);
 
       public:
-        bool has_child(NodePtr n);
-        const NodeList& get_children() const;
-        NodePtr get_parent();
+        NodePtr
+        getParent();
 
-        bool has_component(Component::ComponentPtr c);
+        const NodeList&
+        getChildren() const;
+
+        bool
+        hasChild(NodePtr n);
+
+        bool
+        hasComponent(Component::ComponentPtr c);
 
         template<typename T>
         std::shared_ptr<T> component() const

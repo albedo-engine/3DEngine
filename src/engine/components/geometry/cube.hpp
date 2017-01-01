@@ -1,6 +1,6 @@
 #pragma once
 
-#include "geometry.hpp"
+#include <components/geometry/geometry.hpp>
 
 namespace Engine
 {
@@ -9,7 +9,7 @@ namespace Engine
     class Cube : public Geometry
     {
       public:
-        typedef std::shared_ptr<Cube>     CubePtr;
+        typedef std::shared_ptr<Cube> CubePtr;
 
       public:
         CubePtr
@@ -23,8 +23,11 @@ namespace Engine
         Cube();
 
       private:
-        VertexList initVertices();
-        IndexList initIndices();
+        VertexList
+        initVertices();
+
+        IndexList
+        initIndices();
     };
   } // namespace Components
 } // namespace Engine

@@ -11,15 +11,19 @@ namespace Engine
       public:
         void
         setInternalFormat(GLint format);
+
         void
         setFormat(GLenum format);
+
         void
         setDataType(GLenum type);
+
         void
         setMinFilteringMode(GLint filteringMode);
 
         void
         setMaxFilteringMode(GLint filteringMode);
+
         void
         setMinMaxFilteringMode(GLint minFiltering, GLint maxFiltering);
 

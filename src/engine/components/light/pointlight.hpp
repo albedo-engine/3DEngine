@@ -12,8 +12,6 @@ namespace Engine
         typedef std::shared_ptr<PointLight> PointLightPtr;
 
       public:
-        static constexpr float INITIAL_FOV = 45.0f;
-
         PointLightPtr
         static inline
         create()

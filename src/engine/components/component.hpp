@@ -13,20 +13,25 @@ namespace Engine
     class Component
     {
       public:
-        typedef std::shared_ptr<Component>    ComponentPtr;
+        typedef std::shared_ptr<Component> ComponentPtr;
 
       public:
         virtual ~Component();
 
       public:
-        virtual bool unique() = 0;
+        virtual bool
+        unique() = 0;
 
       public:
-        void set_parent(std::shared_ptr<Scene::Node> parent);
-        std::shared_ptr<Scene::Node> get_target();
+        void
+        setParent(std::shared_ptr<Scene::Node> parent);
+
+      public:
+        std::shared_ptr<Scene::Node>
+        getTarget();
 
       private:
-        std::weak_ptr<Scene::Node> target_node_;
+        std::weak_ptr<Scene::Node> targetNode_;
 
     };
   } // namespace Components

@@ -27,13 +27,9 @@ namespace Engine
       for (size_t i = 0; i < imageList.size(); ++i)
       {
         auto rawData = imageList[i];
-        /*glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0,
+        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0,
                      internalFormat_, width_, height_, 0,
-                     format_, dataType_, rawData);*/
-        glTexImage2D(
-          GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0,
-          GL_RGB, width_, height_, 0, GL_RGB, GL_UNSIGNED_BYTE, rawData
-        );
+                     format_, dataType_, rawData);
       }
 
       glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, minFilteringMode_);

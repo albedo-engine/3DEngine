@@ -56,14 +56,14 @@ namespace Engine
       vertex = glCreateShader(GL_VERTEX_SHADER);
       glShaderSource(vertex, 1, &vertexShader_, NULL);
       glCompileShader(vertex);
-      if (!has_compiled(vertex))
+      if (!hasCompiled(vertex))
         return false;
 
       // Fragment Shader
       fragment = glCreateShader(GL_FRAGMENT_SHADER);
       glShaderSource(fragment, 1, &fragmentShader_, NULL);
       glCompileShader(fragment);
-      if (!has_compiled(fragment))
+      if (!hasCompiled(fragment))
         return false;
 
       // Link shaders
@@ -134,7 +134,7 @@ namespace Engine
     }
 
     void
-    Shader::use_shader() const
+    Shader::useShader() const
     {
       // Enable / Disable depth testing
       glDepthMask(depthMask_);
@@ -151,20 +151,14 @@ namespace Engine
       return std::static_pointer_cast<Shader>(shared_from_this());
     }
 
-    void
-    Shader::setDepthMask(GLboolean mask)
-    {
-      depthMask_ = mask;
-    }
-
     const GLchar*
-    Shader::get_compilation_info()
+    Shader::getCompilationInfo()
     {
       return compileInfo_;
     }
 
     const GLuint&
-    Shader::get_program() const
+    Shader::getProgram() const
     {
       return program_;
     }
@@ -230,7 +224,7 @@ namespace Engine
     }
 
     bool
-    Shader::has_compiled(GLuint shader)
+    Shader::hasCompiled(GLuint shader)
     {
       GLint success;
       glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
