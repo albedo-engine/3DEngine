@@ -20,22 +20,28 @@ namespace Engine
         virtual ~Camera();
 
       public:
-        bool unique() override;
-        virtual void update() = 0;
+        bool
+        unique() override;
+
+        virtual void
+        update() = 0;
 
       public:
-        const glm::mat4& get_projection_matrix() const;
-        const glm::mat4& get_view_matrix();
+        const glm::mat4&
+        getProjection() const;
+
+        const glm::mat4&
+        getView();
 
       protected:
         float     viewport_width_;
         float     viewport_height_;
         float     far_;
         float     near_;
+
         glm::mat4 view_matrix_;
         glm::mat4 projection_matrix_;
 
     };
   } // Namespace Component
 } // Namespace Engine
-

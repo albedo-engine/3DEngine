@@ -17,11 +17,11 @@ namespace Engine
     class Shader : public std::enable_shared_from_this<Shader>
     {
       public:
-        typedef std::shared_ptr<Shader>                       ShaderPtr;
-        typedef Rendering::Texture2D::Texture2DPtr            Texture2DPtr;
-        typedef Rendering::TextureCubemap::TextureCubemapPtr  TextureCubemapPtr;
-        typedef std::unordered_map<std::string, std::string>  UniformsList;
-        typedef std::unordered_map<std::string, int>          TextureUnitMap;
+        typedef std::shared_ptr<Shader>                      ShaderPtr;
+        typedef Rendering::Texture2D::Texture2DPtr           Texture2DPtr;
+        typedef Rendering::TextureCubemap::TextureCubemapPtr TextureCubemapPtr;
+        typedef std::unordered_map<std::string, std::string> UniformsList;
+        typedef std::unordered_map<std::string, int>         TextureUnitMap;
 
       public:
         static
@@ -46,25 +46,21 @@ namespace Engine
         sendStoreData(Data::Store& store);
 
         void
-        use_shader() const;
+        useShader() const;
 
       public:
         ShaderPtr
         addUniform(std::pair<std::string, std::string> value);
 
         const GLchar*
-        get_compilation_info();
+        getCompilationInfo();
 
         const GLuint&
-        get_program() const;
-
-      public:
-        void
-        setDepthMask(GLboolean mask);
+        getProgram() const;
 
       private:
         bool
-        has_compiled(GLuint shader);
+        hasCompiled(GLuint shader);
 
         void
         buildTextureUnit();
@@ -89,16 +85,16 @@ namespace Engine
         setUniform(const std::string& uniform, const glm::mat4* value);
 
       private:
-        const GLchar*   vertexShader_;
-        const GLchar*   fragmentShader_;
+        const GLchar* vertexShader_;
+        const GLchar* fragmentShader_;
 
-        UniformsList    uniforms_;
-        TextureUnitMap  textureUnitMap_;
+        UniformsList   uniforms_;
+        TextureUnitMap textureUnitMap_;
 
-        GLuint          program_;
-        GLchar          compileInfo_[512];
+        GLuint program_;
+        GLchar compileInfo_[512];
 
-        GLboolean       depthMask_;
+        GLboolean depthMask_;
     };
   } // namespace Rendering
 } // namespace Engine

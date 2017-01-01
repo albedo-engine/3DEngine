@@ -123,7 +123,7 @@ GLFW_Freecam::update_camera_lookat(GLfloat x_offset, GLfloat y_offset)
   glm::quat quat = glm::angleAxis(glm::radians(-camera_pitch),
                                   glm::vec3(1, 0, 0));
   quat *= glm::angleAxis(glm::radians(camera_yaw), glm::vec3(0, 1, 0));
-  camera_transform->rotate_to(quat);
+  camera_transform->rotateTo(quat);
 }
 
 void

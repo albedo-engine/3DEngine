@@ -6,41 +6,44 @@ namespace Engine
   {
     PerspectiveCamera::PerspectiveCamera(float viewport_width,
                                          float viewport_height)
-            : Camera(viewport_width, viewport_height)
-            , fov_{INITIAL_FOV}
-    { update(); }
+      : Camera(viewport_width, viewport_height)
+      , fov_{INITIAL_FOV}
+    {
+      update();
+    }
 
     PerspectiveCamera::PerspectiveCamera(float viewport_width,
                                          float viewport_height, float fov)
-            : Camera(viewport_width, viewport_height)
-            , fov_{fov}
-    { update(); }
+      : Camera(viewport_width, viewport_height)
+      , fov_{fov}
+    {
+      update();
+    }
 
     PerspectiveCamera::~PerspectiveCamera()
-    { }
+    {}
 
     void
     PerspectiveCamera::update()
     {
       projection_matrix_ = glm::perspective
-              (
-                      fov_,
-                      (GLfloat)viewport_width_ / (GLfloat)viewport_height_,
-                      near_, far_
-              );
+        (
+          fov_,
+          (GLfloat)viewport_width_ / (GLfloat)viewport_height_,
+          near_, far_
+        );
     }
 
     const float&
-    PerspectiveCamera::get_fov() const
+    PerspectiveCamera::getFov() const
     {
       return fov_;
     }
 
     void
-    PerspectiveCamera::set_fov(const float& fov)
+    PerspectiveCamera::setFov(const float& fov)
     {
       fov_ = fov;
     }
   } // Namespace Components
 } // Namespace Engine
-

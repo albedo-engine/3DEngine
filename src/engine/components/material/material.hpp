@@ -25,7 +25,8 @@ namespace Engine
         ~Material();
 
       public:
-        bool unique() override;
+        bool
+        unique() override;
 
       public:
         void
@@ -38,21 +39,21 @@ namespace Engine
          * the pointer to the shader using this material.
          */
         void
-        set_shader(Rendering::Shader::ShaderPtr shader);
+        setShader(Rendering::Shader::ShaderPtr shader);
 
       public:
         const Rendering::Shader::ShaderPtr&
-        get_shader() const;
+        getShader() const;
 
         const GLuint&
-        get_material_id() const;
+        getMaterialId() const;
 
         const Data::Store&
-        get_store() const;
+        getStore() const;
 
       protected:
         Rendering::Shader::ShaderPtr  shader_;
-        GLuint                        material_id_;
+        GLuint                        materialId_;
         Data::Store                   store_;
 
       private:

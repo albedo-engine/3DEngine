@@ -24,10 +24,14 @@ namespace Engine
         virtual ~Light() = 0;
 
       public:
-        bool unique() override;
+        bool
+        unique() override;
 
-        const glm::vec3& get_color() const;
-        void set_color(glm::vec3 color);
+        const glm::vec3&
+        getColor() const;
+
+        void
+        setColor(glm::vec3 color);
 
       private:
         Data::Store store_;
@@ -35,4 +39,3 @@ namespace Engine
     };
   } // Namespace Component
 } // Namespace Engine
-

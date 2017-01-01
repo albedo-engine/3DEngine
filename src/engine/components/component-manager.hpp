@@ -13,13 +13,14 @@ namespace Engine
   namespace Components
   {
     class Light;
+
     class Material;
 
     class ComponentManager : public Singleton<ComponentManager>
     {
       public:
-        typedef std::vector<std::shared_ptr<Light>>     LightsVector;
-        typedef std::vector<std::shared_ptr<Material>>  MaterialVector;
+        typedef std::vector<std::shared_ptr<Light>>    LightsVector;
+        typedef std::vector<std::shared_ptr<Material>> MaterialVector;
 
       public:
         inline
@@ -37,7 +38,7 @@ namespace Engine
         }
 
       private:
-        LightsVector lightsVector_;
+        LightsVector   lightsVector_;
         MaterialVector materialsVector_;
     };
   } // namespace Components

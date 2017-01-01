@@ -8,15 +8,15 @@ namespace Engine
     { }
 
     void
-    Component::set_parent(Scene::Node::NodePtr target_node)
+    Component::setParent(Scene::Node::NodePtr target_node)
     {
-      target_node_ = target_node;
+      targetNode_ = target_node;
     }
 
     std::shared_ptr<Scene::Node>
-    Component::get_target()
+    Component::getTarget()
     {
-      return target_node_.lock();
+      return targetNode_.lock();
     }
 
   }

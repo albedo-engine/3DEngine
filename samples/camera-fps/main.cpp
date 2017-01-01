@@ -57,30 +57,30 @@ int main(int c, char** argv)
   //Material::MaterialPtr material = Material::create();
   auto cubeTexture = buildTexture();
   MaterialPBR::MaterialPBRPtr material = MaterialPBR::create();
-  material->set_shader(shader);
+  material->setShader(shader);
   material->setColorFactor(glm::vec4(1.0, 0.0, 0.0, 1.0));
   material->setAlbedo(cubeTexture);
 
   // Create the cube node
   Node::NodePtr cube = Node::create("cube");
-  cube->add_component(Transform::create());
+  cube->addComponent(Transform::create());
   cube->component<Transform>()->translate(glm::vec3(0, 0, -4));
-  cube->add_component(Cube::create());
-  cube->add_component(material);
+  cube->addComponent(Cube::create());
+  cube->addComponent(material);
 
   // Create a camera with a renderer attached to it
   Node::NodePtr camera_node = Node::create("camera");
-  camera_node->add_component(PerspectiveCamera::create(width, height));
-  camera_node->add_component(Transform::create());
+  camera_node->addComponent(PerspectiveCamera::create(width, height));
+  camera_node->addComponent(Transform::create());
   camera_node->component<Transform>()->translate(glm::vec3(0, 0, 4));
   freecam.set_camera(camera_node);
 
   // Root node
   Node::NodePtr         root     = Node::create("root");
   Renderer::RendererPtr renderer = Renderer::create(camera_node, width, height);
-  root->add_component(renderer);
-  root->add_child(camera_node);
-  root->add_child(cube);
+  root->addComponent(renderer);
+  root->addChild(camera_node);
+  root->addChild(cube);
 
   // Create some randomized lights
   //srand(time(0));
@@ -89,22 +89,22 @@ int main(int c, char** argv)
     // Light
     Node::NodePtr             light      = Node::create();
     PointLight::PointLightPtr pointlight = PointLight::create();
-    pointlight->set_color(glm::vec3((rand() % 100) / 200.0f + 0.6f,
+    pointlight->setColor(glm::vec3((rand() % 100) / 200.0f + 0.6f,
                                     (rand() % 100) / 200.0f + 0.6f,
                                     (rand() % 100) / 200.0f + 0.6f));
 
     //pointlight->set_color(glm::vec3(1.0, 1.0, 1.0));
 
-    light->add_component(pointlight);
+    light->addComponent(pointlight);
 
     // Position
-    light->add_component(Transform::create());
+    light->addComponent(Transform::create());
     light->component<Transform>()->translate(
       glm::vec3((rand() % 100) / 50.0f * 3.0f,
                 (rand() % 100) / 50.0f * 3.0f,
                 (rand() % 100) / 50.0f * 3.0f));
 
-    root->add_child(light);
+    root->addChild(light);
   }
 
   /*PointLight::PointLightPtr pointlight = PointLight::create();

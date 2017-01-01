@@ -25,31 +25,31 @@ namespace Engine
     }
 
     const Geometry::VertexList&
-    Geometry::get_vertices() const
+    Geometry::getVertices() const
     {
       return vertices_;
     }
 
     const Geometry::IndexList&
-    Geometry::get_indices() const
+    Geometry::getIndices() const
     {
       return indices_;
     }
 
     const GLuint&
-    Geometry::get_vao() const
+    Geometry::getVao() const
     {
       return vao_;
     }
 
     const GLuint&
-    Geometry::get_vbo() const
+    Geometry::getVbo() const
     {
       return vbo_;
     }
 
     const GLuint&
-    Geometry::get_ebo() const
+    Geometry::getEbo() const
     {
       return ebo_;
     }

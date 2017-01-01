@@ -13,15 +13,15 @@ namespace Engine
     { }
 
     bool
-    Node::add_child(Node::NodePtr n)
+    Node::addChild(Node::NodePtr n)
     {
       if (n == nullptr)
         throw new std::logic_error("The node child cannot be null");
-      else if (n == get_parent())
+      else if (n == getParent())
         throw new std::logic_error("A parent node cannot be added as a child node");
 
-      if (n->get_parent())
-        n->get_parent()->remove_child(n);
+      if (n->getParent())
+        n->getParent()->removeChild(n);
 
       // Puts the new child in the children container
       children_.push_back(n);
@@ -32,7 +32,7 @@ namespace Engine
     }
 
     bool
-    Node::remove_child(Node::NodePtr n)
+    Node::removeChild(Node::NodePtr n)
     {
       auto i = std::find(children_.begin(), children_.end(), n);
       if (i != children_.end())
@@ -44,55 +44,55 @@ namespace Engine
         return false;
     }
 
-    bool
-    Node::has_child(Node::NodePtr n)
-    {
-      return std::find(children_.begin(), children_.end(), n) != children_.end();
-    }
-
     void
-    Node::clear_children()
+    Node::clearChildren()
     {
       children_.clear();
     }
 
-    const Node::NodeList&
-    Node::get_children() const
-    {
-      return children_;
-    }
-
     Node::NodePtr
-    Node::get_parent()
+    Node::getParent()
     {
       return parent_.lock();
     }
 
-    bool
-    Node::add_component(Component::ComponentPtr c)
+    const Node::NodeList&
+    Node::getChildren() const
     {
-      if (has_component(c))
+      return children_;
+    }
+
+    bool
+    Node::hasChild(Node::NodePtr n)
+    {
+      return std::find(children_.begin(), children_.end(), n) != children_.end();
+    }
+
+    bool
+    Node::addComponent(Component::ComponentPtr c)
+    {
+      if (hasComponent(c))
         throw new std::logic_error("This component instance is already contained in the node");
 
-      c->set_parent(shared_from_this());
+      c->setParent(shared_from_this());
       components_.push_back(c);
       return true;
     }
 
     bool
-    Node::remove_component(Component::ComponentPtr c)
+    Node::removeComponent(Component::ComponentPtr c)
     {
       auto i = std::find(components_.begin(), components_.end(), c);
       if (i == components_.end())
         return false;
 
-      c->set_parent(nullptr);
+      c->setParent(nullptr);
       components_.erase(i);
       return true;
     }
 
     bool
-    Node::has_component(Component::ComponentPtr c)
+    Node::hasComponent(Component::ComponentPtr c)
     {
       return std::find(components_.begin(), components_.end(), c) != components_.end();
     }

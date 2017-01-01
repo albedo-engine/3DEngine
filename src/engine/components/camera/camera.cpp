@@ -5,14 +5,14 @@ namespace Engine
   namespace Components
   {
     Camera::Camera(float viewport_width, float viewport_height)
-            : viewport_width_{viewport_width}
-            , viewport_height_{viewport_height}
-            , far_{500.0f}
-            , near_{1.0f}
-    { }
+      : viewport_width_{viewport_width}
+      , viewport_height_{viewport_height}
+      , far_{500.0f}
+      , near_{1.0f}
+    {}
 
     Camera::~Camera()
-    { }
+    {}
 
     bool
     Camera::unique()
@@ -21,22 +21,26 @@ namespace Engine
     }
 
     const glm::mat4&
-    Camera::get_projection_matrix() const
+    Camera::getProjection() const
     {
       return projection_matrix_;
     }
 
     const glm::mat4&
-    Camera::get_view_matrix()
+    Camera::getView()
     {
-      if (get_target() != nullptr && get_target()->component<Transform>() == nullptr)
-        throw new std::logic_error("A Camera component should be linked to a Transform component.");
+      if (getTarget() != nullptr &&
+          getTarget()->component<Transform>() == nullptr)
+      {
+        throw new std::logic_error(
+          "A Camera component should be linked to a Transform component.");
+      }
 
-      auto transform = get_target()->component<Transform>();
+      auto transform = getTarget()->component<Transform>();
 
-      auto position = transform->get_world_position();
-      auto direction = transform->get_direction();
-      auto up = transform->get_up();
+      auto position  = transform->getWorldPos();
+      auto direction = transform->getDirection();
+      auto up        = transform->getUp();
 
       view_matrix_ = glm::lookAt(position, position + direction, up);
 

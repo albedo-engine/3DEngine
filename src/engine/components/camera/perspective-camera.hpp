@@ -37,11 +37,15 @@ namespace Engine
         ~PerspectiveCamera();
 
       public:
-        void update() override;
+        void
+        update() override;
 
       public:
-        const float& get_fov() const;
-        void set_fov(const float& fov);
+        const float&
+        getFov() const;
+
+        void
+        setFov(const float& fov);
 
       private:
         float fov_;
