@@ -12,8 +12,8 @@
 #include <components/geometry/cube.hpp>
 #include <components/material/material-pbr.hpp>
 #include <components/material/material-skybox.hpp>
-#include <shaders/formatted/skyboxVertex_glsl.h>
-#include <shaders/formatted/skyboxFragment_glsl.h>
+
+#include <scene/visitor/update-visitor.hpp>
 
 using namespace Engine;
 using namespace Engine::Scene;
@@ -22,11 +22,12 @@ using namespace Engine::Rendering;
 
 Texture2D::Texture2DPtr buildTexture()
 {
-  int width = 128;
-  int height = 128;
+  int  width   = 128;
+  int  height  = 128;
   auto texture = Texture2D::create(width, height);
 
-  unsigned char* img = SOIL_load_image("cat-128.png", &width, &height, 0, SOIL_LOAD_RGBA);
+  unsigned char* img = SOIL_load_image("cat-128.png", &width, &height, 0,
+                                       SOIL_LOAD_RGBA);
   if (img == NULL)
     throw std::invalid_argument("Image loading fail");
 
@@ -55,8 +56,8 @@ int main(int c, char** argv)
   shader->addUniform({"uAlbedoMap", "sampler2D"});
 
   //Material::MaterialPtr material = Material::create();
-  auto cubeTexture = buildTexture();
-  MaterialPBR::MaterialPBRPtr material = MaterialPBR::create();
+  auto                        cubeTexture = buildTexture();
+  MaterialPBR::MaterialPBRPtr material    = MaterialPBR::create();
   material->setShader(shader);
   material->setColorFactor(glm::vec4(1.0, 0.0, 0.0, 1.0));
   material->setAlbedo(cubeTexture);
@@ -79,8 +80,22 @@ int main(int c, char** argv)
   Node::NodePtr         root     = Node::create("root");
   Renderer::RendererPtr renderer = Renderer::create(camera_node, width, height);
   root->addComponent(renderer);
+  root->addComponent(Transform::create());
   root->addChild(camera_node);
   root->addChild(cube);
+
+  cube->addUpdateCallback([](Node::NodePtr thisPtr) {
+
+      auto t = thisPtr->component<Transform>();
+      if (t != nullptr)
+      {
+        t->translate(glm::vec3(0.1, 0.0, 0.0));
+      }
+
+      return true;
+  });
+
+  auto updateVisitor = UpdateVisitor::create();
 
   // Create some randomized lights
   //srand(time(0));
@@ -90,8 +105,8 @@ int main(int c, char** argv)
     Node::NodePtr             light      = Node::create();
     PointLight::PointLightPtr pointlight = PointLight::create();
     pointlight->setColor(glm::vec3((rand() % 100) / 200.0f + 0.6f,
-                                    (rand() % 100) / 200.0f + 0.6f,
-                                    (rand() % 100) / 200.0f + 0.6f));
+                                   (rand() % 100) / 200.0f + 0.6f,
+                                   (rand() % 100) / 200.0f + 0.6f));
 
     //pointlight->set_color(glm::vec3(1.0, 1.0, 1.0));
 
@@ -107,14 +122,6 @@ int main(int c, char** argv)
     root->addChild(light);
   }
 
-  /*PointLight::PointLightPtr pointlight = PointLight::create();
-  pointlight->set_color(glm::vec3(1.0, 1.0, 1.0));
-  Node::NodePtr             light      = Node::create();
-  light->add_component(pointlight);
-  light->add_component(Transform::create());
-  light->component<Transform>()->translate(glm::vec3(0.0, 2.0, 0.0));
-  root->add_child(light);*/
-
   while (!freecam.should_close())
   {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -122,7 +129,10 @@ int main(int c, char** argv)
 
     freecam.pre_update();
 
-    // Renders the scene from the given camera point of view
+    // Updates the scene
+    updateVisitor->visit(root);
+
+    // Renders the scene
     renderer->display();
 
     freecam.post_update();

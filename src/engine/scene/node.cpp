@@ -12,6 +12,12 @@ namespace Engine
       : name_(name)
     { }
 
+    void
+    Node::accept(std::shared_ptr<NodeVisitor> visitor)
+    {
+      visitor->visit(shared_from_this());
+    }
+
     bool
     Node::addChild(Node::NodePtr n)
     {
@@ -91,10 +97,21 @@ namespace Engine
       return true;
     }
 
+    bool Node::addUpdateCallback(std::function<bool(Node::NodePtr)> callback)
+    {
+      updateCallbackList_.push_back(callback);
+    }
+
     bool
     Node::hasComponent(Component::ComponentPtr c)
     {
       return std::find(components_.begin(), components_.end(), c) != components_.end();
+    }
+
+    const Node::UpdateCallbackList&
+    Node::getUpdateCallbackList() const
+    {
+      return updateCallbackList_;
     }
 
   } // namespace Scene

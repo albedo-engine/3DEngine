@@ -1,6 +1,7 @@
 #pragma once
 
 #include <components/component.hpp>
+#include <scene/visitor/visitor.hpp>
 
 namespace Engine
 {
@@ -11,9 +12,10 @@ namespace Engine
     class Node : public std::enable_shared_from_this<Node>
     {
       public:
-        typedef std::shared_ptr<Node> NodePtr;
-        typedef std::vector<NodePtr> NodeList;
-        typedef std::vector<Component::ComponentPtr> ComponentList;
+        typedef std::shared_ptr<Node>                     NodePtr;
+        typedef std::vector<NodePtr>                      NodeList;
+        typedef std::vector<Component::ComponentPtr>      ComponentList;
+        typedef std::vector<std::function<bool(NodePtr)>> UpdateCallbackList;
 
       public:
         NodePtr
@@ -35,6 +37,11 @@ namespace Engine
         Node(const std::string& name);
 
       public:
+        void
+        accept(std::shared_ptr<NodeVisitor> visitor);
+
+      public:
+
         bool
         addChild(NodePtr n);
 
@@ -49,6 +56,9 @@ namespace Engine
 
         bool
         removeComponent(Component::ComponentPtr c);
+
+        bool
+        addUpdateCallback(std::function<bool(NodePtr)> callback);
 
       public:
         NodePtr
@@ -77,12 +87,17 @@ namespace Engine
           return (result_it != components_.end()) ? result_ptr : nullptr;
         }
 
-      private:
-        const std::string   name_;
-        std::weak_ptr<Node> parent_;
-        NodeList            children_;
+        const UpdateCallbackList&
+        getUpdateCallbackList() const;
 
-        ComponentList       components_;
+      private:
+        const std::string         name_;
+        std::weak_ptr<Node>       parent_;
+        NodeList                  children_;
+
+        ComponentList             components_;
+
+        UpdateCallbackList        updateCallbackList_;
     };
   } // namespace Scene
 } // namespace Engine
