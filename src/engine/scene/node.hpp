@@ -42,6 +42,7 @@ namespace Engine
 
       public:
 
+        // TODO: Overload using initializer_list to add several nodes in a row
         bool
         addChild(NodePtr n);
 
@@ -61,6 +62,9 @@ namespace Engine
         addUpdateCallback(std::function<bool(NodePtr)> callback);
 
       public:
+        const std::string&
+        getName() const;
+
         NodePtr
         getParent();
 
@@ -77,13 +81,16 @@ namespace Engine
         std::shared_ptr<T> component() const
         {
           std::shared_ptr<T> result_ptr = nullptr;
-          auto result_it =
-                  std::find_if(components_.begin(), components_.end(),
-                               [&result_ptr](const Component::ComponentPtr& e)
-                               {
-                                 result_ptr = std::dynamic_pointer_cast<T>(e);
-                                 return (result_ptr != nullptr);
-                               });
+          auto               result_it  =
+                               std::find_if(components_.begin(),
+                                            components_.end(),
+                                            [&result_ptr](
+                                              const Component::ComponentPtr& e)
+                                            {
+                                              result_ptr = std::dynamic_pointer_cast<T>(
+                                                e);
+                                              return (result_ptr != nullptr);
+                                            });
           return (result_it != components_.end()) ? result_ptr : nullptr;
         }
 
@@ -91,13 +98,13 @@ namespace Engine
         getUpdateCallbackList() const;
 
       private:
-        const std::string         name_;
-        std::weak_ptr<Node>       parent_;
-        NodeList                  children_;
+        const std::string   name_;
+        std::weak_ptr<Node> parent_;
+        NodeList            children_;
 
-        ComponentList             components_;
+        ComponentList components_;
 
-        UpdateCallbackList        updateCallbackList_;
+        UpdateCallbackList updateCallbackList_;
     };
   } // namespace Scene
 } // namespace Engine

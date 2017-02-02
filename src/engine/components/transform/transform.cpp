@@ -1,5 +1,7 @@
 #include "transform.hpp"
 
+#include <iostream>
+
 namespace Engine
 {
   namespace Components
@@ -109,6 +111,27 @@ namespace Engine
       lookAt(transform_target->getWorldPos());
     }
 
+    void
+    Transform::computeWorldMatrix()
+    {
+      // TODO: For now, the computation does not take
+      // TODO: the parent scale and rotation into account.
+      // TODO: We should fix this by using the world matrix
+      // TODO: and not using vec3 variable for each transformation
+
+      worldPos_ = localPos_;
+      if (parentTransform_ == nullptr)
+        return;
+
+      worldPos_ += parentTransform_->getWorldPos();
+    }
+
+    void
+    Transform::setParentTransform(const TransformPtr& parentTransform)
+    {
+      parentTransform_ = parentTransform;
+    }
+
     glm::vec3
     Transform::getLocalPos() const
     {
@@ -118,19 +141,7 @@ namespace Engine
     glm::vec3
     Transform::getWorldPos()
     {
-      // Updates world position according to parent world position
-      if (getTarget() == nullptr)
-        return localPos_;
-
-      auto parent_node = getTarget()->getParent();
-      if (parent_node == nullptr)
-        return localPos_;
-
-      auto parent_transform = parent_node->component<Transform>();
-      if (parent_transform == nullptr)
-        return localPos_;
-
-      return parent_transform->getWorldPos() + localPos_;
+      return worldPos_;
     }
 
     glm::vec3
@@ -160,11 +171,16 @@ namespace Engine
     const glm::mat4&
     Transform::getWorldMatrix()
     {
-      auto world_pos = getWorldPos();
-      worldMatrix_ = glm::translate(glm::mat4(1.0), world_pos)
-                      * glm::mat4_cast(quaternion_)
-                      * glm::scale(glm::mat4(1.0), localScale_);
+      worldMatrix_ = glm::translate(glm::mat4(1.0), worldPos_)
+                     * glm::mat4_cast(quaternion_)
+                     * glm::scale(glm::mat4(1.0), localScale_);
       return worldMatrix_;
+    }
+
+    bool
+    Transform::isDirty() const
+    {
+      return dirty_;
     }
 
   } // namespace Component

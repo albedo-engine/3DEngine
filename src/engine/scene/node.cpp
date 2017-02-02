@@ -56,6 +56,12 @@ namespace Engine
       children_.clear();
     }
 
+    const std::string&
+    Node::getName() const
+    {
+      return name_;
+    }
+
     Node::NodePtr
     Node::getParent()
     {

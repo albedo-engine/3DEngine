@@ -2,6 +2,8 @@
 
 #include <scene/visitor/visitor.hpp>
 
+#include <components/transform/transform.hpp>
+
 namespace Engine
 {
   namespace Scene
@@ -20,6 +22,9 @@ namespace Engine
         }
 
       public:
+        UpdateVisitor();
+
+      public:
         virtual void
         visit(std::shared_ptr<Node> node) override;
 
@@ -28,7 +33,8 @@ namespace Engine
         setDeltaTime(float deltaTime);
 
       private:
-        float deltaTime_ = 1.0f;
+        float                   deltaTime_;
+
     };
   } // namespace Scene
 } // namespace Engine

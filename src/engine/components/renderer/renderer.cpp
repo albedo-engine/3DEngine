@@ -73,6 +73,9 @@ namespace Engine
       glBindFramebuffer(GL_DRAW_FRAMEBUFFER, gbuffer_.getId());
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+      if (!getTarget())
+        return;
+
       renderGeometry(getTarget());
 
       glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
