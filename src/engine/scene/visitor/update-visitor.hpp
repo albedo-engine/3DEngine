@@ -32,8 +32,9 @@ namespace Engine
         void
         setDeltaTime(float deltaTime);
 
-      private:
-        float                   deltaTime_;
+    private:
+        void
+        computeNodeTransform(Node::NodePtr node, Transform::TransformPtr transform);
 
     };
   } // namespace Scene

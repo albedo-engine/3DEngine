@@ -157,11 +157,11 @@ namespace Engine
         lookAt(const TransformPtr& transformTarget);
 
         void
-        computeWorldMatrix();
+        computeWorldMatrix(const TransformPtr& parentTransform);
 
       public:
         void
-        setParentTransform(const TransformPtr& parentTransform);
+        setDirty(bool dirty);
 
       public:
         glm::vec3
@@ -189,10 +189,7 @@ namespace Engine
         isDirty() const;
 
       private:
-        TransformPtr        parentTransform_;
-
         glm::vec3           localPos_;
-        glm::vec3           worldPos_;
         glm::vec3           localScale_;
         glm::quat           quaternion_;
 

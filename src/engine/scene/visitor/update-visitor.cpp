@@ -5,27 +5,18 @@ namespace Engine
   namespace Scene
   {
     UpdateVisitor::UpdateVisitor()
-      : deltaTime_{0.0f}
     {}
 
     void
     UpdateVisitor::visit(Node::NodePtr node)
     {
+      //
+      // Pre-traversal
+      //
       auto t = node->component<Transform>();
       if (t != nullptr)
       {
-        auto parentNode = node->getParent();
-        while (parentNode)
-        {
-          auto parentTransform = parentNode->component<Transform>();
-
-          t->setParentTransform(parentTransform);
-          t->computeWorldMatrix();
-
-          if (parentTransform) break;
-
-          parentNode = parentNode->getParent();
-        }
+        this->computeNodeTransform(node, t);
       }
 
       // Calls all registered update callbacks
@@ -33,12 +24,27 @@ namespace Engine
         callback(node);
 
       this->traverse(node);
+
+      //
+      // Post-traversal
+      //
+      if (t != nullptr)
+        t->setDirty(false);
     }
 
-    void UpdateVisitor::setDeltaTime(float deltaTime)
+    void
+    UpdateVisitor::computeNodeTransform(Node::NodePtr node, Transform::TransformPtr transform)
     {
-      deltaTime_ = deltaTime;
-    }
+      auto parentNode = node->getParent();
+      do
+      {
+        auto parentTransform = parentNode->component<Transform>();
 
+        transform->computeWorldMatrix(parentTransform);
+        if (parentTransform) break;
+
+        parentNode = parentNode->getParent();
+      } while (parentNode);
+    }
   } // namespace Scene
 } // namespace Engine

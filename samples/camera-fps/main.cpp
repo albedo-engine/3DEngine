@@ -26,7 +26,7 @@ Texture2D::Texture2DPtr buildTexture()
   int  height  = 128;
   auto texture = Texture2D::create(width, height);
 
-  unsigned char* img = SOIL_load_image("cat-128.png", &width, &height, 0,
+  unsigned char* img = SOIL_load_image("../assets/cat.png", &width, &height, 0,
                                        SOIL_LOAD_RGBA);
   if (img == NULL)
     throw std::invalid_argument("Image loading fail");
@@ -65,7 +65,7 @@ int main(int c, char** argv)
   // Create the cube node
   Node::NodePtr cube = Node::create("cube");
   cube->addComponent(Transform::create());
-  cube->component<Transform>()->translate(glm::vec3(0, 0, -4));
+  cube->component<Transform>()->rotate(90.0, glm::vec3(1, 0, 0));
   cube->addComponent(Cube::create());
   cube->addComponent(material);
 
@@ -74,7 +74,7 @@ int main(int c, char** argv)
   // Create the cube node
   Node::NodePtr cube2 = Node::create("cube2");
   cube2->addComponent(Transform::create());
-  cube2->component<Transform>()->translate(glm::vec3(0, 1.5, 0));
+  cube2->component<Transform>()->translate(glm::vec3(0, 1, 0));
   cube2->addComponent(Cube::create());
   cube2->addComponent(material);
 
@@ -112,7 +112,7 @@ int main(int c, char** argv)
 
   // Create some randomized lights
   srand(time(0));
-  /*for (int i = 0; i < 100; ++i)
+  for (int i = 0; i < 100; ++i)
   {
     // Light
     Node::NodePtr             light      = Node::create();
@@ -133,7 +133,7 @@ int main(int c, char** argv)
                 (rand() % 100) / 50.0f * 3.0f));
 
     root->addChild(light);
-  }*/
+  }
 
   while (!freecam.should_close())
   {
