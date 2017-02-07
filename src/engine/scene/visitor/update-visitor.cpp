@@ -16,7 +16,13 @@ namespace Engine
       auto t = node->component<Transform>();
       if (t != nullptr)
       {
-        this->computeNodeTransform(node, t);
+        //this->computeNodeTransform(node, t);
+        Transform::TransformPtr parentTransform = nullptr;
+        if (!transformStack_.empty())
+          parentTransform = transformStack_[transformStack_.size() - 1];
+        t->computeWorldMatrix(parentTransform);
+
+        transformStack_.push_back(t);
       }
 
       // Calls all registered update callbacks
@@ -30,21 +36,9 @@ namespace Engine
       //
       if (t != nullptr)
         t->setDirty(false);
-    }
 
-    void
-    UpdateVisitor::computeNodeTransform(Node::NodePtr node, Transform::TransformPtr transform)
-    {
-      auto parentNode = node->getParent();
-      do
-      {
-        auto parentTransform = parentNode->component<Transform>();
-
-        transform->computeWorldMatrix(parentTransform);
-        if (parentTransform) break;
-
-        parentNode = parentNode->getParent();
-      } while (parentNode);
+      if (!transformStack_.empty())
+        transformStack_.pop_back();
     }
   } // namespace Scene
 } // namespace Engine
