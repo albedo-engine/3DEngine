@@ -1,6 +1,7 @@
 #pragma once
 
-#include "../../../utils/headers/common.hpp"
+#include <utils/headers/common.hpp>
+
 #include <scene/node.hpp>
 #include <components/component.hpp>
 
@@ -143,7 +144,8 @@ namespace Engine
          * \param targetPoint
          * the 3D target point represented as a vector, expressed in the world coordinates system.
          */
-        void lookAt(const glm::vec3& targetPoint);
+        void
+        lookAt(const glm::vec3& targetPoint);
 
 
         /** \brief Makes the Transform look at a given Transform.
@@ -151,26 +153,49 @@ namespace Engine
          * \param transformTarget
          * the target Transform.
          */
-        void lookAt(const TransformPtr& transformTarget);
+        void
+        lookAt(const TransformPtr& transformTarget);
+
+        void
+        computeWorldMatrix(const TransformPtr& parentTransform);
 
       public:
-        glm::vec3 getLocalPos() const;
-        glm::vec3 getWorldPos();
+        void
+        setDirty(bool dirty);
 
-        glm::vec3 getDirection() const;
-        glm::vec3 getUp() const;
-        glm::vec3 getRight() const;
+      public:
+        glm::vec3
+        getLocalPos() const;
 
-        const glm::quat& getRotationQuat();
+        glm::vec3
+        getWorldPos();
 
-        const glm::mat4& getWorldMatrix();
+        glm::vec3
+        getDirection() const;
+
+        glm::vec3
+        getUp() const;
+
+        glm::vec3
+        getRight() const;
+
+        const glm::quat&
+        getRotationQuat();
+
+        const glm::mat4&
+        getWorldMatrix();
+
+        bool
+        isDirty() const;
 
       private:
-        glm::vec3 localPos_;
-        glm::vec3 localScale_;
-        glm::quat quaternion_;
+        glm::vec3           localPos_;
+        glm::vec3           localScale_;
+        glm::quat           quaternion_;
 
-        glm::mat4 worldMatrix_;
+        glm::mat4           worldMatrix_;
+
+        bool                dirty_;
 
     };
   } // namespace Component

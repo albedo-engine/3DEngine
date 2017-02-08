@@ -1,5 +1,7 @@
 #include "transform.hpp"
 
+#include <iostream>
+
 namespace Engine
 {
   namespace Components
@@ -21,6 +23,7 @@ namespace Engine
     Transform::translate(const glm::vec3& position)
     {
       localPos_ += position;
+      this->translateTo(localPos_ + position);
     }
 
     void
@@ -29,23 +32,25 @@ namespace Engine
       switch (dir)
       {
         case FORWARD:
-          localPos_ += getDirection() * amount;
+          this->translate(getDirection() * amount);
           break;
         case BACKWARD:
-          localPos_  += (-1.0f * getDirection()) * amount;
+          this->translate(-1.0f * getDirection() * amount);
           break;
         case EASTWARD:
-          localPos_  += getRight() * amount;
+          this->translate(getRight() * amount);
           break;
         case WESTWARD:
-          localPos_  += (-1.0f * getRight()) * amount;
+          this->translate(-1.0f * getRight() * amount);
           break;
         case UPWARD:
-          localPos_  += getUp() * amount;
+          this->translate(getUp() * amount);
           break;
         case DOWNWARD:
-          localPos_  += (-1.0f * getUp()) * amount;
+          this->translate(-1.0f * getUp() * amount);
           break;
+        default:
+          throw std::logic_error("Transform: Invalid direction in translate method.");
       }
     }
 
@@ -53,6 +58,7 @@ namespace Engine
     Transform::translateTo(const glm::vec3& position)
     {
       localPos_ = position;
+      this->dirty_ = true;
     }
 
     void
@@ -60,31 +66,33 @@ namespace Engine
     {
       glm::vec3 normalized_axis = glm::normalize(axis);
       glm::quat rotation_quat = glm::angleAxis(glm::radians(angle), normalized_axis);
-      rotate(rotation_quat);
+      this->rotate(rotation_quat);
     }
 
     void
     Transform::rotate(const glm::quat& quaternion)
     {
-      quaternion_ = glm::normalize(quaternion) * quaternion_;
+      this->rotateTo(glm::normalize(quaternion) * quaternion_);
     }
 
     void
     Transform::rotateTo(const glm::quat& quaternion)
     {
       quaternion_ = quaternion;
+      dirty_ = true;
     }
 
     void
     Transform::scale(const glm::vec3& scale)
     {
-      localScale_ *= scale;
+      this->scaleTo(localScale_ * scale);
     }
 
     void
     Transform::scaleTo(const glm::vec3& scale)
     {
       localScale_ = scale;
+      dirty_ = true;
     }
 
     void
@@ -101,12 +109,34 @@ namespace Engine
       float half_cos = sqrt(0.5f * (1.f + cosTheta));
       glm::vec3 w = glm::cross(direction, toTarget);
       quaternion_ = glm::normalize(glm::quat(2.f * half_cos * half_cos, - w));
+
+      dirty_ = true;
     }
 
     void
     Transform::lookAt(const Transform::TransformPtr& transform_target)
     {
       lookAt(transform_target->getWorldPos());
+    }
+
+    void
+    Transform::computeWorldMatrix(const Transform::TransformPtr& parentTransform)
+    {
+      bool dirty = dirty_ || (parentTransform && parentTransform->isDirty());
+      if (!dirty)
+        return;
+
+      auto localMatrix = glm::translate(glm::mat4(1.0), localPos_)
+                         * glm::mat4_cast(quaternion_)
+                         * glm::scale(glm::mat4(1.0), localScale_);
+
+      worldMatrix_ = (parentTransform)? parentTransform->getWorldMatrix() * localMatrix : localMatrix;
+    }
+
+    void
+    Transform::setDirty(bool dirty)
+    {
+      dirty_ = dirty;
     }
 
     glm::vec3
@@ -118,19 +148,7 @@ namespace Engine
     glm::vec3
     Transform::getWorldPos()
     {
-      // Updates world position according to parent world position
-      if (getTarget() == nullptr)
-        return localPos_;
-
-      auto parent_node = getTarget()->getParent();
-      if (parent_node == nullptr)
-        return localPos_;
-
-      auto parent_transform = parent_node->component<Transform>();
-      if (parent_transform == nullptr)
-        return localPos_;
-
-      return parent_transform->getWorldPos() + localPos_;
+      return glm::vec3(worldMatrix_[3]);
     }
 
     glm::vec3
@@ -160,11 +178,13 @@ namespace Engine
     const glm::mat4&
     Transform::getWorldMatrix()
     {
-      auto world_pos = getWorldPos();
-      worldMatrix_ = glm::translate(glm::mat4(1.0), world_pos)
-                      * glm::mat4_cast(quaternion_)
-                      * glm::scale(glm::mat4(1.0), localScale_);
       return worldMatrix_;
+    }
+
+    bool
+    Transform::isDirty() const
+    {
+      return dirty_;
     }
 
   } // namespace Component

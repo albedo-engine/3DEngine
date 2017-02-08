@@ -33,7 +33,8 @@ namespace Engine
           getTarget()->component<Transform>() == nullptr)
       {
         throw new std::logic_error(
-          "A Camera component should be linked to a Transform component.");
+          "A Camera component should be linked to a Transform component."
+        );
       }
 
       auto transform = getTarget()->component<Transform>();
