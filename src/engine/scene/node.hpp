@@ -22,19 +22,15 @@ namespace Engine
         static inline
         create()
         {
-          return std::make_shared<Node>();
+          return NodePtr(new Node());
         }
 
         NodePtr
         static inline
         create(const std::string& name)
         {
-          return std::make_shared<Node>(name);
+          return NodePtr(new Node(name));
         }
-
-      public:
-        Node();
-        Node(const std::string& name);
 
       public:
         void
@@ -44,19 +40,19 @@ namespace Engine
 
         // TODO: Overload using initializer_list to add several nodes in a row
         bool
-        addChild(NodePtr n);
+        addChild(const NodePtr& n);
 
         bool
-        removeChild(NodePtr n);
+        removeChild(const NodePtr& n);
 
         void
         clearChildren();
 
         bool
-        addComponent(Component::ComponentPtr c);
+        addComponent(const Component::ComponentPtr& c);
 
         bool
-        removeComponent(Component::ComponentPtr c);
+        removeComponent(const Component::ComponentPtr& c);
 
         bool
         addUpdateCallback(std::function<bool(NodePtr)> callback);
@@ -75,7 +71,7 @@ namespace Engine
         hasChild(NodePtr n);
 
         bool
-        hasComponent(Component::ComponentPtr c);
+        hasComponent(const Component::ComponentPtr& c);
 
         template<typename T>
         std::shared_ptr<T> component() const
@@ -96,6 +92,10 @@ namespace Engine
 
         const UpdateCallbackList&
         getUpdateCallbackList() const;
+
+      private:
+        Node();
+        Node(const std::string& name);
 
       private:
         const std::string   name_;

@@ -28,7 +28,7 @@ namespace Engine
         StorePtr
         create()
         {
-          return std::make_shared<Store>();
+          return StorePtr(new Store());
         }
 
       public:
@@ -82,6 +82,9 @@ namespace Engine
       public:
         const AttributesMap&
         getAttributesMap();
+
+      private:
+        Store();
 
       private:
         boost::any*

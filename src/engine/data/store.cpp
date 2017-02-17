@@ -8,6 +8,9 @@ namespace Engine
 {
   namespace Data
   {
+    Store::Store()
+    {}
+
     Store::~Store()
     {
       for (auto p : attributes_)

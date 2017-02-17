@@ -9,6 +9,7 @@ namespace Engine
 
     Material::Material()
     {
+      this->store_ = Data::Store::create();
       // Updates the global material ID
       materialId_ = ID++;
     }
@@ -23,7 +24,7 @@ namespace Engine
     }
 
     void
-    Material::setShader(Rendering::Shader::ShaderPtr shader)
+    Material::setShader(const Rendering::Shader::ShaderPtr& shader)
     {
       shader_ = shader;
     }
@@ -40,7 +41,7 @@ namespace Engine
       return materialId_;
     }
 
-    const Data::Store&
+    const Data::Store::StorePtr&
     Material::getStore() const
     {
       return store_;

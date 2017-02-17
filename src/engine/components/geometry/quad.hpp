@@ -9,17 +9,17 @@ namespace Engine
     class Quad : public Geometry
     {
       public:
-        typedef std::shared_ptr<Quad>     QuadPtr;
+        typedef std::shared_ptr<Quad> QuadPtr;
 
       public:
         QuadPtr
         inline static
         create()
         {
-          return std::make_shared<Quad>();
+          return QuadPtr(new Quad());
         }
 
-      public:
+      private:
         Quad();
 
       private:

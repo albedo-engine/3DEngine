@@ -16,10 +16,10 @@ namespace Engine
         inline static
         create()
         {
-          return std::make_shared<Cube>();
+          return CubePtr(new Cube());
         }
 
-      public:
+      private:
         Cube();
 
       private:

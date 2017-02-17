@@ -89,9 +89,9 @@ namespace Engine
     }
 
     void
-    Shader::sendStoreData(Data::Store& store)
+    Shader::sendStoreData(Data::Store::StorePtr& store)
     {
-      auto& materialUniforms = store.getAttributesMap();
+      auto& materialUniforms = store->getAttributesMap();
 
       for (auto& attr : uniforms_)
       {
@@ -99,20 +99,20 @@ namespace Engine
         auto& type        = attr.second;
 
         if (type == "int")
-          this->setUniform(uniformName, store.get<int>(uniformName));
+          this->setUniform(uniformName, store->get<int>(uniformName));
         else if (type == "float")
-          this->setUniform(uniformName, store.get<float>(uniformName));
+          this->setUniform(uniformName, store->get<float>(uniformName));
         else if (type == "vec2")
-          this->setUniform(uniformName, store.get<glm::vec2>(uniformName));
+          this->setUniform(uniformName, store->get<glm::vec2>(uniformName));
         else if (type == "vec3")
-          this->setUniform(uniformName, store.get<glm::vec3>(uniformName));
+          this->setUniform(uniformName, store->get<glm::vec3>(uniformName));
         else if (type == "vec4")
-          this->setUniform(uniformName, store.get<glm::vec4>(uniformName));
+          this->setUniform(uniformName, store->get<glm::vec4>(uniformName));
         else if (type == "mat4")
-          this->setUniform(uniformName, store.get<glm::mat4>(uniformName));
+          this->setUniform(uniformName, store->get<glm::mat4>(uniformName));
         else if (type == "sampler2D")
         {
-          auto texture2D = store.get<Shader::Texture2DPtr>(uniformName);
+          auto texture2D = store->get<Shader::Texture2DPtr>(uniformName);
           if (texture2D == nullptr)
             continue;
 
@@ -122,7 +122,7 @@ namespace Engine
         }
         else if (type == "samplerCube")
         {
-          auto cubemap = store.get<Shader::TextureCubemapPtr>(uniformName);
+          auto cubemap = store->get<Shader::TextureCubemapPtr>(uniformName);
           if (cubemap == nullptr)
             continue;
 

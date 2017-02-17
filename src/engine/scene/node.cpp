@@ -19,7 +19,7 @@ namespace Engine
     }
 
     bool
-    Node::addChild(Node::NodePtr n)
+    Node::addChild(const Node::NodePtr& n)
     {
       if (n == nullptr)
         throw new std::logic_error("The node child cannot be null");
@@ -38,7 +38,7 @@ namespace Engine
     }
 
     bool
-    Node::removeChild(Node::NodePtr n)
+    Node::removeChild(const Node::NodePtr& n)
     {
       auto i = std::find(children_.begin(), children_.end(), n);
       if (i != children_.end())
@@ -81,7 +81,7 @@ namespace Engine
     }
 
     bool
-    Node::addComponent(Component::ComponentPtr c)
+    Node::addComponent(const Component::ComponentPtr& c)
     {
       if (hasComponent(c))
         throw new std::logic_error("This component instance is already contained in the node");
@@ -92,7 +92,7 @@ namespace Engine
     }
 
     bool
-    Node::removeComponent(Component::ComponentPtr c)
+    Node::removeComponent(const Component::ComponentPtr& c)
     {
       auto i = std::find(components_.begin(), components_.end(), c);
       if (i == components_.end())
@@ -109,7 +109,7 @@ namespace Engine
     }
 
     bool
-    Node::hasComponent(Component::ComponentPtr c)
+    Node::hasComponent(const Component::ComponentPtr& c)
     {
       return std::find(components_.begin(), components_.end(), c) != components_.end();
     }

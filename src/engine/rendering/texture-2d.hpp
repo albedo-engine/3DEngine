@@ -18,10 +18,10 @@ namespace Engine
         static inline
         create(uint width, uint height)
         {
-          return std::make_shared<Texture2D>(width, height);
+          return Texture2DPtr(new Texture2D(width, height));
         }
 
-      public:
+      private:
         Texture2D(GLuint width, GLuint height);
 
       public:

@@ -30,13 +30,12 @@ namespace Engine
       public:
         RendererPtr
         static inline
-        create(Scene::Node::NodePtr camera, int width, int height)
+        create(const Scene::Node::NodePtr& camera, int width, int height)
         {
-          return std::make_shared<Renderer>(camera, width, height);
+          return RendererPtr(new Renderer(camera, width, height));
         }
 
       public:
-        Renderer(Scene::Node::NodePtr camera, int width, int height);
         ~Renderer();
 
       public:
@@ -59,11 +58,14 @@ namespace Engine
         toggleDebug(unsigned int options);
 
       private:
+        Renderer(const Scene::Node::NodePtr& camera, int width, int height);
+
+      private:
         void
         render();
 
         void
-        renderGeometry(Scene::Node::NodePtr node);
+        renderGeometry(const Scene::Node::NodePtr& node);
 
         void
         renderLights();

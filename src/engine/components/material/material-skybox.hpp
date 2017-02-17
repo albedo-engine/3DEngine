@@ -21,12 +21,15 @@ namespace Engine
         static inline
         create()
         {
-          return std::make_shared<MaterialSkybox>();
+          return MaterialSkyboxPtr(new MaterialSkybox);
         }
 
       public:
         void
-        setCubemap(TextureCubemapPtr cubemap);
+        setCubemap(const TextureCubemapPtr& cubemap);
+
+      private:
+        MaterialSkybox();
 
       private:
         TextureCubemapPtr cubemap_;

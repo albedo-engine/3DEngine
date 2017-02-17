@@ -24,7 +24,7 @@ namespace Engine
 
       public:
         void
-        setParent(std::shared_ptr<Scene::Node> parent);
+        setParent(const std::shared_ptr<Scene::Node>& parent);
 
       public:
         std::shared_ptr<Scene::Node>

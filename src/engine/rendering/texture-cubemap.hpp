@@ -17,10 +17,10 @@ namespace Engine
         static inline
         create(uint width, uint height)
         {
-          return std::make_shared<TextureCubemap>(width, height);
+          return TextureCubemapPtr(new TextureCubemap(width, height));
         }
 
-      public:
+      private:
         TextureCubemap(GLuint width, GLuint height);
 
       public:

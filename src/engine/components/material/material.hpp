@@ -39,7 +39,7 @@ namespace Engine
          * the pointer to the shader using this material.
          */
         void
-        setShader(Rendering::Shader::ShaderPtr shader);
+        setShader(const Rendering::Shader::ShaderPtr& shader);
 
       public:
         const Rendering::Shader::ShaderPtr&
@@ -48,13 +48,13 @@ namespace Engine
         const GLuint&
         getMaterialId() const;
 
-        const Data::Store&
+        const Data::Store::StorePtr&
         getStore() const;
 
       protected:
         Rendering::Shader::ShaderPtr  shader_;
         GLuint                        materialId_;
-        Data::Store                   store_;
+        Data::Store::StorePtr         store_;
 
       private:
         static GLuint ID;

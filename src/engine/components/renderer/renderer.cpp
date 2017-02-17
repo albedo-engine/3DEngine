@@ -5,7 +5,7 @@ namespace Engine
 {
   namespace Components
   {
-    Renderer::Renderer(Scene::Node::NodePtr camera, int width, int height)
+    Renderer::Renderer(const Scene::Node::NodePtr& camera, int width, int height)
       : renderWidth_(width)
       , renderHeight_(height)
       , camera_(camera->component<Camera>())
@@ -102,7 +102,7 @@ namespace Engine
     }
 
     void
-    Renderer::renderGeometry(Scene::Node::NodePtr node)
+    Renderer::renderGeometry(const Scene::Node::NodePtr& node)
     {
       for (Scene::Node::NodePtr child : node->getChildren())
       {

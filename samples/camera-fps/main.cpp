@@ -128,9 +128,9 @@ int main(int c, char** argv)
     // Position
     light->addComponent(Transform::create());
     light->component<Transform>()->translate(
-      glm::vec3((rand() % 100) / 50.0f * 3.0f,
-                (rand() % 100) / 50.0f * 3.0f,
-                (rand() % 100) / 50.0f * 3.0f));
+      glm::vec3((rand() % 100) / 50.0f * 2.0f,
+                (rand() % 100) / 50.0f * 2.0f,
+                (rand() % 100) / 50.0f * 2.0f));
 
     root->addChild(light);
   }

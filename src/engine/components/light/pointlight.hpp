@@ -16,12 +16,17 @@ namespace Engine
         static inline
         create()
         {
-          return std::make_shared<PointLight>();
+          auto ptr = PointLightPtr(new PointLight);
+          ComponentManager::instance()->getLights().push_back(ptr);
+
+          return ptr;
         }
 
       public:
-        PointLight();
         ~PointLight();
+
+      private:
+        PointLight();
     };
   }
 }

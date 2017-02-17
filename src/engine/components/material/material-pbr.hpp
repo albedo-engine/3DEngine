@@ -20,21 +20,18 @@ namespace Engine
         static inline
         create()
         {
-          return std::make_shared<MaterialPBR>();
+          return MaterialPBRPtr(new MaterialPBR());
         }
 
+      private:
+        MaterialPBR();
+
       public:
-        /*MaterialPBRPtr&
-        setBaseColor();*/
+        MaterialPBRPtr
+        setColorFactor(const glm::vec4 colorFactor);
 
         MaterialPBRPtr
-        setColorFactor(glm::vec4 colorFactor);
-
-        MaterialPBRPtr
-        setAlbedo(Texture2DPtr texture);
-
-        /*MaterialPBRPtr&
-        setRoughnessFactor(float roughnessFactor);*/
+        setAlbedo(const Texture2DPtr& texture);
     };
   } // namespace Component
 } // namespace Engine

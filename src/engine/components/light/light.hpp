@@ -31,10 +31,10 @@ namespace Engine
         getColor() const;
 
         void
-        setColor(glm::vec3 color);
+        setColor(const glm::vec3 color);
 
       private:
-        Data::Store store_;
+        Data::Store::StorePtr store_;
 
     };
   } // Namespace Component

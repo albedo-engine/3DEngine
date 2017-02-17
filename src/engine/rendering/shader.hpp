@@ -43,7 +43,7 @@ namespace Engine
         compile();
 
         void
-        sendStoreData(Data::Store& store);
+        sendStoreData(Data::Store::StorePtr& store);
 
         void
         useShader() const;

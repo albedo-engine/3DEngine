@@ -16,10 +16,10 @@ namespace Engine
         inline static
         create()
         {
-          return std::make_shared<Triangle>();
+          return TrianglePtr(new Triangle());
         }
 
-      public:
+      private:
         Triangle();
 
       private:

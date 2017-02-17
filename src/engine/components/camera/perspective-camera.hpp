@@ -16,24 +16,19 @@ namespace Engine
 
         PerspectiveCameraPtr
         static inline
-        create(float viewport_width, float viewport_height)
+        create(float viewportWidth, float viewportHeight)
         {
-          return std::make_shared<PerspectiveCamera>(viewport_width,
-                                                     viewport_height);
+          return PerspectiveCameraPtr(new PerspectiveCamera(viewportWidth, viewportHeight));
         }
 
         PerspectiveCameraPtr
         static inline
-        create(float viewport_width, float viewport_height, float fov)
+        create(float viewportWidth, float viewportHeight, float fov)
         {
-          return std::make_shared<PerspectiveCamera>(viewport_width,
-                                                     viewport_height, fov);
+          return PerspectiveCameraPtr(new PerspectiveCamera(viewportWidth, viewportHeight, fov));
         }
 
       public:
-        PerspectiveCamera(float viewport_width, float viewport_height);
-        PerspectiveCamera(float viewport_width, float viewport_height,
-                          float fov);
         ~PerspectiveCamera();
 
       public:
@@ -46,6 +41,10 @@ namespace Engine
 
         void
         setFov(const float& fov);
+
+      private:
+        PerspectiveCamera(float viewport_width, float viewport_height);
+        PerspectiveCamera(float viewport_width, float viewport_height, float fov);
 
       private:
         float fov_;

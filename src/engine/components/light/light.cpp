@@ -6,10 +6,8 @@ namespace Engine
   {
     Light::Light()
     {
+      this->store_ = Data::Store::create();
       this->setColor(glm::vec3());
-
-      auto this_ptr = std::shared_ptr<Light>(this, [](Light*){});
-      ComponentManager::instance()->getLights().push_back(this_ptr);
     }
 
     Light::~Light()
@@ -24,13 +22,13 @@ namespace Engine
     const glm::vec3&
     Light::getColor() const
     {
-      return *store_.get<glm::vec3>("color");
+      return *store_->get<glm::vec3>("color");
     }
 
     void
-    Light::setColor(glm::vec3 color)
+    Light::setColor(const glm::vec3 color)
     {
-      store_.set<glm::vec3>("color", color);
+      store_->set<glm::vec3>("color", color);
     }
 
   } // Namespace Components

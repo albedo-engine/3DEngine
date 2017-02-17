@@ -22,22 +22,22 @@ namespace Engine
         GLuint
         getId();
 
-        Texture2D&
+        Texture2D::Texture2DPtr&
         getNormalRT();
 
-        Texture2D&
+        Texture2D::Texture2DPtr&
         getBaseColorRT();
 
-        Texture2D&
+        Texture2D::Texture2DPtr&
         getDepthRT();
 
       private:
         GLuint framebufferId_;
 
-        Texture2D normalRT_; ///< normal, material ID
-        Texture2D baseColorRT_; ///< base color, material data
-        Texture2D metalRoughSpecAORT_; ///< metalness, specular, roughness and AO
-        Texture2D depthRT_; ///< depth
+        Texture2D::Texture2DPtr normalRT_; ///< normal, material ID
+        Texture2D::Texture2DPtr baseColorRT_; ///< base color, material data
+        Texture2D::Texture2DPtr metalRoughSpecAORT_; ///< metalness, specular, roughness and AO
+        Texture2D::Texture2DPtr depthRT_; ///< depth
     };
   } // namespace Rendering
 } // namespace Engine
