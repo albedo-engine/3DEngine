@@ -42,3 +42,29 @@ mkdir build && cd $_ && cmake .. && make check
 ### Windows & OS X
 (Not yet supported)
 
+## TODO
+
+* Dependencies
+
+  * [ ] Move from GLEW to GLAD
+
+* Code structure
+  * [ ] Move to C++ 17
+  * [ ] Make use of nested namespace
+  * [ ] Remove boost dependency
+  * [ ] Change the way uniforms are sent (using a lot of conditions),
+  boost::any is not be the answer.
+  * [ ] Separate includes and sources
+  * [ ] Separate templates declaration / definition 
+  * [ ] Add constness and staticness where we can.
+  * [ ] Add Pimpl
+  * [ ] Add typedef to a global scope
+  * [ ] Restrict include scope only to files that need them
+  * [ ] Add unit testing with Gtest
+  * [ ] Better exception handling
+  
+* Rendering
+  * [ ] Add IBL iradiance lighting with SH
+  * [ ] Add IBL radiance lighting with Cubemaps mip
+  * [ ] Add basic PBR on direct light
+  * [ ] Improve shader generation system
