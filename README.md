@@ -50,6 +50,7 @@ mkdir build && cd $_ && cmake .. && make check
 * Code structure
   * [ ] Move to C++ 17
   * [ ] Make use of nested namespace
+  * [ ] Move private code that do not need object attributes to anonymous namespace
   * [ ] Remove boost dependency
   * [ ] Change the way uniforms are sent (using a lot of conditions),
   boost::any is not the answer.
