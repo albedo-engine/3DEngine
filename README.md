@@ -45,7 +45,6 @@ mkdir build && cd $_ && cmake .. && make check
 ## TODO
 
 * Dependencies
-
   * [ ] Move from GLEW to GLAD
 
 * Code structure
@@ -53,7 +52,7 @@ mkdir build && cd $_ && cmake .. && make check
   * [ ] Make use of nested namespace
   * [ ] Remove boost dependency
   * [ ] Change the way uniforms are sent (using a lot of conditions),
-  boost::any is not be the answer.
+  boost::any is not the answer.
   * [ ] Separate includes and sources
   * [ ] Separate templates declaration / definition 
   * [ ] Add constness and staticness where we can.
@@ -68,3 +67,4 @@ mkdir build && cd $_ && cmake .. && make check
   * [ ] Add IBL radiance lighting with Cubemaps mip
   * [ ] Add basic PBR on direct light
   * [ ] Improve shader generation system
+  * [ ] Send 1x1 texture with color when texture is not provided
