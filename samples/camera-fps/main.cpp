@@ -26,7 +26,7 @@ Texture2D::Texture2DPtr buildTexture()
   int  height  = 128;
   auto texture = Texture2D::create(width, height);
 
-  unsigned char* img = SOIL_load_image("../assets/cat.png", &width, &height, 0,
+  unsigned char* img = SOIL_load_image("../asset/cat.jpeg", &width, &height, 0,
                                        SOIL_LOAD_RGBA);
   if (img == NULL)
     throw std::invalid_argument("Image loading fail");
