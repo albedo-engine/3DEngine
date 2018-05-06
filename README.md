@@ -46,6 +46,7 @@ mkdir build && cd $_ && cmake .. && make check
 
 * Dependencies
   * [ ] Move from GLEW to GLAD
+  * [ ] Move from SOIL to stbi
 
 * Code structure
   * [ ] Move to C++ 17
