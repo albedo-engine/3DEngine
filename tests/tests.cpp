@@ -1,6 +1,6 @@
 #include "utils/test_utils.hpp"
 
-#include "engine.hpp"
+#include "../include/engine.hpp"
 #include <components/light/pointlight.hpp>
 
 using namespace Engine;

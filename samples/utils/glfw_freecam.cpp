@@ -28,6 +28,33 @@ GLFW_Freecam::GLFW_Freecam(int width, int height, const char* title)
   this->init(width, height, title);
 }
 
+void
+GLFW_Freecam::post_init(int width, int height)
+{
+    for (int i = 0; i < 512; ++i)
+        keys[i] = false;
+
+    this->last_mouse_x = width / 2;
+    this->last_mouse_y = height / 2;
+    this->init_mouse = true;
+
+    // Events
+    glfwSetKeyCallback(window, freecam_key_dispatch);
+    glfwSetCursorPosCallback(window, freecam_mouse_dispatch);
+    glfwSetErrorCallback(freecam_error_callback);
+
+    // Disable cursor
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+
+    // Viewport dimension
+    int vw_width, vw_height;
+    glfwGetFramebufferSize(window, &vw_width, &vw_height);
+    glViewport(0, 0, vw_width, vw_height);
+
+    // Store this as a user pointer for callbacks usage
+    glfwSetWindowUserPointer(window, this);
+}
+
 GLFW_Freecam::~GLFW_Freecam()
 {
   glfwDestroyWindow(window);
@@ -52,29 +79,6 @@ void GLFW_Freecam::init(int width, int height, const char* title)
   }
 
   glfwMakeContextCurrent(window);
-
-  for (int i = 0; i < 512; ++i)
-    keys[i] = false;
-  
-  this->last_mouse_x = width / 2;
-  this->last_mouse_y = height / 2;
-  this->init_mouse = true;
-
-  // Events
-  glfwSetKeyCallback(window, freecam_key_dispatch);
-  glfwSetCursorPosCallback(window, freecam_mouse_dispatch);
-  glfwSetErrorCallback(freecam_error_callback);
-
-  // Disable cursor
-  glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
-
-  // Viewport dimension
-  int vw_width, vw_height;
-  glfwGetFramebufferSize(window, &vw_width, &vw_height);
-  glViewport(0, 0, vw_width, vw_height);
-
-  // Store this as a user pointer for callbacks usage
-  glfwSetWindowUserPointer(window, this);
 }
 
 void

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <iostream>
-#include <engine.hpp>
+#include "../../include/engine.hpp"
 #include <GLFW/glfw3.h>
 
 using namespace Engine;
@@ -22,6 +22,8 @@ class GLFW_Freecam
     void pre_update();
     void post_update();
     bool should_close();
+
+    void post_init(int width, int height);
 
     void set_camera(Node::NodePtr camera_node);
     void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);

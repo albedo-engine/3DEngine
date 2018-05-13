@@ -1,0 +1,21 @@
+#include <GL/gl.h>
+static const GLchar *shader_source_gbuffer_fs[] = {
+    "#version 330 core\n"
+    "//layout (location = 0) out vec3 position;\n"
+    "layout (location = 0) out vec3 normal;\n"
+    "layout (location = 1) out vec4 albedo; // RGB: diffuse, A: spec\n"
+    "in vec2 TexCoords;\n"
+    "in vec3 FragPos;\n"
+    "in vec3 Normal;\n"
+    "uniform sampler2D uAlbedoMap;\n"
+    "uniform vec4 uAlbedoFactor;\n"
+    "void main()\n"
+    "{\n"
+    "  //position = FragPos;\n"
+    "  normal = normalize(Normal);\n"
+    "  //albedo.rgb = vec3(0,1,1); // Diffuse\n"
+    "  albedo.rgba = texture2D(uAlbedoMap, TexCoords); // Diffuse\n"
+    "  //albedo.rgba = uAlbedoFactor; // Diffuse\n"
+    "  //albedo.a = 1; // Specular\n"
+    "}\n"
+};

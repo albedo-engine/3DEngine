@@ -1,4 +1,4 @@
-#include <engine.hpp>
+#include "../../include/engine.hpp"
 #include "../utils/glfw_freecam.hpp"
 
 #include "SOIL/SOIL.h"
@@ -26,7 +26,7 @@ Texture2D::Texture2DPtr buildTexture()
   int  height  = 128;
   auto texture = Texture2D::create(width, height);
 
-  unsigned char* img = SOIL_load_image("../asset/cat.jpeg", &width, &height, 0,
+  unsigned char* img = SOIL_load_image("./asset/cat.jpeg", &width, &height, 0,
                                        SOIL_LOAD_RGBA);
   if (img == NULL)
     throw std::invalid_argument("Image loading fail");
@@ -46,7 +46,9 @@ int main(int c, char** argv)
   GLFW_Freecam freecam(width, height, "Cube");
 
   // Initializes the engine
-  Engine::Engine::initialize();
+  Engine::Engine::initialize((void* (*)(const char*))glfwGetProcAddress);
+
+  freecam.post_init(width, height);
 
   // Creates the shader used to fill the GBuffer
   Shader::ShaderPtr shader = Shader::create(GET_SHADER(gbuffer_vs),

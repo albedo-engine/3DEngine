@@ -1,0 +1,23 @@
+#include <GL/gl.h>
+static const GLchar *shader_source_gbuffer_vs[] = {
+    "#version 330 core\n"
+    "#extension GL_ARB_separate_shader_objects : enable\n"
+    "layout (location = 0) in vec3 position;\n"
+    "layout (location = 1) in vec3 normal;\n"
+    "layout (location = 2) in vec2 texCoords;\n"
+    "out vec3 FragPos;\n"
+    "out vec2 TexCoords;\n"
+    "out vec3 Normal;\n"
+    "uniform mat4 model;\n"
+    "uniform mat4 view;\n"
+    "uniform mat4 projection;\n"
+    "void main()\n"
+    "{\n"
+    "  vec4 worldPos = model * vec4(position, 1.0f);\n"
+    "  FragPos = worldPos.xyz;\n"
+    "  gl_Position = projection * view * worldPos;\n"
+    "  TexCoords = texCoords;\n"
+    "  mat3 normalMatrix = transpose(inverse(mat3(model)));\n"
+    "  Normal = normalMatrix * normal;\n"
+    "}\n"
+};
