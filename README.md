@@ -1,6 +1,8 @@
-# 3DEngine [![Build Status](https://travis-ci.com/AdrienNeveu/3DEngine.svg?token=AGcLYmG3qkhAiyxVFXyU&branch=master)](https://travis-ci.com/AdrienNeveu/3DEngine)
+[![Build Status](https://travis-ci.com/AdrienNeveu/3DEngine.svg?token=AGcLYmG3qkhAiyxVFXyU&branch=master)](https://travis-ci.com/AdrienNeveu/3DEngine)
 
+# 3DEngine (Deprecated)
 
+This is a deprecated attempt to create a custom C++ 3D engine, made by two students from EPITA (Paris). This is really old and was stopped as a WIP with very few features.
 
 ## Build Instructions
 
